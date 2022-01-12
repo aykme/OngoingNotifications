@@ -3,6 +3,7 @@
     package="com.aykme.ongoingnotifications">
 
     <application
+        android:name="com.aykme.ongoingnotifications.Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -10,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OngoingNotifications">
         <activity
-            android:name="com.aykme.ongoingnotifications.MainActivity"
+            android:name="com.aykme.ongoingnotifications.ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
