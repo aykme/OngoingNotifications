@@ -1,23 +1,49 @@
 package com.aykme.ongoingnotifications.ui.animelist
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.aykme.ongoingnotifications.data.source.remote.api.shikimori.ShikimoriApi
+import androidx.lifecycle.*
+import com.aykme.ongoingnotifications.domain.model.Anime
+import com.aykme.ongoingnotifications.domain.usecase.FetchOngoingAnimeListUseCase
 import kotlinx.coroutines.launch
+import java.lang.Exception
+import java.lang.IllegalArgumentException
 
-const val TAG = "AnimeListViewModel"
+const val AnimeListViewModelTag = "AnimeListViewModel"
 
-class AnimeListViewModel: ViewModel() {
-    fun testApi() {
+class AnimeListViewModel(private val fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase) :
+    ViewModel() {
+    private val _ongoingAnimeList = MutableLiveData<List<Anime>>()
+    val ongoingAnimeList: LiveData<List<Anime>> = _ongoingAnimeList
+    var page = 1
+    var limit = 10
+
+    init {
+        getOngoingAnimeList(page, limit)
+    }
+
+    private fun getOngoingAnimeList(page: Int, limit: Int) {
         viewModelScope.launch {
-            val api = ShikimoriApi.instance
-            val animeList = api.getAnimeList(1, 50, "ongoing")
-            Log.d(TAG, "Размер полученного листа: ${animeList.size}")
-            val anime = animeList[0]
-            Log.d(TAG, "Аниме детали: $anime")
-            val image = anime.imageResponse
-            Log.d(TAG, "Image детали: $image")
+            try {
+                fetchOngoingAnimeListUseCase(page, limit).let { listAnime ->
+                    _ongoingAnimeList.value = listAnime
+                }
+            } catch (e: Exception) {
+                Log.d(AnimeListViewModelTag, "Api error")
+            }
         }
+    }
+}
+
+class AnimeListViewModelFactory(
+    private val fetchOngoingAnimeListUseCase:
+    FetchOngoingAnimeListUseCase
+) :
+    ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(AnimeListViewModel::class.java)) {
+            return AnimeListViewModel(fetchOngoingAnimeListUseCase) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

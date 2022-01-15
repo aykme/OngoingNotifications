@@ -1,4 +1,4 @@
-package com.aykme.ongoingnotifications.data.source.remote.api.shikimori
+package com.aykme.ongoingnotifications.data.source.remote.shikimoriapi
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -30,6 +30,7 @@ interface ShikimoriApi {
     suspend fun getAnimeList(
         @Query("page") page: Int,
         @Query("limit") limit: Int,
-        @Query("status") status: String
+        @Query("status") status: String? = null,
+        @Query("order") order: String? = null
     ): List<AnimeResponse>
 }
