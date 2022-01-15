@@ -1,4 +1,4 @@
-package com.aykme.ongoingnotifications.data.source.remote.api.shikimori
+package com.aykme.ongoingnotifications.data.source.remote.shikimoriapi
 
 import com.squareup.moshi.Json
 
