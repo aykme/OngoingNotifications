@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.aykme.ongoingnotifications.data.repository.ShikimoriApiRepository
 import com.aykme.ongoingnotifications.data.source.remote.shikimoriapi.ShikimoriApi
 import com.aykme.ongoingnotifications.databinding.FragmentAnimeListBinding
@@ -34,10 +35,15 @@ class AnimeListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.ongoingAnimeList.observe(viewLifecycleOwner) {
-            Log.d(AnimeListFragmentTag, "Размер полученного листа: ${it.size}")
-            val anime = it[0]
-            Log.d(AnimeListFragmentTag, "Аниме детали: $anime")
+
+        val recyclerView = binding.animeListRecyclerView
+        val adapter = AnimeListAdapter()
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+
+        viewModel.ongoingAnimeList.observe(viewLifecycleOwner) { ongoingAnimeList ->
+            adapter.submitList(ongoingAnimeList)
         }
     }
 

@@ -7,9 +7,19 @@
 
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/anime_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         tools:srcCompat="@drawable/anime_image_sample" />
+
+    <TextView
+        android:id="@+id/anime_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Атака титанов: Финал. Часть 2" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
