@@ -5,21 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <ImageView
         android:id="@+id/anime_image"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        tools:srcCompat="@drawable/anime_image_sample" />
-
-    <TextView
-        android:id="@+id/anime_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="40sp"
+        android:minHeight="600sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Атака титанов: Финал. Часть 2" />
+        tools:srcCompat="@drawable/anime_image_sample" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

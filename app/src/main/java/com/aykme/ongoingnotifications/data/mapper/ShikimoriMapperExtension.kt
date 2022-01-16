@@ -8,7 +8,7 @@ fun List<AnimeResponse>.responseToEntityList(): List<Anime> {
         Anime(
             id = animeResponse.id!!,
             name = animeResponse.russianName ?: animeResponse.englishName!!,
-            image = animeResponse.imageResponse?.originalSizeUrl!!,
+            imageUrl = animeResponse.imageResponse?.originalSizeUrl!!,
             score = animeResponse.score!!,
             episodesAired = animeResponse.episodesAired!!,
             episodes = animeResponse.episodes!!

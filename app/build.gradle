@@ -59,4 +59,6 @@ dependencies {
     implementation 'com.squareup.moshi:moshi-kotlin:1.9.3'
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
+    // Coil
+    implementation "io.coil-kt:coil:1.4.0"
 }

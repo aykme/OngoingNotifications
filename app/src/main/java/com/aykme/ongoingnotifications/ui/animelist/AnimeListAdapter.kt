@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.aykme.ongoingnotifications.data.source.remote.coil.ImageDownloader
+import com.aykme.ongoingnotifications.data.source.remote.shikimoriapi.BASE_URL
 import com.aykme.ongoingnotifications.databinding.ItemAnimeListBinding
 import com.aykme.ongoingnotifications.domain.model.Anime
 
@@ -13,7 +15,8 @@ class AnimeListAdapter : ListAdapter<Anime, AnimeListAdapter.AnimeViewHolder>(Di
     class AnimeViewHolder(private val binding: ItemAnimeListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(anime: Anime) {
-            binding.animeName.text = anime.name
+            val fullImageUrl = (BASE_URL + anime.imageUrl)
+            ImageDownloader.bindImage(binding.animeImage, fullImageUrl)
         }
     }
 
