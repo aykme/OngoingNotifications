@@ -1,4 +1,3 @@
 <resources>
-    <string name="app_name">OngoingNotifications</string>
-    <string name="anime_list_title">Аниме онгоинги</string>
+    <string name="app_name">AnimeNotifications</string>
 </resources>

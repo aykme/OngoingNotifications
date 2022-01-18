@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.aykme.ongoingnotifications">
+    package="com.aykme.animenotifications">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="com.aykme.ongoingnotifications.Application"
+        android:name="com.aykme.animenotifications.Application"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OngoingNotifications">
         <activity
-            android:name="com.aykme.ongoingnotifications.ui.MainActivity"
+            android:name="com.aykme.animenotifications.ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

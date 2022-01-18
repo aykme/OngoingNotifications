@@ -1,14 +1,14 @@
-package com.aykme.ongoingnotifications.ui.animelist
+package com.aykme.animenotifications.ui.animelist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.aykme.ongoingnotifications.data.source.remote.coil.ImageDownloader
-import com.aykme.ongoingnotifications.data.source.remote.shikimoriapi.BASE_URL
-import com.aykme.ongoingnotifications.databinding.ItemAnimeListBinding
-import com.aykme.ongoingnotifications.domain.model.Anime
+import com.aykme.animenotifications.data.source.remote.coil.ImageDownloader
+import com.aykme.animenotifications.data.source.remote.shikimoriapi.BASE_URL
+import com.aykme.animenotifications.databinding.ItemAnimeListBinding
+import com.aykme.animenotifications.domain.model.Anime
 
 class AnimeListAdapter : ListAdapter<Anime, AnimeListAdapter.AnimeViewHolder>(DiffCallback) {
 

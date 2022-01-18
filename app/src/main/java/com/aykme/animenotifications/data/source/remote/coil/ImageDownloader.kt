@@ -1,4 +1,4 @@
-package com.aykme.ongoingnotifications.data.source.remote.coil
+package com.aykme.animenotifications.data.source.remote.coil
 
 import android.widget.ImageView
 import androidx.core.net.toUri

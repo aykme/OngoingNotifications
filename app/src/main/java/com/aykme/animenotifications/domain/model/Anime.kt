@@ -1,4 +1,4 @@
-package com.aykme.ongoingnotifications.domain.model
+package com.aykme.animenotifications.domain.model
 
 data class Anime(
     val id: Int,

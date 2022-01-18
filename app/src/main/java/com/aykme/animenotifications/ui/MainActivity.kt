@@ -1,11 +1,10 @@
-package com.aykme.ongoingnotifications.ui
+package com.aykme.animenotifications.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupActionBarWithNavController
-import com.aykme.ongoingnotifications.R
+import com.aykme.animenotifications.R
 
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController

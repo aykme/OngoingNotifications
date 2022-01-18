@@ -1,7 +1,7 @@
-package com.aykme.ongoingnotifications.data.mapper
+package com.aykme.animenotifications.data.mapper
 
-import com.aykme.ongoingnotifications.data.source.remote.shikimoriapi.AnimeResponse
-import com.aykme.ongoingnotifications.domain.model.Anime
+import com.aykme.animenotifications.data.source.remote.shikimoriapi.AnimeResponse
+import com.aykme.animenotifications.domain.model.Anime
 
 fun List<AnimeResponse>.responseToEntityList(): List<Anime> {
     return this.map { animeResponse ->

@@ -1,4 +1,4 @@
-package com.aykme.ongoingnotifications.data.source.remote.shikimoriapi
+package com.aykme.animenotifications.data.source.remote.shikimoriapi
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

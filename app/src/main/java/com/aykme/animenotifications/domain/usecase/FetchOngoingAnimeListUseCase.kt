@@ -1,7 +1,7 @@
-package com.aykme.ongoingnotifications.domain.usecase
+package com.aykme.animenotifications.domain.usecase
 
-import com.aykme.ongoingnotifications.domain.model.Anime
-import com.aykme.ongoingnotifications.domain.repository.ApiRepository
+import com.aykme.animenotifications.domain.model.Anime
+import com.aykme.animenotifications.domain.repository.ApiRepository
 
 class FetchOngoingAnimeListUseCase(private val repository: ApiRepository) {
     suspend operator fun invoke(page: Int, limit: Int): List<Anime> =

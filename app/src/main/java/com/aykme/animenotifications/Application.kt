@@ -1,4 +1,4 @@
-package com.aykme.ongoingnotifications
+package com.aykme.animenotifications
 
 import android.app.Application
 

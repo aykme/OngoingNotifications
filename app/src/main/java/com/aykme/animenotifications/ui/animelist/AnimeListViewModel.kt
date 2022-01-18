@@ -1,9 +1,9 @@
-package com.aykme.ongoingnotifications.ui.animelist
+package com.aykme.animenotifications.ui.animelist
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.aykme.ongoingnotifications.domain.model.Anime
-import com.aykme.ongoingnotifications.domain.usecase.FetchOngoingAnimeListUseCase
+import com.aykme.animenotifications.domain.model.Anime
+import com.aykme.animenotifications.domain.usecase.FetchOngoingAnimeListUseCase
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.lang.IllegalArgumentException
