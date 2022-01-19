@@ -22,12 +22,14 @@ class AnimeListAdapter(private val context: Context) :
             val fullImageUrl = (BASE_URL + anime.imageUrl)
             ImageDownloader.bindImage(binding.animeImage, fullImageUrl)
             binding.animeName.text = anime.name
-            binding.animeEpisodesAired.text = resources?.getString(
-                R.string.anime_episodes_aired,
-                anime.episodesAired,
-                anime.episodes
-            )
             binding.animeScore.text = anime.score.toString()
+
+            val episodesTotal = if (anime.episodesTotal < 1) "?" else anime.episodesTotal.toString()
+            binding.animeEpisodes.text = resources?.getString(
+                R.string.anime_episodes_aired,
+                anime.episodesAired.toString(),
+                episodesTotal
+            )
         }
     }
 

@@ -70,7 +70,7 @@
                 tools:text="Атака титанов: Финал. Часть 2" />
 
             <TextView
-                android:id="@+id/anime_episodes_aired"
+                android:id="@+id/anime_episodes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -92,8 +92,8 @@
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 android:textColor="@color/white"
-                app:layout_constraintStart_toStartOf="@id/anime_episodes_aired"
-                app:layout_constraintTop_toBottomOf="@id/anime_episodes_aired"
+                app:layout_constraintStart_toStartOf="@id/anime_episodes"
+                app:layout_constraintTop_toBottomOf="@id/anime_episodes"
                 tools:text="8.90" />
 
 

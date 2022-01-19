@@ -6,5 +6,5 @@ data class Anime(
     val imageUrl: String,
     val score: Float,
     val episodesAired: Int,
-    val episodes: Int
+    val episodesTotal: Int
 )

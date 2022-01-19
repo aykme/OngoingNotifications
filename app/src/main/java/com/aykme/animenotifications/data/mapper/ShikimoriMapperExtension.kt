@@ -11,7 +11,7 @@ fun List<AnimeResponse>.responseToEntityList(): List<Anime> {
             imageUrl = animeResponse.imageResponse?.originalSizeUrl!!,
             score = animeResponse.score!!,
             episodesAired = animeResponse.episodesAired!!,
-            episodes = animeResponse.episodes!!
+            episodesTotal = animeResponse.episodes!!
         )
     }
 }
