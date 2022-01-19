@@ -11,8 +11,9 @@ import com.aykme.animenotifications.data.repository.ShikimoriApiRepository
 import com.aykme.animenotifications.data.source.remote.shikimoriapi.ShikimoriApi
 import com.aykme.animenotifications.databinding.FragmentAnimeListBinding
 import com.aykme.animenotifications.domain.usecase.FetchOngoingAnimeListUseCase
+import com.aykme.animenotifications.ui.animelist.paging.PagingAnimeListAdapter
 
-const val AnimeListFragmentTag = "AnimeListFragment"
+const val ANIME_LIST_FRAGMENT_TAG = "AnimeListFragment"
 
 class AnimeListFragment : Fragment() {
     private var _binding: FragmentAnimeListBinding? = null
@@ -36,16 +37,17 @@ class AnimeListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = binding.animeListRecyclerView
-        val adapter = AnimeListAdapter(requireContext())
+        val adapter = PagingAnimeListAdapter(requireContext())
         recyclerView.adapter = adapter
-        recyclerView.layoutManager =
-            GridLayoutManager(requireContext(), 1)
+        val layoutManager = GridLayoutManager(requireContext(), 1)
+        recyclerView.layoutManager = layoutManager
 
-        viewModel.ongoingAnimeList.observe(viewLifecycleOwner) { ongoingAnimeList ->
-            adapter.submitList(ongoingAnimeList)
-        }
         viewModel.apiStatus.observe(viewLifecycleOwner) {
             viewModel.bindApiStatus(binding)
+        }
+
+        viewModel.ongoingAnimeData.observe(viewLifecycleOwner) { pagingData ->
+            viewModel.bindOngoingAnimeData(adapter, pagingData)
         }
     }
 

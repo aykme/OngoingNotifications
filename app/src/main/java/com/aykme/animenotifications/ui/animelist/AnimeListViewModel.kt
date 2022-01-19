@@ -1,47 +1,36 @@
 package com.aykme.animenotifications.ui.animelist
 
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.*
+import androidx.paging.*
 import com.aykme.animenotifications.R
 import com.aykme.animenotifications.databinding.FragmentAnimeListBinding
 import com.aykme.animenotifications.domain.model.Anime
 import com.aykme.animenotifications.domain.repository.ApiStatus
 import com.aykme.animenotifications.domain.usecase.FetchOngoingAnimeListUseCase
+import com.aykme.animenotifications.ui.animelist.paging.AnimeListDataSource
+import com.aykme.animenotifications.ui.animelist.paging.PAGE_LIMIT
+import com.aykme.animenotifications.ui.animelist.paging.PagingAnimeListAdapter
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import java.lang.IllegalArgumentException
 
-const val AnimeListViewModelTag = "AnimeListViewModel"
-const val MIN_PAGE = 1
-const val MAX_PAGE = 100000
-const val PAGE_STEP = 50
+const val ANIME_LIST_VIEW_MODEL_TAG = "AnimeListViewModel"
 
-class AnimeListViewModel(private val fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase) :
+class AnimeListViewModel(fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase) :
     ViewModel() {
+
     private val _apiStatus = MutableLiveData<ApiStatus>()
     val apiStatus: LiveData<ApiStatus> = _apiStatus
-    private val _ongoingAnimeList = MutableLiveData<List<Anime>>()
-    val ongoingAnimeList: LiveData<List<Anime>> = _ongoingAnimeList
-    var page = 1
-    var limit = 50
+    private val _ongoingAnimeData: LiveData<PagingData<Anime>> = Pager(
+        config = PagingConfig(pageSize = PAGE_LIMIT)
+    ) {
+        AnimeListDataSource(fetchOngoingAnimeListUseCase, _apiStatus)
+    }.liveData
+    val ongoingAnimeData = _ongoingAnimeData.cachedIn(viewModelScope)
 
-    init {
-        getOngoingAnimeList(page, limit)
-    }
-
-    private fun getOngoingAnimeList(page: Int, limit: Int) {
+    fun bindOngoingAnimeData(adapter: PagingAnimeListAdapter, data: PagingData<Anime>) {
         viewModelScope.launch {
-            _apiStatus.value = ApiStatus.LOADING
-            try {
-                fetchOngoingAnimeListUseCase(page, limit).let { listAnime ->
-                    _apiStatus.value = ApiStatus.DONE
-                    _ongoingAnimeList.value = listAnime
-                }
-            } catch (e: Exception) {
-                _apiStatus.value = ApiStatus.ERROR
-                Log.d(AnimeListViewModelTag, "Api error")
-            }
+            adapter.submitData(data)
         }
     }
 
@@ -55,7 +44,6 @@ class AnimeListViewModel(private val fetchOngoingAnimeListUseCase: FetchOngoingA
             binding.status.visibility = View.VISIBLE
         }
         else -> binding.status.visibility = View.GONE
-
     }
 }
 

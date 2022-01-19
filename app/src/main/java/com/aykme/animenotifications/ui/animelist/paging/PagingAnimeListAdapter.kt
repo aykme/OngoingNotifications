@@ -1,11 +1,11 @@
-package com.aykme.animenotifications.ui.animelist
+package com.aykme.animenotifications.ui.animelist.paging
 
 import android.content.Context
 import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.aykme.animenotifications.R
 import com.aykme.animenotifications.data.source.remote.coil.ImageDownloader
@@ -13,8 +13,8 @@ import com.aykme.animenotifications.data.source.remote.shikimoriapi.BASE_URL
 import com.aykme.animenotifications.databinding.ItemAnimeListBinding
 import com.aykme.animenotifications.domain.model.Anime
 
-class AnimeListAdapter(private val context: Context) :
-    ListAdapter<Anime, AnimeListAdapter.AnimeViewHolder>(DiffCallback) {
+class PagingAnimeListAdapter(private val context: Context) :
+    PagingDataAdapter<Anime, PagingAnimeListAdapter.AnimeViewHolder>(DiffCallback) {
 
     class AnimeViewHolder(private val binding: ItemAnimeListBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -40,8 +40,10 @@ class AnimeListAdapter(private val context: Context) :
 
     override fun onBindViewHolder(holder: AnimeViewHolder, position: Int) {
         val anime = getItem(position)
-        val resources = context.resources
-        holder.bind(anime, resources)
+        anime?.let {
+            val resources = context.resources
+            holder.bind(anime, resources)
+        }
     }
 
     companion object {
