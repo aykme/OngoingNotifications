@@ -8,11 +8,11 @@
     tools:context=".ui.animelist.AnimeListFragment">
 
     <ImageView
+        android:id="@+id/status"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="64dp"
-        android:background="@color/grey"
-        android:src="@drawable/ic_connection_error_24" />
+        android:background="@color/grey" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/animeListRecyclerView"

@@ -44,6 +44,9 @@ class AnimeListFragment : Fragment() {
         viewModel.ongoingAnimeList.observe(viewLifecycleOwner) { ongoingAnimeList ->
             adapter.submitList(ongoingAnimeList)
         }
+        viewModel.apiStatus.observe(viewLifecycleOwner) {
+            viewModel.bindApiStatus(binding)
+        }
     }
 
     override fun onDestroyView() {
