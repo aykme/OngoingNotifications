@@ -15,7 +15,7 @@ class AnimeListViewModel(private val fetchOngoingAnimeListUseCase: FetchOngoingA
     private val _ongoingAnimeList = MutableLiveData<List<Anime>>()
     val ongoingAnimeList: LiveData<List<Anime>> = _ongoingAnimeList
     var page = 1
-    var limit = 10
+    var limit = 50
 
     init {
         getOngoingAnimeList(page, limit)

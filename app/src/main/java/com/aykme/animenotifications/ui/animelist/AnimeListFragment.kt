@@ -36,7 +36,7 @@ class AnimeListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = binding.animeListRecyclerView
-        val adapter = AnimeListAdapter()
+        val adapter = AnimeListAdapter(requireContext())
         recyclerView.adapter = adapter
         recyclerView.layoutManager =
             GridLayoutManager(requireContext(), 1)
