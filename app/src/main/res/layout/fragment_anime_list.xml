@@ -4,12 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey"
     tools:context=".ui.animelist.AnimeListFragment">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="64dp"
+        android:background="@color/grey"
+        android:src="@drawable/ic_connection_error_24" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/animeListRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/item_anime_list" />
+
 
 </FrameLayout>
