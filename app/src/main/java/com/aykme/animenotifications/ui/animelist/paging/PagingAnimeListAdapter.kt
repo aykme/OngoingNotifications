@@ -8,28 +8,68 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.aykme.animenotifications.R
-import com.aykme.animenotifications.data.source.remote.coil.ImageDownloader
-import com.aykme.animenotifications.data.source.remote.shikimoriapi.BASE_URL
 import com.aykme.animenotifications.databinding.ItemAnimeListBinding
 import com.aykme.animenotifications.domain.model.Anime
+import com.aykme.animenotifications.ui.animelist.AnimeListViewModel
 
-class PagingAnimeListAdapter(private val context: Context) :
+class PagingAnimeListAdapter(
+    private val context: Context,
+    private val viewModel: AnimeListViewModel
+) :
     PagingDataAdapter<Anime, PagingAnimeListAdapter.AnimeViewHolder>(DiffCallback) {
+
+    private var followedAnimeList: List<Anime>? = null
 
     class AnimeViewHolder(private val binding: ItemAnimeListBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(anime: Anime, resources: Resources?) {
-            val fullImageUrl = (BASE_URL + anime.imageUrl)
-            ImageDownloader.bindImage(binding.animeImage, fullImageUrl)
-            binding.animeName.text = anime.name
-            binding.animeScore.text = anime.score.toString()
 
-            val episodesTotal = if (anime.episodesTotal < 1) "?" else anime.episodesTotal.toString()
-            binding.animeEpisodes.text = resources?.getString(
-                R.string.anime_episodes_aired,
-                anime.episodesAired.toString(),
-                episodesTotal
-            )
+        fun bind(
+            anime: Anime,
+            followedAnimeList: List<Anime>?,
+            resources: Resources?,
+            viewModel: AnimeListViewModel
+        ) {
+            val fullImageUrl = viewModel.getImageUrl(anime)
+            val episodesTotal = viewModel.getFormattedEpisodesField(anime)
+            viewModel.bindImage(binding.animeImage, fullImageUrl)
+
+            binding.apply {
+                animeName.text = anime.name
+                animeScore.text = anime.score.toString()
+                animeEpisodes.text = resources?.getString(
+                    R.string.anime_episodes_aired,
+                    anime.episodesAired.toString(),
+                    episodesTotal
+                )
+                val notificationText = notificationText
+                val notificationOnFab = notificationOnFab
+                val notificationOffFab = notificationOffFab
+                notificationOnFab.setOnClickListener {
+                    viewModel.onNotificationOnClicked(
+                        anime,
+                        notificationText,
+                        notificationOnFab,
+                        notificationOffFab
+                    )
+                }
+                notificationOffFab.setOnClickListener {
+                    viewModel.onNotificationOffClicked(
+                        anime,
+                        notificationText,
+                        notificationOnFab,
+                        notificationOffFab
+                    )
+                }
+                followedAnimeList?.let {
+                    viewModel.bindNotificationFields(
+                        anime,
+                        followedAnimeList,
+                        notificationText,
+                        notificationOnFab,
+                        notificationOffFab
+                    )
+                }
+            }
         }
     }
 
@@ -41,9 +81,12 @@ class PagingAnimeListAdapter(private val context: Context) :
     override fun onBindViewHolder(holder: AnimeViewHolder, position: Int) {
         val anime = getItem(position)
         anime?.let {
-            val resources = context.resources
-            holder.bind(anime, resources)
+            holder.bind(anime, followedAnimeList, context.resources, viewModel)
         }
+    }
+
+    fun submitFollowedAnimeList(followedAnimeList: List<Anime>) {
+        this.followedAnimeList = followedAnimeList
     }
 
     companion object {

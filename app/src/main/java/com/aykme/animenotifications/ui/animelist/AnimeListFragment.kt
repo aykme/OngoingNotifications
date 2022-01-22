@@ -1,12 +1,14 @@
 package com.aykme.animenotifications.ui.animelist
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import com.aykme.animenotifications.Application
 import com.aykme.animenotifications.data.repository.ShikimoriApiRepository
 import com.aykme.animenotifications.data.source.remote.shikimoriapi.ShikimoriApi
 import com.aykme.animenotifications.databinding.FragmentAnimeListBinding
@@ -19,9 +21,7 @@ class AnimeListFragment : Fragment() {
     private var _binding: FragmentAnimeListBinding? = null
     private val binding get() = _binding!!
     private val viewModel: AnimeListViewModel by viewModels {
-        AnimeListViewModelFactory(
-            FetchOngoingAnimeListUseCase(ShikimoriApiRepository(ShikimoriApi.instance))
-        )
+        AnimeListViewModelFactory.getInstance(activity?.application as Application)
     }
 
     override fun onCreateView(
@@ -35,19 +35,20 @@ class AnimeListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val recyclerView = binding.animeListRecyclerView
-        val adapter = PagingAnimeListAdapter(requireContext())
-        recyclerView.adapter = adapter
+        val adapter = PagingAnimeListAdapter(requireContext(), viewModel)
         val layoutManager = GridLayoutManager(requireContext(), 1)
+        recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
 
         viewModel.apiStatus.observe(viewLifecycleOwner) {
-            viewModel.bindApiStatus(binding)
+            viewModel.bindApiStatus(binding.status)
         }
-
         viewModel.ongoingAnimeData.observe(viewLifecycleOwner) { pagingData ->
             viewModel.bindOngoingAnimeData(adapter, pagingData)
+        }
+        viewModel.followedAnimeList.observe(viewLifecycleOwner) { followedAnimeList ->
+            adapter.submitFollowedAnimeList(followedAnimeList)
         }
     }
 
