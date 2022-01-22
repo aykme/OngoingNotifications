@@ -1,4 +1,8 @@
 <resources>
-    <string name="app_name">AnimeNotifications</string>
+    <string name="app_name">Anime Notifications</string>
     <string name="anime_episodes_aired">Эпизоды: %1$s / %2$s</string>
+    <string name="notification_off_ic">Нажми, чтобы включить уведомления</string>
+    <string name="notification_off_text">Off</string>
+    <string name="notification_on_ic">Нажми, чтобы выключить уведомления</string>
+    <string name="notification_on_text">On</string>
 </resources>
