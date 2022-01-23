@@ -1,10 +1,15 @@
 package com.aykme.animenotifications.domain.model
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "anime_table")
 data class Anime(
-    val id: Int,
-    val name: String,
-    val imageUrl: String,
-    val score: Float,
-    val episodesAired: Int,
-    val episodesTotal: Int
+    @PrimaryKey @ColumnInfo(name = "id") val id: Int,
+    @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "image_url") val imageUrl: String,
+    @ColumnInfo(name = "score") val score: Float,
+    @ColumnInfo(name = "episodes_aired") val episodesAired: Int,
+    @ColumnInfo(name = "episodes_total") val episodesTotal: Int
 )
