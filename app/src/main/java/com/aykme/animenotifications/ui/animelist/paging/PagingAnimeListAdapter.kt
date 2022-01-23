@@ -18,16 +18,19 @@ class PagingAnimeListAdapter(
 ) :
     PagingDataAdapter<Anime, PagingAnimeListAdapter.AnimeViewHolder>(DiffCallback) {
 
+    private var followedAnimeList: List<Anime>? = null
+
     class AnimeViewHolder(private val binding: ItemAnimeListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
             anime: Anime,
+            followedAnimeList: List<Anime>?,
             resources: Resources?,
             viewModel: AnimeListViewModel
         ) {
             val fullImageUrl = viewModel.getImageUrl(anime)
-            val episodesTotal = viewModel.getFormattedEpisodesTitle(anime)
+            val episodesTotal = viewModel.getFormattedEpisodesField(anime)
             viewModel.bindImage(binding.animeImage, fullImageUrl)
 
             binding.apply {
@@ -38,9 +41,9 @@ class PagingAnimeListAdapter(
                     anime.episodesAired.toString(),
                     episodesTotal
                 )
-                val notificationText = binding.notificationText
-                val notificationOnFab = binding.notificationOnFab
-                val notificationOffFab = binding.notificationOffFab
+                val notificationText = notificationText
+                val notificationOnFab = notificationOnFab
+                val notificationOffFab = notificationOffFab
                 notificationOnFab.setOnClickListener {
                     viewModel.onNotificationOnClicked(
                         anime,
@@ -52,6 +55,15 @@ class PagingAnimeListAdapter(
                 notificationOffFab.setOnClickListener {
                     viewModel.onNotificationOffClicked(
                         anime,
+                        notificationText,
+                        notificationOnFab,
+                        notificationOffFab
+                    )
+                }
+                followedAnimeList?.let {
+                    viewModel.bindNotificationFields(
+                        anime,
+                        followedAnimeList,
                         notificationText,
                         notificationOnFab,
                         notificationOffFab
@@ -69,8 +81,12 @@ class PagingAnimeListAdapter(
     override fun onBindViewHolder(holder: AnimeViewHolder, position: Int) {
         val anime = getItem(position)
         anime?.let {
-            holder.bind(anime, context.resources, viewModel)
+            holder.bind(anime, followedAnimeList, context.resources, viewModel)
         }
+    }
+
+    fun submitFollowedAnimeList(followedAnimeList: List<Anime>) {
+        this.followedAnimeList = followedAnimeList
     }
 
     companion object {

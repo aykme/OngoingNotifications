@@ -1,6 +1,7 @@
 package com.aykme.animenotifications.ui.animelist
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,10 +21,7 @@ class AnimeListFragment : Fragment() {
     private var _binding: FragmentAnimeListBinding? = null
     private val binding get() = _binding!!
     private val viewModel: AnimeListViewModel by viewModels {
-        AnimeListViewModelFactory(
-            ((activity?.application) as Application),
-            FetchOngoingAnimeListUseCase(ShikimoriApiRepository(ShikimoriApi.instance))
-        )
+        AnimeListViewModelFactory.getInstance(activity?.application as Application)
     }
 
     override fun onCreateView(
@@ -48,6 +46,9 @@ class AnimeListFragment : Fragment() {
         }
         viewModel.ongoingAnimeData.observe(viewLifecycleOwner) { pagingData ->
             viewModel.bindOngoingAnimeData(adapter, pagingData)
+        }
+        viewModel.followedAnimeList.observe(viewLifecycleOwner) { followedAnimeList ->
+            adapter.submitFollowedAnimeList(followedAnimeList)
         }
     }
 
