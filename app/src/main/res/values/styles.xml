@@ -6,14 +6,10 @@
     </style>
     <!-- Theme style -->
     <style name="Theme.AnimeNotifications.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Отключение ActionBar c названием приложения -->
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
         <!-- Изменение цвета панели навигации -->
         <item name="android:navigationBarColor">@color/black</item>
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimary">@color/pink</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
@@ -22,5 +18,10 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+    </style>
+
+    <style name="AnimeNotifications.BottomMenu" parent="Widget.MaterialComponents.BottomAppBar">
+        <item name="backgroundTint">@color/black</item>
+
     </style>
 </resources>

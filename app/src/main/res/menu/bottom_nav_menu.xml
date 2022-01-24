@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/anime_list"
+        android:icon="@drawable/ic_ongoings_menu_24"
+        android:title="@string/ongoings_menu" />
+    <item
+        android:id="@+id/favorites_anime"
+        android:icon="@drawable/ic_favorites_menu_24"
+        android:title="@string/favorites_menu" />
+
+</menu>
