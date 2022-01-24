@@ -3,9 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/coffe/AndroidStudioProjects/AnimeNotifications/app/src/main/res/drawable/ic_connection_error_24.xml" value="0.20885416666666667" />
+        <entry key="..\:/Users/coffe/AndroidStudioProjects/AnimeNotifications/app/src/main/res/drawable/ic_favorites_menu_24.xml" value="0.221875" />
+        <entry key="..\:/Users/coffe/AndroidStudioProjects/AnimeNotifications/app/src/main/res/drawable/ic_followed_menu_24.xml" value="0.22135416666666666" />
+        <entry key="..\:/Users/coffe/AndroidStudioProjects/AnimeNotifications/app/src/main/res/drawable/ic_ongoings_menu_24.xml" value="0.22135416666666666" />
+        <entry key="..\:/Users/coffe/AndroidStudioProjects/AnimeNotifications/app/src/main/res/layout/activity_bottom_navigation.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/coffe/AndroidStudioProjects/AnimeNotifications/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/coffe/AndroidStudioProjects/AnimeNotifications/app/src/main/res/layout/fragment_anime_list.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/coffe/AndroidStudioProjects/AnimeNotifications/app/src/main/res/layout/fragment_favorites.xml" value="0.20572916666666666" />
         <entry key="..\:/Users/coffe/AndroidStudioProjects/AnimeNotifications/app/src/main/res/layout/item_anime_list.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/coffe/AndroidStudioProjects/AnimeNotifications/app/src/main/res/menu-v26/bottom_navigation_menu.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/coffe/AndroidStudioProjects/AnimeNotifications/app/src/main/res/menu/bottom_nav_menu.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/coffe/AndroidStudioProjects/AnimeNotifications/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/coffe/AndroidStudioProjects/OngoingNotifications/app/src/main/res/drawable/ic_baseline_stars_24.xml" value="0.22864583333333333" />
         <entry key="..\:/Users/coffe/AndroidStudioProjects/OngoingNotifications/app/src/main/res/drawable/ic_connection_error_24.xml" value="0.22291666666666668" />
         <entry key="..\:/Users/coffe/AndroidStudioProjects/OngoingNotifications/app/src/main/res/drawable/ic_image_error_24.xml" value="0.22864583333333333" />
