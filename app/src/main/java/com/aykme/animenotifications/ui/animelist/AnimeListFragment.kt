@@ -50,6 +50,7 @@ class AnimeListFragment : Fragment() {
         viewModel.followedAnimeList.observe(viewLifecycleOwner) { followedAnimeList ->
             adapter.submitFollowedAnimeList(followedAnimeList)
         }
+
     }
 
     override fun onDestroyView() {

@@ -5,22 +5,22 @@
         <item name="android:background">?attr/dividerHorizontal</item>
     </style>
     <!-- Theme style -->
-    <style name="Theme.AnimeNotifications.DayNight.DarkActionBar" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Отключение ActionBar c названием приложения -->
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
+    <style name="Theme.AnimeNotifications" parent="Theme.MaterialComponents">
         <!-- Изменение цвета панели навигации -->
         <item name="android:navigationBarColor">@color/black</item>
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimary">@color/pink</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+    </style>
+
+    <style name="AnimeNotifications.BottomMenu" parent="Widget.MaterialComponents.BottomAppBar.PrimarySurface">
+        <item name="backgroundTint">@color/black</item>
     </style>
 </resources>
