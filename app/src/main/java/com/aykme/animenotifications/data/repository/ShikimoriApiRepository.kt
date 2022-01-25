@@ -13,4 +13,10 @@ class ShikimoriApiRepository(private val api: ShikimoriApi) : ApiRepository {
             api.getAnimeList(page, limit, "ongoing", "ranked")
         return animeResponseList.responseToEntityList()
     }
+
+    override suspend fun getAnnounced(page: Int, limit: Int): List<Anime> {
+        val animeResponseList: List<AnimeResponse> =
+            api.getAnimeList(page, limit, "anons", "popularity")
+        return animeResponseList.responseToEntityList()
+    }
 }

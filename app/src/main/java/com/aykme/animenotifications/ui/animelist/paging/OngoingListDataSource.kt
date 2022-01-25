@@ -1,19 +1,16 @@
 package com.aykme.animenotifications.ui.animelist.paging
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.aykme.animenotifications.domain.model.Anime
 import com.aykme.animenotifications.domain.repository.ApiStatus
 import com.aykme.animenotifications.domain.usecase.FetchOngoingAnimeListUseCase
+import com.aykme.animenotifications.ui.animelist.MIN_PAGE
+import com.aykme.animenotifications.ui.animelist.MAX_PAGE
+import com.aykme.animenotifications.ui.animelist.PAGE_LIMIT
 
-const val ANIME_LIST_DATA_SOURCE_TAG = "AnimeListDataSource"
-const val MIN_PAGE = 1
-const val MAX_PAGE = 100000
-const val PAGE_LIMIT = 50
-
-class AnimeListDataSource(
+class OngoingListDataSource(
     private val fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase,
     private val apiStatus: MutableLiveData<ApiStatus>
 ) : PagingSource<Int, Anime>() {
@@ -34,7 +31,6 @@ class AnimeListDataSource(
             apiStatus.value = ApiStatus.DONE
             return result
         } catch (e: Exception) {
-            Log.d(ANIME_LIST_DATA_SOURCE_TAG, "Load result error")
             apiStatus.value = ApiStatus.ERROR
             LoadResult.Error(e)
         }

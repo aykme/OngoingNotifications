@@ -11,21 +11,19 @@ import com.aykme.animenotifications.data.source.remote.coil.ImageDownloader
 import com.aykme.animenotifications.data.source.remote.shikimoriapi.BASE_URL
 import com.aykme.animenotifications.domain.model.Anime
 import com.aykme.animenotifications.domain.repository.ApiStatus
-import com.aykme.animenotifications.domain.usecase.DeleteOneDatabaseItemUseCase
-import com.aykme.animenotifications.domain.usecase.FetchAllDatabaseItemsUseCase
-import com.aykme.animenotifications.domain.usecase.FetchOngoingAnimeListUseCase
-import com.aykme.animenotifications.domain.usecase.InsertDatabaseItemUseCase
-import com.aykme.animenotifications.ui.animelist.paging.AnimeListDataSource
-import com.aykme.animenotifications.ui.animelist.paging.PAGE_LIMIT
+import com.aykme.animenotifications.domain.usecase.*
+import com.aykme.animenotifications.ui.animelist.paging.AnnouncedListDataSource
+import com.aykme.animenotifications.ui.animelist.paging.OngoingListDataSource
 import com.aykme.animenotifications.ui.animelist.paging.PagingAnimeListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
+import kotlin.IllegalArgumentException
+
 
 class AnimeListViewModel(
     application: Application,
     fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase,
+    fetchAnnouncedAnimeListUseCase: FetchAnnouncedAnimeListUseCase,
     fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
@@ -34,17 +32,35 @@ class AnimeListViewModel(
 
     private val _apiStatus = MutableLiveData<ApiStatus>()
     val apiStatus: LiveData<ApiStatus> = _apiStatus
-    val ongoingAnimeData: LiveData<PagingData<Anime>> =
+    val animeStatus = MutableLiveData(AnimeStatus.ONGOING)
+    val ongoingAnimeData: LiveData<PagingData<Anime>> by lazy {
         getOngoingAnimeData(fetchOngoingAnimeListUseCase)
+    }
+    val announcedAnimeData: LiveData<PagingData<Anime>> by lazy {
+        getAnnouncedAnimeData(fetchAnnouncedAnimeListUseCase)
+    }
     private val resources = application.applicationContext.resources
     val followedAnimeList: LiveData<List<Anime>> = fetchAllDatabaseItemsUseCase().asLiveData()
 
-    private fun getOngoingAnimeData(fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase):
+    private fun getOngoingAnimeData(
+        fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase
+    ):
             LiveData<PagingData<Anime>> {
         return Pager(
             config = PagingConfig(pageSize = PAGE_LIMIT)
         ) {
-            AnimeListDataSource(fetchOngoingAnimeListUseCase, _apiStatus)
+            OngoingListDataSource(fetchOngoingAnimeListUseCase, _apiStatus)
+        }.liveData.cachedIn(viewModelScope)
+    }
+
+    private fun getAnnouncedAnimeData(
+        fetchAnnouncedAnimeListUseCase: FetchAnnouncedAnimeListUseCase
+    ):
+            LiveData<PagingData<Anime>> {
+        return Pager(
+            config = PagingConfig(pageSize = PAGE_LIMIT)
+        ) {
+            AnnouncedListDataSource(fetchAnnouncedAnimeListUseCase, _apiStatus)
         }.liveData.cachedIn(viewModelScope)
     }
 
@@ -58,10 +74,10 @@ class AnimeListViewModel(
             status.visibility = View.VISIBLE
         }
         ApiStatus.DONE -> status.visibility = View.GONE
-        else -> throw IllegalStateException("Unknown ApiStatus")
+        else -> throw IllegalArgumentException("Unknown ApiStatus")
     }
 
-    fun bindOngoingAnimeData(adapter: PagingAnimeListAdapter, data: PagingData<Anime>) {
+    fun submitAnimeData(adapter: PagingAnimeListAdapter, data: PagingData<Anime>) {
         viewModelScope.launch {
             adapter.submitData(data)
         }
@@ -154,6 +170,7 @@ class AnimeListViewModel(
 class AnimeListViewModelFactory(
     private val application: Application,
     private val fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase,
+    private val fetchAnnouncedAnimeListUseCase: FetchAnnouncedAnimeListUseCase,
     private val fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
@@ -165,6 +182,7 @@ class AnimeListViewModelFactory(
             return AnimeListViewModel(
                 application,
                 fetchOngoingAnimeListUseCase,
+                fetchAnnouncedAnimeListUseCase,
                 fetchAllDatabaseItemsUseCase,
                 insertDatabaseItemUseCase,
                 deleteOneDatabaseItemUseCase
@@ -178,6 +196,7 @@ class AnimeListViewModelFactory(
             return AnimeListViewModelFactory(
                 application,
                 FetchOngoingAnimeListUseCase(application.apiRepository),
+                FetchAnnouncedAnimeListUseCase(application.apiRepository),
                 FetchAllDatabaseItemsUseCase(application.databaseRepository),
                 InsertDatabaseItemUseCase(application.databaseRepository),
                 DeleteOneDatabaseItemUseCase(application.databaseRepository)

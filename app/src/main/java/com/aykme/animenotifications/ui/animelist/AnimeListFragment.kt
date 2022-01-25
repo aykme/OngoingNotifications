@@ -1,7 +1,6 @@
 package com.aykme.animenotifications.ui.animelist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +12,7 @@ import com.aykme.animenotifications.R
 import com.aykme.animenotifications.databinding.FragmentAnimeListBinding
 import com.aykme.animenotifications.ui.animelist.paging.PagingAnimeListAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
-
-const val ANIME_LIST_FRAGMENT_TAG = "AnimeListFragment"
+import java.lang.IllegalArgumentException
 
 class AnimeListFragment : Fragment() {
     private var _binding: FragmentAnimeListBinding? = null
@@ -41,28 +39,40 @@ class AnimeListFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
 
         val upperMenu: BottomNavigationView = binding.upperMenu
-        upperMenu.menu.findItem(R.id.ongoing_anime).setOnMenuItemClickListener {
-            Log.d(ANIME_LIST_FRAGMENT_TAG, "Нажата кнопка: Онгоинги")
-            it.isChecked = true
-            return@setOnMenuItemClickListener true
-        }
-        upperMenu.menu.findItem(R.id.announced_anime)
-        upperMenu.menu.findItem(R.id.announced_anime).setOnMenuItemClickListener {
-            Log.d(ANIME_LIST_FRAGMENT_TAG, "Нажата кнопка: Анонсы")
-            it.isChecked = true
-            return@setOnMenuItemClickListener true
-        }
+        val menuOngoingAnime = upperMenu.menu.findItem(R.id.ongoing_anime)
+        val menuAnnouncedAnime = upperMenu.menu.findItem(R.id.announced_anime)
 
+        menuOngoingAnime.setOnMenuItemClickListener {
+            viewModel.animeStatus.value = AnimeStatus.ONGOING
+            it.isChecked = true
+            return@setOnMenuItemClickListener true
+        }
+        menuAnnouncedAnime.setOnMenuItemClickListener {
+            viewModel.animeStatus.value = AnimeStatus.ANONS
+            it.isChecked = true
+            return@setOnMenuItemClickListener true
+        }
+        viewModel.animeStatus.observe(viewLifecycleOwner) { animeStatus ->
+            when (animeStatus) {
+                AnimeStatus.ONGOING -> {
+                    viewModel.ongoingAnimeData.observe(viewLifecycleOwner) { pagingData ->
+                        viewModel.submitAnimeData(adapter, pagingData)
+                    }
+                }
+                AnimeStatus.ANONS -> {
+                    viewModel.announcedAnimeData.observe(viewLifecycleOwner) { pagingData ->
+                        viewModel.submitAnimeData(adapter, pagingData)
+                    }
+                }
+                else -> throw IllegalArgumentException("Unknown AnimeStatus")
+            }
+        }
         viewModel.apiStatus.observe(viewLifecycleOwner) {
             viewModel.bindApiStatus(binding.status)
-        }
-        viewModel.ongoingAnimeData.observe(viewLifecycleOwner) { pagingData ->
-            viewModel.bindOngoingAnimeData(adapter, pagingData)
         }
         viewModel.followedAnimeList.observe(viewLifecycleOwner) { followedAnimeList ->
             adapter.submitFollowedAnimeList(followedAnimeList)
         }
-
     }
 
     override fun onDestroyView() {
