@@ -46,6 +46,7 @@ class AnimeListFragment : Fragment() {
             it.isChecked = true
             return@setOnMenuItemClickListener true
         }
+        upperMenu.menu.findItem(R.id.announced_anime)
         upperMenu.menu.findItem(R.id.announced_anime).setOnMenuItemClickListener {
             Log.d(ANIME_LIST_FRAGMENT_TAG, "Нажата кнопка: Анонсы")
             it.isChecked = true

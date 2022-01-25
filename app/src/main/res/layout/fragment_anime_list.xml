@@ -9,18 +9,20 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/upper_menu"
+        app:itemTextAppearanceActive="@style/AnimeNotifications.UpperMenu"
+        app:itemTextAppearanceInactive="@style/AnimeNotifications.UpperMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:outlineAmbientShadowColor="@android:color/transparent"
         android:outlineSpotShadowColor="@android:color/transparent"
-        app:backgroundTint="@color/black_transparent"
-        app:itemTextAppearanceActive="@style/TextAppearance.MaterialComponents.Headline5"
-        app:itemTextAppearanceInactive="@style/TextAppearance.MaterialComponents.Headline5"
+        app:backgroundTint="@android:color/transparent"
+        app:itemTextColor="@drawable/upper_menu_color_selector"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/upper_menu" />
+        app:menu="@menu/upper_menu"
+        tools:targetApi="p" />
 
     <ImageView
         android:id="@+id/status"
