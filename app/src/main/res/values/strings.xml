@@ -5,10 +5,11 @@
     <string name="notification_off_text">Off</string>
     <string name="notification_on_ic">Нажми, чтобы выключить уведомления</string>
     <string name="notification_on_text">On</string>
-    <string name="ongoings_menu">Онгоинги</string>
-    <string name="announced_menu">Анонсы</string>
+    <string name="anime_menu">Аниме</string>
     <string name="favorites_menu">Слежу</string>
     <string name="anime_ongoings_title">Аниме онгоинги</string>
     <string name="favorites_title">Мои подписки</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ongoing_anime_menu">Онгоинги</string>
+    <string name="announced_anime_menu">Анонсы</string>
 </resources>

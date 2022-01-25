@@ -4,7 +4,7 @@
     <item
         android:id="@+id/anime_list"
         android:icon="@drawable/ic_ongoings_menu_24"
-        android:title="@string/ongoings_menu" />
+        android:title="@string/anime_menu" />
     <item
         android:id="@+id/favorites_anime"
         android:icon="@drawable/ic_favorites_menu_24"

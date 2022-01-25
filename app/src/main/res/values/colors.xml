@@ -11,4 +11,5 @@
     <color name="grey">#121212</color>
     <color name="pink">#F34375</color>
     <color name="green">#81F343</color>
+    <color name="black_transparent">#33000000</color>
 </resources>

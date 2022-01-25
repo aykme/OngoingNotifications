@@ -9,11 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aykme.animenotifications.Application
-import com.aykme.animenotifications.data.repository.ShikimoriApiRepository
-import com.aykme.animenotifications.data.source.remote.shikimoriapi.ShikimoriApi
+import com.aykme.animenotifications.R
 import com.aykme.animenotifications.databinding.FragmentAnimeListBinding
-import com.aykme.animenotifications.domain.usecase.FetchOngoingAnimeListUseCase
 import com.aykme.animenotifications.ui.animelist.paging.PagingAnimeListAdapter
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 const val ANIME_LIST_FRAGMENT_TAG = "AnimeListFragment"
 
@@ -40,6 +39,18 @@ class AnimeListFragment : Fragment() {
         val layoutManager = GridLayoutManager(requireContext(), 1)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = layoutManager
+
+        val upperMenu: BottomNavigationView = binding.upperMenu
+        upperMenu.menu.findItem(R.id.ongoing_anime).setOnMenuItemClickListener {
+            Log.d(ANIME_LIST_FRAGMENT_TAG, "Нажата кнопка: Онгоинги")
+            it.isChecked = true
+            return@setOnMenuItemClickListener true
+        }
+        upperMenu.menu.findItem(R.id.announced_anime).setOnMenuItemClickListener {
+            Log.d(ANIME_LIST_FRAGMENT_TAG, "Нажата кнопка: Анонсы")
+            it.isChecked = true
+            return@setOnMenuItemClickListener true
+        }
 
         viewModel.apiStatus.observe(viewLifecycleOwner) {
             viewModel.bindApiStatus(binding.status)
