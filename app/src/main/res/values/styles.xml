@@ -8,13 +8,9 @@
     <style name="Theme.AnimeNotifications" parent="Theme.MaterialComponents">
         <!-- Изменение цвета панели навигации -->
         <item name="android:navigationBarColor">@color/black</item>
-        <!-- Отключение ActionBar c названием приложения -->
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowFullscreen">true</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/pink</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimaryVariant">@color/black</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
