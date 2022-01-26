@@ -12,7 +12,6 @@ import com.aykme.animenotifications.R
 import com.aykme.animenotifications.databinding.FragmentAnimeListBinding
 import com.aykme.animenotifications.ui.animelist.paging.PagingAnimeListAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.lang.IllegalArgumentException
 
 class AnimeListFragment : Fragment() {
     private var _binding: FragmentAnimeListBinding? = null
@@ -43,29 +42,17 @@ class AnimeListFragment : Fragment() {
         val menuAnnouncedAnime = upperMenu.menu.findItem(R.id.announced_anime)
 
         menuOngoingAnime.setOnMenuItemClickListener {
-            viewModel.animeStatus.value = AnimeStatus.ONGOING
+            viewModel.animeDataType.value = AnimeDataType.ONGOING
             it.isChecked = true
             return@setOnMenuItemClickListener true
         }
         menuAnnouncedAnime.setOnMenuItemClickListener {
-            viewModel.animeStatus.value = AnimeStatus.ANONS
+            viewModel.animeDataType.value = AnimeDataType.ANONS
             it.isChecked = true
             return@setOnMenuItemClickListener true
         }
-        viewModel.animeStatus.observe(viewLifecycleOwner) { animeStatus ->
-            when (animeStatus) {
-                AnimeStatus.ONGOING -> {
-                    viewModel.ongoingAnimeData.observe(viewLifecycleOwner) { pagingData ->
-                        viewModel.submitAnimeData(adapter, pagingData)
-                    }
-                }
-                AnimeStatus.ANONS -> {
-                    viewModel.announcedAnimeData.observe(viewLifecycleOwner) { pagingData ->
-                        viewModel.submitAnimeData(adapter, pagingData)
-                    }
-                }
-                else -> throw IllegalArgumentException("Unknown AnimeStatus")
-            }
+        viewModel.animeDataType.observe(viewLifecycleOwner) { animeStatus ->
+            viewModel.submitAnimeData(recyclerView, adapter, animeStatus)
         }
         viewModel.apiStatus.observe(viewLifecycleOwner) {
             viewModel.bindApiStatus(binding.status)

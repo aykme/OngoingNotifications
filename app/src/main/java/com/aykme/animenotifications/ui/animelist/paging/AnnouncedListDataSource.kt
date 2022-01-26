@@ -6,9 +6,6 @@ import androidx.paging.PagingState
 import com.aykme.animenotifications.domain.model.Anime
 import com.aykme.animenotifications.domain.repository.ApiStatus
 import com.aykme.animenotifications.domain.usecase.FetchAnnouncedAnimeListUseCase
-import com.aykme.animenotifications.ui.animelist.MIN_PAGE
-import com.aykme.animenotifications.ui.animelist.MAX_PAGE
-import com.aykme.animenotifications.ui.animelist.PAGE_LIMIT
 
 class AnnouncedListDataSource(
     private val fetchAnnouncedAnimeListUseCase: FetchAnnouncedAnimeListUseCase,
