@@ -30,6 +30,7 @@ class AnimeListViewModel(
 ) :
     ViewModel() {
 
+    private val resources = application.applicationContext.resources
     private val _apiStatus = MutableLiveData<ApiStatus>()
     val apiStatus: LiveData<ApiStatus> = _apiStatus
     val animeStatus = MutableLiveData(AnimeStatus.ONGOING)
@@ -39,8 +40,9 @@ class AnimeListViewModel(
     val announcedAnimeData: LiveData<PagingData<Anime>> by lazy {
         getAnnouncedAnimeData(fetchAnnouncedAnimeListUseCase)
     }
-    private val resources = application.applicationContext.resources
-    val followedAnimeList: LiveData<List<Anime>> = fetchAllDatabaseItemsUseCase().asLiveData()
+    val followedAnimeList: LiveData<List<Anime>> by lazy {
+        fetchAllDatabaseItemsUseCase().asLiveData()
+    }
 
     private fun getOngoingAnimeData(
         fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase
