@@ -1,4 +1,4 @@
-package com.aykme.animenotifications.ui.animelist
+package com.aykme.animenotifications.ui.animelist.paging
 
 const val MIN_PAGE = 1
 const val MAX_PAGE = 100000

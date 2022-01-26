@@ -12,18 +12,17 @@ import com.aykme.animenotifications.data.source.remote.shikimoriapi.BASE_URL
 import com.aykme.animenotifications.domain.model.Anime
 import com.aykme.animenotifications.domain.repository.ApiStatus
 import com.aykme.animenotifications.domain.usecase.*
-import com.aykme.animenotifications.ui.animelist.paging.AnnouncedListDataSource
-import com.aykme.animenotifications.ui.animelist.paging.OngoingListDataSource
-import com.aykme.animenotifications.ui.animelist.paging.PagingAnimeListAdapter
+import com.aykme.animenotifications.ui.animelist.paging.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlin.IllegalArgumentException
 
-
 class AnimeListViewModel(
     application: Application,
-    fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase,
-    fetchAnnouncedAnimeListUseCase: FetchAnnouncedAnimeListUseCase,
+    private val fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase,
+    private val fetchAnnouncedAnimeListUseCase: FetchAnnouncedAnimeListUseCase,
     fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
@@ -33,37 +32,9 @@ class AnimeListViewModel(
     private val resources = application.applicationContext.resources
     private val _apiStatus = MutableLiveData(ApiStatus.LOADING)
     val apiStatus: LiveData<ApiStatus> = _apiStatus
-    val animeStatus = MutableLiveData(AnimeStatus.ONGOING)
-    val ongoingAnimeData: LiveData<PagingData<Anime>> by lazy {
-        getOngoingAnimeData(fetchOngoingAnimeListUseCase)
-    }
-    val announcedAnimeData: LiveData<PagingData<Anime>> by lazy {
-        getAnnouncedAnimeData(fetchAnnouncedAnimeListUseCase)
-    }
+    val animeDataType = MutableLiveData(AnimeDataType.ONGOING)
     val followedAnimeList: LiveData<List<Anime>> by lazy {
         fetchAllDatabaseItemsUseCase().asLiveData()
-    }
-
-    private fun getOngoingAnimeData(
-        fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase
-    ):
-            LiveData<PagingData<Anime>> {
-        return Pager(
-            config = PagingConfig(pageSize = PAGE_LIMIT)
-        ) {
-            OngoingListDataSource(fetchOngoingAnimeListUseCase, _apiStatus)
-        }.liveData.cachedIn(viewModelScope)
-    }
-
-    private fun getAnnouncedAnimeData(
-        fetchAnnouncedAnimeListUseCase: FetchAnnouncedAnimeListUseCase
-    ):
-            LiveData<PagingData<Anime>> {
-        return Pager(
-            config = PagingConfig(pageSize = PAGE_LIMIT)
-        ) {
-            AnnouncedListDataSource(fetchAnnouncedAnimeListUseCase, _apiStatus)
-        }.liveData.cachedIn(viewModelScope)
     }
 
     fun bindApiStatus(status: ImageView) = when (apiStatus.value) {
@@ -79,10 +50,37 @@ class AnimeListViewModel(
         else -> throw IllegalArgumentException("Unknown ApiStatus")
     }
 
-    fun submitAnimeData(adapter: PagingAnimeListAdapter, data: PagingData<Anime>) {
+    fun submitAnimeData(
+        adapter: PagingAnimeListAdapter,
+        animeDataType: AnimeDataType
+    ) {
         viewModelScope.launch {
-            adapter.submitData(data)
+            when (animeDataType) {
+                AnimeDataType.ONGOING -> getOngoingAnimeData().collectLatest {
+                    adapter.submitData(it)
+                }
+                AnimeDataType.ANONS -> getAnnouncedAnimeData().collectLatest {
+                    adapter.submitData(it)
+                }
+                else -> throw IllegalArgumentException("Unknown AAnimeStatus")
+            }
         }
+    }
+
+    private fun getOngoingAnimeData(): Flow<PagingData<Anime>> {
+        return Pager(
+            config = PagingConfig(pageSize = PAGE_LIMIT)
+        ) {
+            OngoingListDataSource(fetchOngoingAnimeListUseCase, _apiStatus)
+        }.flow.cachedIn(viewModelScope)
+    }
+
+    private fun getAnnouncedAnimeData(): Flow<PagingData<Anime>> {
+        return Pager(
+            config = PagingConfig(pageSize = PAGE_LIMIT)
+        ) {
+            AnnouncedListDataSource(fetchAnnouncedAnimeListUseCase, _apiStatus)
+        }.flow.cachedIn(viewModelScope)
     }
 
     fun getImageUrl(anime: Anime): String {
