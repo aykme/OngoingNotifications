@@ -5,7 +5,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.*
 import androidx.paging.*
-import androidx.recyclerview.widget.RecyclerView
 import com.aykme.animenotifications.Application
 import com.aykme.animenotifications.R
 import com.aykme.animenotifications.data.source.remote.coil.ImageDownloader
