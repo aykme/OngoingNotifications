@@ -31,7 +31,7 @@ class AnimeListViewModel(
     ViewModel() {
 
     private val resources = application.applicationContext.resources
-    private val _apiStatus = MutableLiveData<ApiStatus>()
+    private val _apiStatus = MutableLiveData(ApiStatus.LOADING)
     val apiStatus: LiveData<ApiStatus> = _apiStatus
     val animeStatus = MutableLiveData(AnimeStatus.ONGOING)
     val ongoingAnimeData: LiveData<PagingData<Anime>> by lazy {
