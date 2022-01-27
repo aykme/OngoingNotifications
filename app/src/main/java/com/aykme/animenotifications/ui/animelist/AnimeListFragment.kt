@@ -32,9 +32,10 @@ class AnimeListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = binding.animeListRecyclerView
-        val adapter = PagingAnimeListAdapter(requireContext(), viewModel)
+        val ongoingListAdapter = PagingAnimeListAdapter(requireContext(), viewModel)
+        val announceListAdapter = PagingAnimeListAdapter(requireContext(), viewModel)
         val layoutManager = GridLayoutManager(requireContext(), 1)
-        recyclerView.adapter = adapter
+        recyclerView.adapter = ongoingListAdapter
         recyclerView.layoutManager = layoutManager
 
         val upperMenu: BottomNavigationView = binding.upperMenu
@@ -42,23 +43,28 @@ class AnimeListFragment : Fragment() {
         val menuAnnouncedAnime = upperMenu.menu.findItem(R.id.announced_anime)
 
         menuOngoingAnime.setOnMenuItemClickListener {
+            recyclerView.adapter = ongoingListAdapter
             viewModel.animeDataType.value = AnimeDataType.ONGOING
             it.isChecked = true
             return@setOnMenuItemClickListener true
         }
         menuAnnouncedAnime.setOnMenuItemClickListener {
+            recyclerView.adapter = announceListAdapter
             viewModel.animeDataType.value = AnimeDataType.ANONS
             it.isChecked = true
             return@setOnMenuItemClickListener true
         }
-        viewModel.animeDataType.observe(viewLifecycleOwner) { animeStatus ->
-            viewModel.submitAnimeData(adapter, animeStatus)
-        }
-        viewModel.apiStatus.observe(viewLifecycleOwner) {
-            viewModel.bindApiStatus(binding.status)
-        }
-        viewModel.followedAnimeList.observe(viewLifecycleOwner) { followedAnimeList ->
-            adapter.submitFollowedAnimeList(followedAnimeList)
+        viewModel.apply {
+            animeDataType.observe(viewLifecycleOwner) { animeStatus ->
+                val currentAdapter = recyclerView.adapter as PagingAnimeListAdapter
+                submitAnimeData(currentAdapter, animeStatus)
+            }
+            apiStatus.observe(viewLifecycleOwner) {
+                bindApiStatus(binding.status)
+            }
+            followedAnimeList.observe(viewLifecycleOwner) { followedAnimeList ->
+                ongoingListAdapter.submitFollowedAnimeList(followedAnimeList)
+            }
         }
     }
 
