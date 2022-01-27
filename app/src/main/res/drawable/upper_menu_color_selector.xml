@@ -7,6 +7,6 @@
         android:state_checked="true"/>
 
     <item
-        android:color="@color/white_transparent" />
+        android:color="@color/white" />
 
 </selector>
