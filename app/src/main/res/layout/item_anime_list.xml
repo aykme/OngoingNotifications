@@ -117,7 +117,7 @@
                 app:layout_constraintEnd_toEndOf="parent">
 
                 <TextView
-                    android:id="@+id/notification_text"
+                    android:id="@+id/anime_notification_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
@@ -126,21 +126,21 @@
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/notification_fab_layout"
+                    app:layout_constraintEnd_toStartOf="@id/anime_notification_fab_layout"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Off" />
 
                 <LinearLayout
-                    android:id="@+id/notification_fab_layout"
+                    android:id="@+id/anime_notification_fab_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/notification_text">
+                    app:layout_constraintStart_toEndOf="@id/anime_notification_text">
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/notification_off_fab"
+                        android:id="@+id/anime_notification_off_fab"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0.8"
@@ -150,11 +150,11 @@
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/notification_text"
+                        app:layout_constraintStart_toEndOf="@id/anime_notification_text"
                         app:maxImageSize="40dp" />
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/notification_on_fab"
+                        android:id="@+id/anime_notification_on_fab"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:alpha="0.8"
@@ -164,7 +164,7 @@
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/notification_text"
+                        app:layout_constraintStart_toEndOf="@id/anime_notification_text"
                         app:maxImageSize="40dp" />
                 </LinearLayout>
 

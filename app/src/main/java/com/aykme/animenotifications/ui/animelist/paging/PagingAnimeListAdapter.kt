@@ -41,9 +41,9 @@ class PagingAnimeListAdapter(
                     anime.episodesAired.toString(),
                     episodesTotal
                 )
-                val notificationText = notificationText
-                val notificationOnFab = notificationOnFab
-                val notificationOffFab = notificationOffFab
+                val notificationText = animeNotificationText
+                val notificationOnFab = animeNotificationOnFab
+                val notificationOffFab = animeNotificationOffFab
                 notificationOnFab.setOnClickListener {
                     viewModel.onNotificationOnClicked(
                         anime,
