@@ -9,7 +9,9 @@
     <string name="favorites_menu">Слежу</string>
     <string name="anime_ongoings_title">Аниме онгоинги</string>
     <string name="favorites_title">Мои подписки</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="ongoing_anime_menu">Онгоинги</string>
     <string name="announced_anime_menu">Анонсы</string>
+    <string name="ongoing_status">Онгоинг</string>
+    <string name="announced_status">Аннонс</string>
+    <string name="released_status">Закончен</string>
 </resources>
