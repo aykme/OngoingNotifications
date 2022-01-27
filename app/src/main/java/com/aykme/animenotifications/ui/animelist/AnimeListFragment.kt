@@ -64,6 +64,7 @@ class AnimeListFragment : Fragment() {
             }
             followedAnimeList.observe(viewLifecycleOwner) { followedAnimeList ->
                 ongoingListAdapter.submitFollowedAnimeList(followedAnimeList)
+                announcedListAdapter.submitFollowedAnimeList(followedAnimeList)
             }
         }
     }
