@@ -85,7 +85,7 @@
             <ImageView
                 android:id="@+id/anime_score_ic"
                 android:layout_width="36dp"
-                android:layout_height="32dp"
+                android:layout_height="36dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="16dp"

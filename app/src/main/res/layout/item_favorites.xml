@@ -22,13 +22,65 @@
             app:layout_constraintTop_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/favorites_image"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:importantForAccessibility="no"
-                android:scaleType="centerCrop"
-                tools:srcCompat="@drawable/anime_image_sample" />
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/favorites_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:importantForAccessibility="no"
+                    android:scaleType="centerCrop"
+                    tools:srcCompat="@drawable/anime_image_sample" />
+
+                <RelativeLayout
+                    android:id="@+id/info_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@id/favorites_image"
+                    app:layout_constraintEnd_toEndOf="@id/favorites_image"
+                    app:layout_constraintStart_toStartOf="@id/favorites_image">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:alpha="0.5"
+                        app:cardBackgroundColor="@color/black"
+                        app:cardCornerRadius="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/favorites_score_ic"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_anime_score_24"
+                    app:layout_constraintBottom_toBottomOf="@id/favorites_image"
+                    app:layout_constraintStart_toStartOf="@id/favorites_image" />
+
+                <TextView
+                    android:id="@+id/favorites_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@id/favorites_score_ic"
+                    app:layout_constraintStart_toEndOf="@id/favorites_score_ic"
+                    app:layout_constraintTop_toTopOf="@id/favorites_score_ic"
+                    tools:text="8.90" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
@@ -73,10 +125,11 @@
                     app:layout_constraintTop_toBottomOf="@id/favorites_name"
                     tools:text="Эпизоды: 2 / ?" />
 
-                <androidx.appcompat.widget.LinearLayoutCompat
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
+                    app:layout_constraintEnd_toStartOf="fav"
                     app:layout_constraintStart_toStartOf="@id/favorites_episodes"
                     app:layout_constraintTop_toBottomOf="@id/favorites_episodes">
 
@@ -85,43 +138,79 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:visibility="visible"
+                        android:layout_marginEnd="16dp"
                         android:maxLines="1"
+                        android:text="@string/ongoing_status"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                         android:textColor="@color/green"
+                        android:visibility="visible"
                         app:layout_constraintStart_toStartOf="@id/favorites_episodes"
-                        app:layout_constraintTop_toBottomOf="@id/favorites_episodes"
-                        android:text="@string/ongoing_status" />
+                        app:layout_constraintTop_toBottomOf="@id/favorites_episodes" />
 
                     <TextView
                         android:id="@+id/announced_status"
                         android:layout_width="wrap_content"
-                        android:visibility="gone"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
+                        android:layout_marginEnd="16dp"
                         android:maxLines="1"
                         android:text="@string/announced_status"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                         android:textColor="@color/purple_200"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="@id/favorites_episodes"
                         app:layout_constraintTop_toBottomOf="@id/favorites_episodes" />
 
                     <TextView
                         android:id="@+id/released_status"
                         android:layout_width="wrap_content"
-                        android:visibility="gone"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
+                        android:layout_marginEnd="16dp"
                         android:maxLines="1"
+                        android:text="@string/released_status"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                         android:textColor="@color/pink"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="@id/favorites_episodes"
-                        app:layout_constraintTop_toBottomOf="@id/favorites_episodes"
-                        android:text="@string/released_status" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                        app:layout_constraintTop_toBottomOf="@id/favorites_episodes" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/favorites_notification_fab_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/favorites_notification_off_fab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.8"
+                        android:backgroundTint="@color/green"
+                        android:contentDescription="@string/notification_off_ic"
+                        android:src="@drawable/ic_notification_on_24"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:maxImageSize="40dp" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/favorites_notification_on_fab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.8"
+                        android:backgroundTint="@color/pink"
+                        android:contentDescription="@string/notification_on_ic"
+                        android:src="@drawable/ic_notification_off_24"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:maxImageSize="40dp" />
+                </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
