@@ -125,7 +125,8 @@
                     android:textColor="@color/white"
                     app:layout_constraintStart_toStartOf="@id/favorites_name"
                     app:layout_constraintTop_toBottomOf="@id/favorites_name"
-                    tools:text="Эпизоды: 2 / ?" />
+                    tools:text="Эпизоды: 2 / ?"
+                    tools:ignore="RtlSymmetry" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
