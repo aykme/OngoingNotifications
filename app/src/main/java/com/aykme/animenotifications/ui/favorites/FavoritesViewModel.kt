@@ -8,7 +8,6 @@ import com.aykme.animenotifications.Application
 import com.aykme.animenotifications.data.source.remote.coil.ImageDownloader
 import com.aykme.animenotifications.data.source.remote.shikimoriapi.BASE_URL
 import com.aykme.animenotifications.domain.model.Anime
-import com.aykme.animenotifications.domain.model.AnimeStatus
 import com.aykme.animenotifications.domain.usecase.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.Flow
@@ -25,6 +24,14 @@ class FavoritesViewModel(
     }
     val followedAnimeList: LiveData<List<Anime>> by lazy {
         _followedAnimeList.asLiveData()
+    }
+
+    fun bindPlaceholder(placeholder: View, isActive: Boolean) {
+       if (isActive) {
+           placeholder.visibility = View.VISIBLE
+       } else {
+           placeholder.visibility = View.GONE
+       }
     }
 
     fun submitAnimeData(
@@ -49,21 +56,12 @@ class FavoritesViewModel(
     }
 
     fun bindNotificationFields(
-        anime: Anime,
-        followedAnimeList: List<Anime>,
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
     ) {
         viewModelScope.launch {
-            if (isFollowedAnime(anime, followedAnimeList)) {
                 bindNotificationOnFields(notificationOnFab, notificationOffFab)
-            } else
-                bindNotificationOffFields(notificationOnFab, notificationOffFab)
         }
-    }
-
-    private fun isFollowedAnime(anime: Anime, followedAnimeList: List<Anime>): Boolean {
-        return followedAnimeList.contains(anime)
     }
 
     fun bindAnimeStatus(

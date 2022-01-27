@@ -13,7 +13,7 @@
         android:layout_margin="8dp">
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/favorites_image_container"
+            android:id="@+id/favorites_placeholder_image_container"
             android:layout_width="130dp"
             android:layout_height="130dp"
             app:cardBackgroundColor="@color/grey"
@@ -92,7 +92,7 @@
             app:cardCornerRadius="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/favorites_image_container"
+            app:layout_constraintStart_toEndOf="@id/favorites_placeholder_image_container"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout

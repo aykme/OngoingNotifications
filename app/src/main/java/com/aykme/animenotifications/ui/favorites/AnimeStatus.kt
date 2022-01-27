@@ -1,4 +1,4 @@
-package com.aykme.animenotifications.domain.model
+package com.aykme.animenotifications.ui.favorites
 
 enum class AnimeStatus(val value: String) {
     ANONS("anons"),

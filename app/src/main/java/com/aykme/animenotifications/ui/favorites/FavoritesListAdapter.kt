@@ -16,14 +16,11 @@ class FavoritesListAdapter(
     private val viewModel: FavoritesViewModel
 ) : ListAdapter<Anime, FavoritesListAdapter.AnimeViewHolder>(DiffCallback.instance) {
 
-    private var followedAnimeList: List<Anime>? = null
-
     class AnimeViewHolder(private val binding: ItemFavoritesBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
             anime: Anime,
-            followedAnimeList: List<Anime>?,
             resources: Resources?,
             viewModel: FavoritesViewModel
         ) {
@@ -60,14 +57,7 @@ class FavoritesListAdapter(
                         notificationOffFab
                     )
                 }
-                followedAnimeList?.let {
-                    viewModel.bindNotificationFields(
-                        anime,
-                        followedAnimeList,
-                        notificationOnFab,
-                        notificationOffFab
-                    )
-                }
+                viewModel.bindNotificationFields(notificationOnFab, notificationOffFab)
             }
         }
     }
@@ -80,11 +70,7 @@ class FavoritesListAdapter(
     override fun onBindViewHolder(holder: AnimeViewHolder, position: Int) {
         val anime = getItem(position)
         anime?.let {
-            holder.bind(anime, followedAnimeList, context.resources, viewModel)
+            holder.bind(anime, context.resources, viewModel)
         }
-    }
-
-    fun submitFollowedAnimeList(followedAnimeList: List<Anime>) {
-        this.followedAnimeList = followedAnimeList
     }
 }

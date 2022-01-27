@@ -32,10 +32,13 @@ class FavoritesFragment : Fragment() {
         val adapter = FavoritesListAdapter(requireContext(), viewModel)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
+        val placeholder = binding.favoritesPlaceholder
 
-        viewModel.followedAnimeList.observe(viewLifecycleOwner) { followedAnimeList ->
-            viewModel.submitAnimeData(adapter, followedAnimeList)
-            adapter.submitFollowedAnimeList(followedAnimeList)
+        viewModel.apply {
+            followedAnimeList.observe(viewLifecycleOwner) { followedAnimeList ->
+                bindPlaceholder(placeholder, followedAnimeList.isNullOrEmpty())
+                submitAnimeData(adapter, followedAnimeList)
+            }
         }
     }
 
