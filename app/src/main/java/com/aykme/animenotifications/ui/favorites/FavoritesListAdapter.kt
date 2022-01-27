@@ -38,6 +38,12 @@ class FavoritesListAdapter(
                     anime.episodesAired.toString(),
                     episodesTotal
                 )
+                viewModel.bindAnimeStatus(
+                    anime.status,
+                    ongoingStatus,
+                    announcedStatus,
+                    releasedStatus
+                )
                 val notificationOnFab = favoritesNotificationOnFab
                 val notificationOffFab = favoritesNotificationOffFab
                 notificationOnFab.setOnClickListener {

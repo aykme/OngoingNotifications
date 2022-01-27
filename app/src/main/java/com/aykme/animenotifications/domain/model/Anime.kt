@@ -11,5 +11,6 @@ data class Anime(
     @ColumnInfo(name = "image_url") val imageUrl: String,
     @ColumnInfo(name = "score") val score: Float,
     @ColumnInfo(name = "episodes_aired") val episodesAired: Int,
-    @ColumnInfo(name = "episodes_total") val episodesTotal: Int
+    @ColumnInfo(name = "episodes_total") val episodesTotal: Int,
+    @ColumnInfo(name = "status") val status: String
 )

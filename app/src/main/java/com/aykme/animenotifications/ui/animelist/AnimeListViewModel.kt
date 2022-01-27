@@ -62,7 +62,7 @@ class AnimeListViewModel(
                 AnimeDataType.ANONS -> getAnnouncedAnimeData().collectLatest {
                     adapter.submitData(it)
                 }
-                else -> throw IllegalArgumentException("Unknown AAnimeStatus")
+                else -> throw IllegalArgumentException("Unknown AnimeDataType")
             }
         }
     }

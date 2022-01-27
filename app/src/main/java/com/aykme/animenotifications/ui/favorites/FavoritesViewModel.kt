@@ -2,15 +2,16 @@ package com.aykme.animenotifications.ui.favorites
 
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.lifecycle.*
 import com.aykme.animenotifications.Application
 import com.aykme.animenotifications.data.source.remote.coil.ImageDownloader
 import com.aykme.animenotifications.data.source.remote.shikimoriapi.BASE_URL
 import com.aykme.animenotifications.domain.model.Anime
+import com.aykme.animenotifications.domain.model.AnimeStatus
 import com.aykme.animenotifications.domain.usecase.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class FavoritesViewModel(
@@ -63,6 +64,31 @@ class FavoritesViewModel(
 
     private fun isFollowedAnime(anime: Anime, followedAnimeList: List<Anime>): Boolean {
         return followedAnimeList.contains(anime)
+    }
+
+    fun bindAnimeStatus(
+        animeStatus: String,
+        ongoingStatus: TextView,
+        announcedStatus: TextView,
+        releasedStatus: TextView,
+    ) {
+        when (animeStatus) {
+            AnimeStatus.ONGOING.value -> {
+                ongoingStatus.visibility = View.VISIBLE
+                announcedStatus.visibility = View.GONE
+                releasedStatus.visibility = View.GONE
+            }
+            AnimeStatus.ANONS.value -> {
+                announcedStatus.visibility = View.VISIBLE
+                ongoingStatus.visibility = View.GONE
+                releasedStatus.visibility = View.GONE
+            }
+            AnimeStatus.RELEASED.value -> {
+                releasedStatus.visibility = View.VISIBLE
+                ongoingStatus.visibility = View.GONE
+                announcedStatus.visibility = View.GONE
+            }
+        }
     }
 
     fun onNotificationOnClicked(
