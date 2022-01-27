@@ -9,13 +9,13 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="130dp"
         android:layout_margin="8dp">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/favorites_image_container"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
             app:cardBackgroundColor="@color/grey"
             app:cardCornerRadius="10dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,8 +55,8 @@
 
                 <ImageView
                     android:id="@+id/favorites_score_ic"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
@@ -70,13 +70,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
                     android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:paddingEnd="8dp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="@id/favorites_score_ic"
                     app:layout_constraintStart_toEndOf="@id/favorites_score_ic"
                     app:layout_constraintTop_toTopOf="@id/favorites_score_ic"
+                    tools:ignore="RtlSymmetry"
                     tools:text="8.90" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -104,12 +105,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
                     android:maxLines="2"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:paddingEnd="8dp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:textColor="@color/white"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlSymmetry"
                     tools:text="Атака титанов: Финал. Часть 2" />
 
                 <TextView
@@ -117,9 +119,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
                     android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                    android:paddingEnd="16dp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:textColor="@color/white"
                     app:layout_constraintStart_toStartOf="@id/favorites_name"
                     app:layout_constraintTop_toBottomOf="@id/favorites_name"
@@ -128,18 +130,19 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@id/favorites_notification_fab_layout"
                     app:layout_constraintStart_toStartOf="@id/favorites_episodes"
-                    app:layout_constraintTop_toBottomOf="@id/favorites_episodes">
+                    app:layout_constraintTop_toTopOf="@id/favorites_notification_fab_layout"
+                    tools:ignore="RtlSymmetry">
 
                     <TextView
                         android:id="@+id/ongoing_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="16dp"
                         android:maxLines="1"
                         android:text="@string/ongoing_status"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                         android:textColor="@color/green"
                         android:visibility="visible"
                         app:layout_constraintStart_toStartOf="@id/favorites_episodes"
@@ -149,11 +152,9 @@
                         android:id="@+id/announced_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="16dp"
                         android:maxLines="1"
                         android:text="@string/announced_status"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                         android:textColor="@color/purple_200"
                         android:visibility="gone"
                         app:layout_constraintStart_toStartOf="@id/favorites_episodes"
@@ -163,11 +164,9 @@
                         android:id="@+id/released_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="16dp"
                         android:maxLines="1"
                         android:text="@string/released_status"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                         android:textColor="@color/pink"
                         android:visibility="gone"
                         app:layout_constraintStart_toStartOf="@id/favorites_episodes"
