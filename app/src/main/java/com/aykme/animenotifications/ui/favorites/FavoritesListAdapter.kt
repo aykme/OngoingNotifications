@@ -1,53 +1,48 @@
-package com.aykme.animenotifications.ui.animelist.paging
+package com.aykme.animenotifications.ui.favorites
 
 import android.content.Context
 import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.aykme.animenotifications.R
-import com.aykme.animenotifications.databinding.ItemAnimeListBinding
+import com.aykme.animenotifications.databinding.ItemFavoritesBinding
 import com.aykme.animenotifications.domain.model.Anime
 import com.aykme.animenotifications.ui.diffcallback.DiffCallback
-import com.aykme.animenotifications.ui.animelist.AnimeListViewModel
 
-class PagingAnimeListAdapter(
+class FavoritesListAdapter(
     private val context: Context,
-    private val viewModel: AnimeListViewModel
-) :
-    PagingDataAdapter<Anime, PagingAnimeListAdapter.AnimeViewHolder>(DiffCallback.instance) {
+    private val viewModel: FavoritesViewModel
+) : ListAdapter<Anime, FavoritesListAdapter.AnimeViewHolder>(DiffCallback.instance) {
 
     private var followedAnimeList: List<Anime>? = null
 
-    class AnimeViewHolder(private val binding: ItemAnimeListBinding) :
+    class AnimeViewHolder(private val binding: ItemFavoritesBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
             anime: Anime,
             followedAnimeList: List<Anime>?,
             resources: Resources?,
-            viewModel: AnimeListViewModel
+            viewModel: FavoritesViewModel
         ) {
             val fullImageUrl = viewModel.getImageUrl(anime)
             val episodesTotal = viewModel.getFormattedEpisodesField(anime)
-            viewModel.bindImage(binding.animeImage, fullImageUrl)
-
+            viewModel.bindImage(binding.favoritesImage, fullImageUrl)
             binding.apply {
-                animeName.text = anime.name
-                animeScore.text = anime.score.toString()
-                animeEpisodes.text = resources?.getString(
+                favoritesName.text = anime.name
+                favoritesScore.text = anime.score.toString()
+                favoritesEpisodes.text = resources?.getString(
                     R.string.anime_episodes_aired,
                     anime.episodesAired.toString(),
                     episodesTotal
                 )
-                val notificationText = animeNotificationText
-                val notificationOnFab = animeNotificationOnFab
-                val notificationOffFab = animeNotificationOffFab
+                val notificationOnFab = favoritesNotificationOnFab
+                val notificationOffFab = favoritesNotificationOffFab
                 notificationOnFab.setOnClickListener {
                     viewModel.onNotificationOnClicked(
                         anime,
-                        notificationText,
                         notificationOnFab,
                         notificationOffFab
                     )
@@ -55,7 +50,6 @@ class PagingAnimeListAdapter(
                 notificationOffFab.setOnClickListener {
                     viewModel.onNotificationOffClicked(
                         anime,
-                        notificationText,
                         notificationOnFab,
                         notificationOffFab
                     )
@@ -64,7 +58,6 @@ class PagingAnimeListAdapter(
                     viewModel.bindNotificationFields(
                         anime,
                         followedAnimeList,
-                        notificationText,
                         notificationOnFab,
                         notificationOffFab
                     )
@@ -74,7 +67,7 @@ class PagingAnimeListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnimeViewHolder {
-        val binding = ItemAnimeListBinding.inflate(LayoutInflater.from(parent.context))
+        val binding = ItemFavoritesBinding.inflate(LayoutInflater.from(parent.context))
         return AnimeViewHolder(binding)
     }
 
