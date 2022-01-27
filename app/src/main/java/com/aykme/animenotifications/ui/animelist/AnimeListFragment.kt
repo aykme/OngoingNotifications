@@ -33,7 +33,7 @@ class AnimeListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = binding.animeListRecyclerView
         val ongoingListAdapter = PagingAnimeListAdapter(requireContext(), viewModel)
-        val announceListAdapter = PagingAnimeListAdapter(requireContext(), viewModel)
+        val announcedListAdapter = PagingAnimeListAdapter(requireContext(), viewModel)
         val layoutManager = GridLayoutManager(requireContext(), 1)
         recyclerView.adapter = ongoingListAdapter
         recyclerView.layoutManager = layoutManager
@@ -49,7 +49,7 @@ class AnimeListFragment : Fragment() {
             return@setOnMenuItemClickListener true
         }
         menuAnnouncedAnime.setOnMenuItemClickListener {
-            recyclerView.adapter = announceListAdapter
+            recyclerView.adapter = announcedListAdapter
             viewModel.animeDataType.value = AnimeDataType.ANONS
             it.isChecked = true
             return@setOnMenuItemClickListener true
