@@ -1,12 +1,16 @@
 package com.aykme.animenoti
 
 import android.app.Application
+import android.util.Log
+import androidx.work.*
+import com.aykme.animenoti.background.workers.RefreshAnimeDataWork
 import com.aykme.animenoti.data.repository.AnimeDatabaseRepositoryImpl
 import com.aykme.animenoti.data.repository.ShikimoriApiRepository
 import com.aykme.animenoti.data.source.local.animedatabase.AnimeRoomDatabase
 import com.aykme.animenoti.data.source.remote.shikimoriapi.ShikimoriApi
 import com.aykme.animenoti.domain.repository.AnimeDatabaseRepository
 import com.aykme.animenoti.domain.repository.ApiRepository
+import java.util.concurrent.TimeUnit
 
 class AnimeNotiApplication : Application() {
     val apiRepository: ApiRepository by lazy {
@@ -17,5 +21,28 @@ class AnimeNotiApplication : Application() {
     }
     val databaseRepository: AnimeDatabaseRepository by lazy {
         AnimeDatabaseRepositoryImpl(database.animeDao())
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        setupWorkManagerWork()
+    }
+
+    private fun setupWorkManagerWork() {
+        Log.d("RefreshWork", "вхожу в work")
+        val workManagerConfiguration = Configuration.Builder()
+            .setWorkerFactory(RefreshAnimeDataWork.Factory())
+            .build()
+        WorkManager.initialize(this, workManagerConfiguration)
+        val work = PeriodicWorkRequestBuilder<RefreshAnimeDataWork>(10, TimeUnit.MINUTES)
+            .build()
+
+        WorkManager.getInstance(this)
+            .enqueueUniquePeriodicWork(
+                RefreshAnimeDataWork::class.java.name,
+                ExistingPeriodicWorkPolicy.KEEP,
+                work
+            )
+        Log.d("RefreshWork", "закончил work")
     }
 }
