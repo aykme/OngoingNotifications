@@ -12,7 +12,7 @@ data class Anime(
     @ColumnInfo(name = "score") val score: Float,
     @ColumnInfo(name = "episodes_aired") val episodesAired: Int,
     @ColumnInfo(name = "episodes_total") val episodesTotal: Int,
-    @ColumnInfo(name = "status") val status: String
+    @ColumnInfo(name = "status") val status: AnimeStatus
 ) {
     override fun hashCode(): Int {
         return id

@@ -8,6 +8,7 @@ import com.aykme.animenotifications.Application
 import com.aykme.animenotifications.data.source.remote.coil.ImageDownloader
 import com.aykme.animenotifications.data.source.remote.shikimoriapi.BASE_URL
 import com.aykme.animenotifications.domain.model.Anime
+import com.aykme.animenotifications.domain.model.AnimeStatus
 import com.aykme.animenotifications.domain.usecase.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.Flow
@@ -65,23 +66,23 @@ class FavoritesViewModel(
     }
 
     fun bindAnimeStatus(
-        animeStatus: String,
+        animeStatus: AnimeStatus,
         ongoingStatus: TextView,
         announcedStatus: TextView,
         releasedStatus: TextView,
     ) {
         when (animeStatus) {
-            AnimeStatus.ONGOING.value -> {
+            AnimeStatus.ONGOING -> {
                 ongoingStatus.visibility = View.VISIBLE
                 announcedStatus.visibility = View.GONE
                 releasedStatus.visibility = View.GONE
             }
-            AnimeStatus.ANONS.value -> {
+            AnimeStatus.ANONS -> {
                 announcedStatus.visibility = View.VISIBLE
                 ongoingStatus.visibility = View.GONE
                 releasedStatus.visibility = View.GONE
             }
-            AnimeStatus.RELEASED.value -> {
+            AnimeStatus.RELEASED -> {
                 releasedStatus.visibility = View.VISIBLE
                 ongoingStatus.visibility = View.GONE
                 announcedStatus.visibility = View.GONE
