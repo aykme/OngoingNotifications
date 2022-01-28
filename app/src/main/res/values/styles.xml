@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Divider style -->
-    <style name="Widget.AnimeNotifications.Divider" parent="">
+    <style name="Widget.AnimeNoti.Divider" parent="">
         <item name="android:background">?attr/dividerHorizontal</item>
     </style>
     <!-- Theme style -->
-    <style name="Theme.AnimeNotifications" parent="Theme.MaterialComponents">
+    <style name="Theme.AnimeNoti" parent="Theme.MaterialComponents">
         <!-- Изменение цвета панели навигации -->
         <item name="android:navigationBarColor">@color/black</item>
         <!-- Primary brand color. -->
@@ -20,11 +20,11 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
     </style>
 
-    <style name="AnimeNotifications.BottomMenu" parent="Widget.MaterialComponents.BottomAppBar.PrimarySurface">
+    <style name="AnimeNoti.BottomMenu" parent="Widget.MaterialComponents.BottomAppBar.PrimarySurface">
         <item name="backgroundTint">@color/black</item>
     </style>
 
-    <style name="AnimeNotifications.UpperMenu" parent="TextAppearance.AppCompat">
+    <style name="AnimeNoti.UpperMenu" parent="TextAppearance.AppCompat">
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">@font/amiko_bold</item>
         <item name="android:textSize">25sp</item>

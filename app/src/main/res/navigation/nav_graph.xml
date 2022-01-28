@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/anime_list"
-        android:name="com.aykme.animenotifications.ui.animelist.AnimeListFragment"
+        android:name="com.aykme.animenoti.ui.animelist.AnimeListFragment"
         android:label="@string/anime_ongoings_title"
         tools:layout="@layout/fragment_anime_list" />
     <fragment
         android:id="@+id/favorites_anime"
-        android:name="com.aykme.animenotifications.ui.favorites.FavoritesFragment"
+        android:name="com.aykme.animenoti.ui.favorites.FavoritesFragment"
         android:label="@string/favorites_title"
         tools:layout="@layout/fragment_favorites" />
 </navigation>

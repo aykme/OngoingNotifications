@@ -7,7 +7,7 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_menu"
-        style="@style/AnimeNotifications.BottomMenu"
+        style="@style/AnimeNoti.BottomMenu"
         android:layout_width="0dp"
         android:layout_height="57dp"
         android:layout_marginStart="0dp"
