@@ -2,8 +2,8 @@ package com.aykme.animenoti.data.source.remote.shikimoriapi
 
 import com.squareup.moshi.Json
 
-data class AnimeResponse(
-    val id: Int?,
+open class AnimeResponse(
+    val id: Int,
     @Json(name = "name") val englishName: String?,
     @Json(name = "russian") val russianName: String?,
     @Json(name = "image") val imageResponse: ImageResponse?,

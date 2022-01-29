@@ -28,11 +28,11 @@ class FavoritesViewModel(
     }
 
     fun bindPlaceholder(placeholder: View, isActive: Boolean) {
-       if (isActive) {
-           placeholder.visibility = View.VISIBLE
-       } else {
-           placeholder.visibility = View.GONE
-       }
+        if (isActive) {
+            placeholder.visibility = View.VISIBLE
+        } else {
+            placeholder.visibility = View.GONE
+        }
     }
 
     fun submitAnimeData(
@@ -45,11 +45,12 @@ class FavoritesViewModel(
     }
 
     fun getImageUrl(anime: Anime): String {
-        return BASE_URL + anime.imageUrl
+        val imageUrl = anime.imageUrl ?: ""
+        return BASE_URL + imageUrl
     }
 
-    fun getFormattedEpisodesField(anime: Anime): String {
-        return if (anime.episodesTotal < 1) "?" else anime.episodesTotal.toString()
+    fun getFormattedEpisodesField(episodesTotal: Int): String {
+        return if (episodesTotal < 1) "?" else episodesTotal.toString()
     }
 
     fun bindImage(animeImage: ImageView, fullImageUrl: String) {
@@ -61,12 +62,12 @@ class FavoritesViewModel(
         notificationOffFab: FloatingActionButton
     ) {
         viewModelScope.launch {
-                bindNotificationOnFields(notificationOnFab, notificationOffFab)
+            bindNotificationOnFields(notificationOnFab, notificationOffFab)
         }
     }
 
     fun bindAnimeStatus(
-        animeStatus: AnimeStatus,
+        animeStatus: AnimeStatus?,
         ongoingStatus: TextView,
         announcedStatus: TextView,
         releasedStatus: TextView,
@@ -84,6 +85,11 @@ class FavoritesViewModel(
             }
             AnimeStatus.RELEASED -> {
                 releasedStatus.visibility = View.VISIBLE
+                ongoingStatus.visibility = View.GONE
+                announcedStatus.visibility = View.GONE
+            }
+            else -> {
+                releasedStatus.visibility = View.GONE
                 ongoingStatus.visibility = View.GONE
                 announcedStatus.visibility = View.GONE
             }

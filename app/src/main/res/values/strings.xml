@@ -15,4 +15,5 @@
     <string name="announced_status">Аннонс</string>
     <string name="released_status">Закончен</string>
     <string name="favorites_placeholder">Ты пока не подписан на уведомления о новых сериях аниме. Нажми на меню [Аниме] и выбери что-нибудь (≧◡≦) ♡</string>
+    <string name="unknown">Неизвестно</string>
 </resources>
