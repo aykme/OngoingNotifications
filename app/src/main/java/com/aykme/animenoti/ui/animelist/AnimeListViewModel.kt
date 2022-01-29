@@ -111,7 +111,10 @@ class AnimeListViewModel(
     }
 
     private fun isFollowedAnime(anime: Anime, followedAnimeList: List<Anime>): Boolean {
-        return followedAnimeList.contains(anime)
+        followedAnimeList.forEach {
+            if (it.id == anime.id) return true
+        }
+        return false
     }
 
     fun onNotificationOnClicked(
