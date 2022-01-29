@@ -8,17 +8,19 @@ fun List<AnimeResponse>.responseToEntityList(): List<Anime> {
     return this.map { animeResponse ->
 
         Anime(
-            id = animeResponse.id!!,
-            name = animeResponse.russianName ?: animeResponse.englishName!!,
-            imageUrl = animeResponse.imageResponse?.originalSizeUrl!!,
-            score = animeResponse.score!!,
-            episodesAired = animeResponse.episodesAired!!,
-            episodesTotal = animeResponse.episodes!!,
+            id = animeResponse.id,
+            name = animeResponse.russianName ?: animeResponse.englishName,
+            imageUrl = animeResponse.imageResponse?.originalSizeUrl,
+            score = animeResponse.score,
+            episodesAired = animeResponse.episodesAired,
+            episodesTotal = animeResponse.episodes,
+            airedOn = animeResponse.airedOn,
+            releasedOn = animeResponse.releasedOn,
             status = when (animeResponse.status) {
                 AnimeStatus.ONGOING.value -> AnimeStatus.ONGOING
                 AnimeStatus.ANONS.value -> AnimeStatus.ANONS
                 AnimeStatus.RELEASED.value -> AnimeStatus.RELEASED
-                else -> throw IllegalArgumentException("Unknown AnimeStatus")
+                else -> AnimeStatus.UNKNOWN
             }
         )
     }

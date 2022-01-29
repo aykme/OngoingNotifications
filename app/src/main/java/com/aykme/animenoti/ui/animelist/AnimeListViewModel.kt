@@ -84,11 +84,12 @@ class AnimeListViewModel(
     }
 
     fun getImageUrl(anime: Anime): String {
-        return BASE_URL + anime.imageUrl
+        val imageUrl = anime.imageUrl ?: ""
+        return BASE_URL + imageUrl
     }
 
-    fun getFormattedEpisodesField(anime: Anime): String {
-        return if (anime.episodesTotal < 1) "?" else anime.episodesTotal.toString()
+    fun getFormattedEpisodesField(episodesTotal: Int): String {
+        return if (episodesTotal < 1) "?" else episodesTotal.toString()
     }
 
     fun bindImage(animeImage: ImageView, fullImageUrl: String) {
