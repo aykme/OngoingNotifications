@@ -25,7 +25,8 @@ class AnimeListViewModel(
     private val fetchAnnouncedAnimeListUseCase: FetchAnnouncedAnimeListUseCase,
     fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
-    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
+    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
+    private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase
 ) :
     ViewModel() {
 
@@ -177,7 +178,8 @@ class AnimeListViewModelFactory(
     private val fetchAnnouncedAnimeListUseCase: FetchAnnouncedAnimeListUseCase,
     private val fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
-    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
+    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
+    private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase
 ) :
     ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
@@ -189,7 +191,8 @@ class AnimeListViewModelFactory(
                 fetchAnnouncedAnimeListUseCase,
                 fetchAllDatabaseItemsUseCase,
                 insertDatabaseItemUseCase,
-                deleteOneDatabaseItemUseCase
+                deleteOneDatabaseItemUseCase,
+                fetchAnimeByIdUseCase
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
@@ -203,7 +206,8 @@ class AnimeListViewModelFactory(
                 FetchAnnouncedAnimeListUseCase(application.apiRepository),
                 FetchAllDatabaseItemsUseCase(application.databaseRepository),
                 InsertDatabaseItemUseCase(application.databaseRepository),
-                DeleteOneDatabaseItemUseCase(application.databaseRepository)
+                DeleteOneDatabaseItemUseCase(application.databaseRepository),
+                FetchAnimeByIdUseCase(application.apiRepository)
             )
         }
     }

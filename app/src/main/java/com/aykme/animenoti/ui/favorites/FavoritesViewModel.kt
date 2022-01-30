@@ -1,10 +1,16 @@
 package com.aykme.animenoti.ui.favorites
 
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.*
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.aykme.animenoti.AnimeNotiApplication
+import com.aykme.animenoti.background.workers.REFRESH_ANIME_DATA_WORK
+import com.aykme.animenoti.background.workers.RefreshAnimeDataWork
 import com.aykme.animenoti.data.source.remote.coil.ImageDownloader
 import com.aykme.animenoti.data.source.remote.shikimoriapi.BASE_URL
 import com.aykme.animenoti.domain.model.Anime
@@ -15,11 +21,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class FavoritesViewModel(
-    fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
+    private val application: AnimeNotiApplication,
+    private val fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
-    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
+    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
+    private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase,
+    private val updateDatabaseItemUseCase: UpdateDatabaseItemUseCase
 ) : ViewModel() {
 
+    private val workTag = "OneTimeRefreshAnimeDataWork"
     private val _followedAnimeList: Flow<List<Anime>> by lazy {
         fetchAllDatabaseItemsUseCase()
     }
@@ -33,6 +43,17 @@ class FavoritesViewModel(
         } else {
             placeholder.visibility = View.GONE
         }
+    }
+
+    fun refreshDatabaseItems() {
+        Log.d(REFRESH_ANIME_DATA_WORK, "viewModel refresh")
+        val workManager = WorkManager.getInstance(application)
+        val work = OneTimeWorkRequestBuilder<RefreshAnimeDataWork>().build()
+        workManager.enqueueUniqueWork(
+            RefreshAnimeDataWork::class.java.name,
+            ExistingWorkPolicy.REPLACE,
+            work
+        )
     }
 
     fun submitAnimeData(
@@ -144,18 +165,24 @@ class FavoritesViewModel(
 }
 
 class FavoritesViewModelFactory(
+    private val application: AnimeNotiApplication,
     private val fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
-    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
+    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
+    private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase,
+    private val updateDatabaseItemUseCase: UpdateDatabaseItemUseCase
 ) :
     ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(FavoritesViewModel::class.java)) {
             return FavoritesViewModel(
+                application,
                 fetchAllDatabaseItemsUseCase,
                 insertDatabaseItemUseCase,
-                deleteOneDatabaseItemUseCase
+                deleteOneDatabaseItemUseCase,
+                fetchAnimeByIdUseCase,
+                updateDatabaseItemUseCase
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
@@ -164,9 +191,12 @@ class FavoritesViewModelFactory(
     companion object {
         fun getInstance(application: AnimeNotiApplication): FavoritesViewModelFactory {
             return FavoritesViewModelFactory(
+                application,
                 FetchAllDatabaseItemsUseCase(application.databaseRepository),
                 InsertDatabaseItemUseCase(application.databaseRepository),
-                DeleteOneDatabaseItemUseCase(application.databaseRepository)
+                DeleteOneDatabaseItemUseCase(application.databaseRepository),
+                FetchAnimeByIdUseCase(application.apiRepository),
+                UpdateDatabaseItemUseCase(application.databaseRepository)
             )
         }
     }

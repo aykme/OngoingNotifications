@@ -12,11 +12,14 @@ import com.aykme.animenoti.data.source.remote.shikimoriapi.ShikimoriApi
 import com.aykme.animenoti.domain.repository.AnimeDatabaseRepository
 import com.aykme.animenoti.domain.repository.ApiRepository
 import com.aykme.animenoti.domain.usecase.FetchAllDatabaseItemsUseCase
+import com.aykme.animenoti.domain.usecase.FetchAnimeByIdUseCase
+import com.aykme.animenoti.domain.usecase.UpdateDatabaseItemUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import java.util.concurrent.TimeUnit
 
 class AnimeNotiApplication : Application() {
+    private val workTag = "PeriodicRefreshAnimeDataWork"
     val apiRepository: ApiRepository by lazy {
         ShikimoriApiRepository(ShikimoriApi.instance)
     }
@@ -26,7 +29,6 @@ class AnimeNotiApplication : Application() {
     val databaseRepository: AnimeDatabaseRepository by lazy {
         AnimeDatabaseRepositoryImpl(database.animeDao())
     }
-    private val applicationScope = CoroutineScope(SupervisorJob())
 
     override fun onCreate() {
         super.onCreate()
@@ -37,11 +39,15 @@ class AnimeNotiApplication : Application() {
         Log.d(REFRESH_ANIME_DATA_WORK, "setupWorkManager() start")
         val workManagerConfiguration = Configuration.Builder()
             .setWorkerFactory(
-                RefreshAnimeDataWork.Factory(FetchAllDatabaseItemsUseCase(databaseRepository))
+                RefreshAnimeDataWork.Factory(
+                    FetchAllDatabaseItemsUseCase(databaseRepository),
+                    FetchAnimeByIdUseCase(apiRepository),
+                    UpdateDatabaseItemUseCase(databaseRepository)
+                )
             )
             .build()
         WorkManager.initialize(this, workManagerConfiguration)
-        val work = PeriodicWorkRequestBuilder<RefreshAnimeDataWork>(10, TimeUnit.MINUTES)
+        val work = PeriodicWorkRequestBuilder<RefreshAnimeDataWork>(1, TimeUnit.MINUTES)
             .build()
 
         WorkManager.getInstance(this)
