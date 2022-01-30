@@ -40,6 +40,7 @@ class AnimeNotiApplication : Application() {
         val workManagerConfiguration = Configuration.Builder()
             .setWorkerFactory(
                 RefreshAnimeDataWork.Factory(
+                    databaseRepository,
                     FetchAllDatabaseItemsUseCase(databaseRepository),
                     FetchAnimeByIdUseCase(apiRepository),
                     UpdateDatabaseItemUseCase(databaseRepository)

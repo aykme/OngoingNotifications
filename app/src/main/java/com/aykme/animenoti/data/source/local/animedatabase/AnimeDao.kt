@@ -24,4 +24,7 @@ interface AnimeDao {
 
     @Query("DELETE FROM anime_table")
     suspend fun deleteAll()
+
+    @Query("SELECT * FROM anime_table ORDER BY name")
+    suspend fun getItemsAlt(): List<Anime>
 }

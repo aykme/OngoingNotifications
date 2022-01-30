@@ -16,4 +16,6 @@ interface AnimeDatabaseRepository {
     suspend fun delete(id: Int)
 
     suspend fun deleteAll()
+
+    suspend fun getItemsAlt(): List<Anime>
 }

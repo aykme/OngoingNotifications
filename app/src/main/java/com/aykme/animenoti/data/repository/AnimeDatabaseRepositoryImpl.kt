@@ -30,4 +30,8 @@ class AnimeDatabaseRepositoryImpl(private val animeDao: AnimeDao) : AnimeDatabas
     override suspend fun deleteAll() {
         animeDao.deleteAll()
     }
+
+    override suspend fun getItemsAlt(): List<Anime> {
+        return animeDao.getItemsAlt()
+    }
 }
