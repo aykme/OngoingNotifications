@@ -24,12 +24,9 @@ class FavoritesViewModel(
     private val application: AnimeNotiApplication,
     private val fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
-    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
-    private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase,
-    private val updateDatabaseItemUseCase: UpdateDatabaseItemUseCase
+    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
 ) : ViewModel() {
 
-    private val workTag = "OneTimeRefreshAnimeDataWork"
     private val _followedAnimeList: Flow<List<Anime>> by lazy {
         fetchAllDatabaseItemsUseCase()
     }
@@ -168,9 +165,7 @@ class FavoritesViewModelFactory(
     private val application: AnimeNotiApplication,
     private val fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
-    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
-    private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase,
-    private val updateDatabaseItemUseCase: UpdateDatabaseItemUseCase
+    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
 ) :
     ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
@@ -180,9 +175,7 @@ class FavoritesViewModelFactory(
                 application,
                 fetchAllDatabaseItemsUseCase,
                 insertDatabaseItemUseCase,
-                deleteOneDatabaseItemUseCase,
-                fetchAnimeByIdUseCase,
-                updateDatabaseItemUseCase
+                deleteOneDatabaseItemUseCase
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
@@ -194,9 +187,7 @@ class FavoritesViewModelFactory(
                 application,
                 FetchAllDatabaseItemsUseCase(application.databaseRepository),
                 InsertDatabaseItemUseCase(application.databaseRepository),
-                DeleteOneDatabaseItemUseCase(application.databaseRepository),
-                FetchAnimeByIdUseCase(application.apiRepository),
-                UpdateDatabaseItemUseCase(application.databaseRepository)
+                DeleteOneDatabaseItemUseCase(application.databaseRepository)
             )
         }
     }
