@@ -68,7 +68,7 @@ class AnimeNotiApplication : Application() {
 
     private fun setupNotificationManager() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannelName = "Work Manager Notification Channel Name"
+            val notificationChannelName = getString(R.string.work_manager_notification_channel_name)
             val description = getString(R.string.work_manager_notification_channel_description)
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(
