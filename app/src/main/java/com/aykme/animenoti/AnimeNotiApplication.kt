@@ -1,8 +1,11 @@
 package com.aykme.animenoti
 
-import android.app.Application
+import android.app.*
+import android.content.Context
+import android.os.Build
 import android.util.Log
 import androidx.work.*
+import com.aykme.animenoti.background.notification.WorkManagerNotification
 import com.aykme.animenoti.background.workers.REFRESH_ANIME_DATA_WORK
 import com.aykme.animenoti.background.workers.RefreshAnimeDataWork
 import com.aykme.animenoti.data.repository.AnimeDatabaseRepositoryImpl
@@ -16,6 +19,8 @@ import com.aykme.animenoti.domain.usecase.FetchAnimeByIdUseCase
 import com.aykme.animenoti.domain.usecase.UpdateDatabaseItemUseCase
 import java.util.concurrent.TimeUnit
 
+const val NOTIFICATION_CHANNEL_ID = "Work Manager Notification Channel Id"
+
 class AnimeNotiApplication : Application() {
     val apiRepository: ApiRepository by lazy {
         ShikimoriApiRepository(ShikimoriApi.instance)
@@ -26,10 +31,14 @@ class AnimeNotiApplication : Application() {
     val databaseRepository: AnimeDatabaseRepository by lazy {
         AnimeDatabaseRepositoryImpl(database.animeDao())
     }
+    private val workManagerNotification by lazy {
+        WorkManagerNotification(this)
+    }
 
     override fun onCreate() {
         super.onCreate()
         setupWorkManagerWork()
+        setupNotificationManager()
     }
 
     private fun setupWorkManagerWork() {
@@ -39,7 +48,8 @@ class AnimeNotiApplication : Application() {
                 RefreshAnimeDataWork.Factory(
                     FetchAllDatabaseItems(databaseRepository),
                     FetchAnimeByIdUseCase(apiRepository),
-                    UpdateDatabaseItemUseCase(databaseRepository)
+                    UpdateDatabaseItemUseCase(databaseRepository),
+                    workManagerNotification
                 )
             )
             .build()
@@ -54,5 +64,22 @@ class AnimeNotiApplication : Application() {
                 work
             )
         Log.d(REFRESH_ANIME_DATA_WORK, "setupWorkManager() end")
+    }
+
+    private fun setupNotificationManager() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannelName = "Work Manager Notification Channel Name"
+            val description = getString(R.string.work_manager_notification_channel_description)
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                notificationChannelName,
+                importance
+            )
+            channel.description = description
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }

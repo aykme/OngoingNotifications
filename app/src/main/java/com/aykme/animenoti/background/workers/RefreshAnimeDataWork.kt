@@ -7,6 +7,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
+import com.aykme.animenoti.R
+import com.aykme.animenoti.background.notification.WorkManagerNotification
 import com.aykme.animenoti.domain.model.Anime
 import com.aykme.animenoti.domain.usecase.FetchAllDatabaseItems
 import com.aykme.animenoti.domain.usecase.FetchAnimeByIdUseCase
@@ -20,10 +22,12 @@ class RefreshAnimeDataWork(
     params: WorkerParameters,
     private val fetchAllDatabaseItems: FetchAllDatabaseItems,
     private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase,
-    private val updateDatabaseItemUseCase: UpdateDatabaseItemUseCase
+    private val updateDatabaseItemUseCase: UpdateDatabaseItemUseCase,
+    private val workManagerNotification: WorkManagerNotification
 ) :
     CoroutineWorker(appContext, params) {
 
+    private val resources = applicationContext.resources
     private lateinit var databaseItems: List<Anime>
 
     override suspend fun doWork(): Result {
@@ -42,6 +46,17 @@ class RefreshAnimeDataWork(
                 )
                 val currentEpisodesAired = databaseItem.episodesAired ?: 0
                 val newEpisodesAired = remoteItem.episodesAired ?: 0
+                if (newEpisodesAired > currentEpisodesAired) {
+                    val contentTitle = databaseItem.name ?: resources.getString(R.string.unknown)
+                    val contentText = resources.getString(
+                        R.string.work_manager_notification_title,
+                        newEpisodesAired
+                    )
+                    workManagerNotification.makeNotification(
+                        contentTitle,
+                        contentText
+                    )
+                }
                 if (databaseItem != remoteItem) {
                     updateDatabaseItemUseCase(remoteItem)
                     Log.d(
@@ -61,7 +76,8 @@ class RefreshAnimeDataWork(
     class Factory(
         private val fetchAllDatabaseItems: FetchAllDatabaseItems,
         private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase,
-        private val updateDatabaseItemUseCase: UpdateDatabaseItemUseCase
+        private val updateDatabaseItemUseCase: UpdateDatabaseItemUseCase,
+        private val workManagerNotification: WorkManagerNotification
     ) : WorkerFactory() {
         override fun createWorker(
             appContext: Context,
@@ -73,7 +89,8 @@ class RefreshAnimeDataWork(
                 workerParameters,
                 fetchAllDatabaseItems,
                 fetchAnimeByIdUseCase,
-                updateDatabaseItemUseCase
+                updateDatabaseItemUseCase,
+                workManagerNotification
             )
         }
     }

@@ -15,5 +15,7 @@ data class Anime(
     @Nullable @ColumnInfo(name = "episodes_total") val episodesTotal: Int?,
     @Nullable @ColumnInfo(name = "status") val status: AnimeStatus?,
     @Nullable @ColumnInfo(name = "aired_on") val airedOn: String?,
-    @Nullable @ColumnInfo(name = "released_on") val releasedOn: String?
+    @Nullable @ColumnInfo(name = "released_on") val releasedOn: String?,
+    @Nullable @ColumnInfo(name = "description") val description: String?,
+    @Nullable @ColumnInfo(name = "next_episode_at") val nextEpisodeAt: String?,
 )

@@ -14,5 +14,7 @@ class AnimeDetailsResponse(
     @Json(name = "episodes") val episodes: Int?,
     @Json(name = "episodes_aired") val episodesAired: Int?,
     @Json(name = "aired_on") val airedOn: String?,
-    @Json(name = "released_on") val releasedOn: String?
+    @Json(name = "released_on") val releasedOn: String?,
+    @Json(name = "description")val description: String?,
+    @Json(name = "next_episode_at") val nextEpisodeAt: String?,
 )
