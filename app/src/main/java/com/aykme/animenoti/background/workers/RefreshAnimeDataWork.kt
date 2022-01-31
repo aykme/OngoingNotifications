@@ -29,11 +29,6 @@ class RefreshAnimeDataWork(
         return try {
             Log.d(REFRESH_ANIME_DATA_WORK, "Database Items $databaseItems")
             Log.d(REFRESH_ANIME_DATA_WORK, "doWork() end success")
-            for (item in databaseItems) {
-                val anime = fetchAnimeByIdUseCase(item.id)
-                Log.d(REFRESH_ANIME_DATA_WORK, "Remote Item $anime")
-
-            }
             Result.success()
         } catch (e: Throwable) {
             Log.d(REFRESH_ANIME_DATA_WORK, "doWork() failure")
