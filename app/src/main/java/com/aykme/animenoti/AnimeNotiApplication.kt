@@ -11,6 +11,7 @@ import com.aykme.animenoti.data.source.local.animedatabase.AnimeRoomDatabase
 import com.aykme.animenoti.data.source.remote.shikimoriapi.ShikimoriApi
 import com.aykme.animenoti.domain.repository.AnimeDatabaseRepository
 import com.aykme.animenoti.domain.repository.ApiRepository
+import com.aykme.animenoti.domain.usecase.FetchAllDatabaseItems
 import com.aykme.animenoti.domain.usecase.FetchAnimeByIdUseCase
 import com.aykme.animenoti.domain.usecase.UpdateDatabaseItemUseCase
 import java.util.concurrent.TimeUnit
@@ -36,13 +37,14 @@ class AnimeNotiApplication : Application() {
         val workManagerConfiguration = Configuration.Builder()
             .setWorkerFactory(
                 RefreshAnimeDataWork.Factory(
+                    FetchAllDatabaseItems(databaseRepository),
                     FetchAnimeByIdUseCase(apiRepository),
                     UpdateDatabaseItemUseCase(databaseRepository)
                 )
             )
             .build()
         WorkManager.initialize(this, workManagerConfiguration)
-        val work = PeriodicWorkRequestBuilder<RefreshAnimeDataWork>(1, TimeUnit.MINUTES)
+        val work = PeriodicWorkRequestBuilder<RefreshAnimeDataWork>(10, TimeUnit.MINUTES)
             .build()
 
         WorkManager.getInstance(this)

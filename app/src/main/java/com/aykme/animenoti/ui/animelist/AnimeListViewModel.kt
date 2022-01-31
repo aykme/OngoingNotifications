@@ -23,7 +23,7 @@ class AnimeListViewModel(
     application: AnimeNotiApplication,
     private val fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase,
     private val fetchAnnouncedAnimeListUseCase: FetchAnnouncedAnimeListUseCase,
-    fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
+    fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
     private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase
@@ -35,7 +35,7 @@ class AnimeListViewModel(
     val apiStatus: LiveData<ApiStatus> = _apiStatus
     val animeDataType = MutableLiveData(AnimeDataType.ONGOING)
     val followedAnimeList: LiveData<List<Anime>> by lazy {
-        fetchAllDatabaseItemsUseCase().asLiveData()
+        fetchAllDatabaseItemsAsFlowUseCase().asLiveData()
     }
 
     fun bindApiStatus(status: ImageView) = when (apiStatus.value) {
@@ -176,7 +176,7 @@ class AnimeListViewModelFactory(
     private val application: AnimeNotiApplication,
     private val fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase,
     private val fetchAnnouncedAnimeListUseCase: FetchAnnouncedAnimeListUseCase,
-    private val fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
+    private val fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
     private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase
@@ -189,7 +189,7 @@ class AnimeListViewModelFactory(
                 application,
                 fetchOngoingAnimeListUseCase,
                 fetchAnnouncedAnimeListUseCase,
-                fetchAllDatabaseItemsUseCase,
+                fetchAllDatabaseItemsAsFlowUseCase,
                 insertDatabaseItemUseCase,
                 deleteOneDatabaseItemUseCase,
                 fetchAnimeByIdUseCase
@@ -204,7 +204,7 @@ class AnimeListViewModelFactory(
                 application,
                 FetchOngoingAnimeListUseCase(application.apiRepository),
                 FetchAnnouncedAnimeListUseCase(application.apiRepository),
-                FetchAllDatabaseItemsUseCase(application.databaseRepository),
+                FetchAllDatabaseItemsAsFlowUseCase(application.databaseRepository),
                 InsertDatabaseItemUseCase(application.databaseRepository),
                 DeleteOneDatabaseItemUseCase(application.databaseRepository),
                 FetchAnimeByIdUseCase(application.apiRepository)

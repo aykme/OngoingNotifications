@@ -22,13 +22,13 @@ import kotlinx.coroutines.launch
 
 class FavoritesViewModel(
     private val application: AnimeNotiApplication,
-    private val fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
+    private val fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
 ) : ViewModel() {
 
     private val _followedAnimeList: Flow<List<Anime>> by lazy {
-        fetchAllDatabaseItemsUseCase()
+        fetchAllDatabaseItemsAsFlowUseCase()
     }
     val followedAnimeList: LiveData<List<Anime>> by lazy {
         _followedAnimeList.asLiveData()
@@ -163,7 +163,7 @@ class FavoritesViewModel(
 
 class FavoritesViewModelFactory(
     private val application: AnimeNotiApplication,
-    private val fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
+    private val fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
 ) :
@@ -173,7 +173,7 @@ class FavoritesViewModelFactory(
         if (modelClass.isAssignableFrom(FavoritesViewModel::class.java)) {
             return FavoritesViewModel(
                 application,
-                fetchAllDatabaseItemsUseCase,
+                fetchAllDatabaseItemsAsFlowUseCase,
                 insertDatabaseItemUseCase,
                 deleteOneDatabaseItemUseCase
             ) as T
@@ -185,7 +185,7 @@ class FavoritesViewModelFactory(
         fun getInstance(application: AnimeNotiApplication): FavoritesViewModelFactory {
             return FavoritesViewModelFactory(
                 application,
-                FetchAllDatabaseItemsUseCase(application.databaseRepository),
+                FetchAllDatabaseItemsAsFlowUseCase(application.databaseRepository),
                 InsertDatabaseItemUseCase(application.databaseRepository),
                 DeleteOneDatabaseItemUseCase(application.databaseRepository)
             )

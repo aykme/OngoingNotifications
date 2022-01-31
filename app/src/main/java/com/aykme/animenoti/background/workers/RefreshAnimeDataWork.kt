@@ -8,6 +8,7 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import com.aykme.animenoti.domain.model.Anime
+import com.aykme.animenoti.domain.usecase.FetchAllDatabaseItems
 import com.aykme.animenoti.domain.usecase.FetchAnimeByIdUseCase
 import com.aykme.animenoti.domain.usecase.UpdateDatabaseItemUseCase
 
@@ -17,6 +18,7 @@ const val REFRESH_ANIME_DATA_WORK = "RefreshAnimeDataWork"
 class RefreshAnimeDataWork(
     appContext: Context,
     params: WorkerParameters,
+    private val fetchAllDatabaseItems: FetchAllDatabaseItems,
     private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase,
     private val updateDatabaseItemUseCase: UpdateDatabaseItemUseCase
 ) :
@@ -27,6 +29,20 @@ class RefreshAnimeDataWork(
     override suspend fun doWork(): Result {
         Log.d(REFRESH_ANIME_DATA_WORK, "doWork() start")
         return try {
+            databaseItems = fetchAllDatabaseItems()
+            Log.d(REFRESH_ANIME_DATA_WORK, "databaseItems: $databaseItems")
+            for (databaseItem in databaseItems) {
+                val remoteItem = fetchAnimeByIdUseCase(databaseItem.id)
+                Log.d(REFRESH_ANIME_DATA_WORK, "remoteItem: $remoteItem")
+                val currentEpisodesAired = databaseItem.episodesAired ?: 0
+                val newEpisodesAired = remoteItem.episodesAired ?: 0
+                if (databaseItem != remoteItem) {
+                    updateDatabaseItemUseCase(remoteItem)
+                    Log.d(REFRESH_ANIME_DATA_WORK, "Обновлен item: $remoteItem")
+                } else {
+                    Log.d(REFRESH_ANIME_DATA_WORK, "item не обновлен: $remoteItem")
+                }
+            }
             Result.success()
         } catch (e: Throwable) {
             Result.failure()
@@ -34,6 +50,7 @@ class RefreshAnimeDataWork(
     }
 
     class Factory(
+        private val fetchAllDatabaseItems: FetchAllDatabaseItems,
         private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase,
         private val updateDatabaseItemUseCase: UpdateDatabaseItemUseCase
     ) : WorkerFactory() {
@@ -45,6 +62,7 @@ class RefreshAnimeDataWork(
             return RefreshAnimeDataWork(
                 appContext,
                 workerParameters,
+                fetchAllDatabaseItems,
                 fetchAnimeByIdUseCase,
                 updateDatabaseItemUseCase
             )
