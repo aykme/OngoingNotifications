@@ -1,8 +1,10 @@
 package com.aykme.animenoti.ui.animelist
 
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.paging.*
 import com.aykme.animenoti.AnimeNotiApplication
@@ -20,7 +22,7 @@ import kotlinx.coroutines.launch
 import kotlin.IllegalArgumentException
 
 class AnimeListViewModel(
-    application: AnimeNotiApplication,
+    private val application: AnimeNotiApplication,
     private val fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase,
     private val fetchAnnouncedAnimeListUseCase: FetchAnnouncedAnimeListUseCase,
     fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
@@ -30,6 +32,7 @@ class AnimeListViewModel(
 ) :
     ViewModel() {
 
+    private val tag = "AnimeListViewModel"
     private val resources = application.applicationContext.resources
     private val _apiStatus = MutableLiveData(ApiStatus.LOADING)
     val apiStatus: LiveData<ApiStatus> = _apiStatus
@@ -125,8 +128,14 @@ class AnimeListViewModel(
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
     ) {
-        insertIntoDatabaseAsync(animeId)
-        bindNotificationOnFields(notificationText, notificationOnFab, notificationOffFab)
+        try {
+            insertIntoDatabaseAsync(animeId)
+            bindNotificationOnFields(notificationText, notificationOnFab, notificationOffFab)
+        } catch (e: Throwable) {
+            Log.d(tag, "onNotificationOnClicked() failure")
+            val toastText = resources.getString(R.string.notification_on_failure)
+            Toast.makeText(application, toastText, Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun insertIntoDatabaseAsync(animeId: Int) {
