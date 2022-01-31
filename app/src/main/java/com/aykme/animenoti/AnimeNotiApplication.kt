@@ -31,9 +31,6 @@ class AnimeNotiApplication : Application() {
     val databaseRepository: AnimeDatabaseRepository by lazy {
         AnimeDatabaseRepositoryImpl(database.animeDao())
     }
-    private val workManagerNotification by lazy {
-        WorkManagerNotification(this)
-    }
 
     override fun onCreate() {
         super.onCreate()
@@ -49,7 +46,7 @@ class AnimeNotiApplication : Application() {
                     FetchAllDatabaseItems(databaseRepository),
                     FetchAnimeByIdUseCase(apiRepository),
                     UpdateDatabaseItemUseCase(databaseRepository),
-                    workManagerNotification
+                    WorkManagerNotification(this)
                 )
             )
             .build()
