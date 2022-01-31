@@ -30,17 +30,26 @@ class RefreshAnimeDataWork(
         Log.d(REFRESH_ANIME_DATA_WORK, "doWork() start")
         return try {
             databaseItems = fetchAllDatabaseItems()
-            Log.d(REFRESH_ANIME_DATA_WORK, "databaseItems: $databaseItems")
+            Log.d(
+                REFRESH_ANIME_DATA_WORK, "databaseItems: $databaseItems" +
+                        "\n--------------------------------------------------"
+            )
             for (databaseItem in databaseItems) {
                 val remoteItem = fetchAnimeByIdUseCase(databaseItem.id)
-                Log.d(REFRESH_ANIME_DATA_WORK, "remoteItem: $remoteItem")
+                Log.d(
+                    REFRESH_ANIME_DATA_WORK, "remoteItem: $remoteItem" +
+                            "\n--------------------------------------------------"
+                )
                 val currentEpisodesAired = databaseItem.episodesAired ?: 0
                 val newEpisodesAired = remoteItem.episodesAired ?: 0
                 if (databaseItem != remoteItem) {
                     updateDatabaseItemUseCase(remoteItem)
-                    Log.d(REFRESH_ANIME_DATA_WORK, "Обновлен item: $remoteItem")
+                    Log.d(
+                        REFRESH_ANIME_DATA_WORK, "Обновлен item: $remoteItem" +
+                                "\n--------------------------------------------------"
+                    )
                 } else {
-                    Log.d(REFRESH_ANIME_DATA_WORK, "item не обновлен: $remoteItem")
+                    Log.d(REFRESH_ANIME_DATA_WORK, "item не обновлен\n")
                 }
             }
             Result.success()

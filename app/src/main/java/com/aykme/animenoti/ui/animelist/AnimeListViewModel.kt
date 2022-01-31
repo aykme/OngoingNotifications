@@ -120,17 +120,18 @@ class AnimeListViewModel(
     }
 
     fun onNotificationOnClicked(
-        anime: Anime,
+        animeId: Int,
         notificationText: TextView,
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
     ) {
-        insertIntoDatabaseAsync(anime)
+        insertIntoDatabaseAsync(animeId)
         bindNotificationOnFields(notificationText, notificationOnFab, notificationOffFab)
     }
 
-    private fun insertIntoDatabaseAsync(anime: Anime) {
+    private fun insertIntoDatabaseAsync(animeId: Int) {
         viewModelScope.launch {
+            val anime = fetchAnimeByIdUseCase(animeId)
             insertDatabaseItemUseCase(anime)
         }
     }
@@ -146,12 +147,12 @@ class AnimeListViewModel(
     }
 
     fun onNotificationOffClicked(
-        anime: Anime,
+        animeId: Int,
         notificationText: TextView,
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
     ) {
-        deleteFromDatabaseAsync(anime.id)
+        deleteFromDatabaseAsync(animeId)
         bindNotificationOffFields(notificationText, notificationOnFab, notificationOffFab)
     }
 
