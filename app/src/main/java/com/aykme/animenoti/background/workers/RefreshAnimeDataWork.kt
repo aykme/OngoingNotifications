@@ -27,7 +27,6 @@ class RefreshAnimeDataWork(
     override suspend fun doWork(): Result {
         Log.d(REFRESH_ANIME_DATA_WORK, "doWork() start")
         return try {
-            Log.d(REFRESH_ANIME_DATA_WORK, "Database Items $databaseItems")
             Log.d(REFRESH_ANIME_DATA_WORK, "doWork() end success")
             Result.success()
         } catch (e: Throwable) {
