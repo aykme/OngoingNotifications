@@ -73,12 +73,14 @@ class RefreshAnimeDataWork(
                         "--------------------------------------------------\""
             )
         }
-        val notificationTitle = getNotificationTitle(newEpisodesCount)
-        val notificationText = getNotificationText(notificationTextBuffer)
-        makeNotification(
-            notificationTitle,
-            notificationText
-        )
+        if (newEpisodesCount > 0) {
+            val notificationTitle = getNotificationTitle(newEpisodesCount)
+            val notificationText = getNotificationText(notificationTextBuffer)
+            makeNotification(
+                notificationTitle,
+                notificationText
+            )
+        }
     }
 
     private fun isNewEpisode(databaseItem: Anime, remoteItem: Anime): Boolean {

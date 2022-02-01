@@ -12,11 +12,11 @@ class WorkManagerNotification(private val application: AnimeNotiApplication) {
 
     fun makeNotification(contentTitle: String, contentText: String) {
         val builder = NotificationCompat.Builder(application, NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.favorites_placeholder_image)
+            .setSmallIcon(R.drawable.ic_notification_48)
             .setContentTitle(contentTitle)
             .setContentText(contentText)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setVibrate(LongArray(10))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setVibrate(LongArray(0))
         NotificationManagerCompat.from(application).notify(notificationId, builder.build())
     }
 }
