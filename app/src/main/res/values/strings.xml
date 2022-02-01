@@ -18,6 +18,6 @@
     <string name="unknown">Нет информации</string>
     <string name="work_manager_notification_channel_name">Новые серии</string>
     <string name="work_manager_notification_channel_description">Показывает уведомления о выходе новых серий</string>
-    <string name="work_manager_notification_title">Вышли новые серии</string>
+    <string name="work_manager_notification_title">Новые серии: %1$d</string>
     <string name="notification_on_failure">Не удалось включить уведомление</string>
 </resources>

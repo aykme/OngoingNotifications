@@ -13,7 +13,6 @@ import com.aykme.animenoti.domain.model.Anime
 import com.aykme.animenoti.domain.usecase.FetchAllDatabaseItems
 import com.aykme.animenoti.domain.usecase.FetchAnimeByIdUseCase
 import com.aykme.animenoti.domain.usecase.UpdateDatabaseItemUseCase
-import java.lang.StringBuilder
 
 const val REFRESH_ANIME_DATA_WORK = "RefreshAnimeDataWork"
 
@@ -37,16 +36,17 @@ class RefreshAnimeDataWork(
             databaseItems = fetchAllDatabaseItems()
             Log.d(REFRESH_ANIME_DATA_WORK, "databaseItemsSize: ${databaseItems.size}")
             Log.d(REFRESH_ANIME_DATA_WORK, "databaseItems: ${databaseItems.joinToString()}")
-            refreshDatabaseItems(databaseItems)
+            checkNewEpisodes(databaseItems)
             Result.success()
         } catch (e: Throwable) {
             Result.failure()
         }
     }
 
-    private suspend fun refreshDatabaseItems(databaseItems: List<Anime>) {
+    private suspend fun checkNewEpisodes(databaseItems: List<Anime>) {
         var itemNumber = 1
-        val notificationTextBuilder = StringBuilder()
+        var newEpisodesCount = 0
+        val notificationTextBuffer = StringBuffer()
         for (databaseItem in databaseItems) {
             val remoteItem = try {
                 fetchAnimeByIdUseCase(databaseItem.id)
@@ -58,10 +58,9 @@ class RefreshAnimeDataWork(
             itemNumber++
             val hasNewEpisode = isNewEpisode(databaseItem, remoteItem)
             if (hasNewEpisode) {
-                notificationTextBuilder.append("${databaseItem.name}")
-                if (itemNumber < databaseItems.size) {
-                    notificationTextBuilder.append(", ")
-                }
+                newEpisodesCount += calculateNewEpisodes(databaseItem, remoteItem)
+                Log.d(REFRESH_ANIME_DATA_WORK, "newEpisodesCount: $newEpisodesCount")
+                notificationTextBuffer.append(", ${databaseItem.name}")
             }
             if (databaseItem != remoteItem) {
                 updateDatabaseItemUseCase(remoteItem)
@@ -74,9 +73,10 @@ class RefreshAnimeDataWork(
                         "--------------------------------------------------\""
             )
         }
-        val notificationText = notificationTextBuilder.toString()
+        val notificationTitle = getNotificationTitle(newEpisodesCount)
+        val notificationText = getNotificationText(notificationTextBuffer)
         makeNotification(
-            resources.getString(R.string.work_manager_notification_title),
+            notificationTitle,
             notificationText
         )
     }
@@ -85,6 +85,18 @@ class RefreshAnimeDataWork(
         val currentEpisodesAired = databaseItem.episodesAired ?: 0
         val newEpisodesAired = remoteItem.episodesAired ?: 0
         return newEpisodesAired > currentEpisodesAired
+    }
+
+    private fun calculateNewEpisodes(databaseItem: Anime, remoteItem: Anime): Int {
+        return (remoteItem.episodesAired ?: 0) - (databaseItem.episodesAired ?: 0)
+    }
+
+    private fun getNotificationTitle(newEpisodesCount: Int): String {
+        return resources.getString(R.string.work_manager_notification_title, newEpisodesCount)
+    }
+
+    private fun getNotificationText(notificationTextBuffer: StringBuffer): String {
+        return notificationTextBuffer.toString().trim(',', ' ')
     }
 
     private fun makeNotification(contentTitle: String, contentText: String) {
