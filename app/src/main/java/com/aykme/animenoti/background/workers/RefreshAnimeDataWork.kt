@@ -1,6 +1,7 @@
 package com.aykme.animenoti.background.workers
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.annotation.WorkerThread
 import androidx.work.CoroutineWorker
@@ -9,6 +10,8 @@ import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import com.aykme.animenoti.R
 import com.aykme.animenoti.background.notification.WorkManagerNotification
+import com.aykme.animenoti.data.source.remote.coil.ImageDownloader
+import com.aykme.animenoti.data.source.remote.shikimoriapi.BASE_URL
 import com.aykme.animenoti.domain.model.Anime
 import com.aykme.animenoti.domain.usecase.FetchAllDatabaseItems
 import com.aykme.animenoti.domain.usecase.FetchAnimeByIdUseCase
@@ -36,17 +39,16 @@ class RefreshAnimeDataWork(
             databaseItems = fetchAllDatabaseItems()
             Log.d(REFRESH_ANIME_DATA_WORK, "databaseItemsSize: ${databaseItems.size}")
             Log.d(REFRESH_ANIME_DATA_WORK, "databaseItems: ${databaseItems.joinToString()}")
-            checkNewEpisodes(databaseItems)
+            refreshAnimeData(databaseItems)
             Result.success()
         } catch (e: Throwable) {
             Result.failure()
         }
     }
 
-    private suspend fun checkNewEpisodes(databaseItems: List<Anime>) {
+    private suspend fun refreshAnimeData(databaseItems: List<Anime>) {
         var itemNumber = 1
         var newEpisodesCount = 0
-        val notificationTextBuffer = StringBuffer()
         for (databaseItem in databaseItems) {
             val remoteItem = try {
                 fetchAnimeByIdUseCase(databaseItem.id)
@@ -60,7 +62,14 @@ class RefreshAnimeDataWork(
             if (hasNewEpisode) {
                 newEpisodesCount += calculateNewEpisodes(databaseItem, remoteItem)
                 Log.d(REFRESH_ANIME_DATA_WORK, "newEpisodesCount: $newEpisodesCount")
-                notificationTextBuffer.append(", ${databaseItem.name}")
+                val notificationTitle = getNotificationTitle(remoteItem)
+                val notificationText = getNotificationText(remoteItem)
+                val fullImageUrl = BASE_URL + remoteItem.imageUrl
+                val notificationImage = ImageDownloader.fetchBitmap(
+                    applicationContext,
+                    fullImageUrl
+                )
+                makeNotification(notificationTitle, notificationText, notificationImage)
             }
             if (databaseItem != remoteItem) {
                 updateDatabaseItemUseCase(remoteItem)
@@ -71,14 +80,6 @@ class RefreshAnimeDataWork(
             Log.d(
                 REFRESH_ANIME_DATA_WORK, "\n" +
                         "--------------------------------------------------\""
-            )
-        }
-        if (newEpisodesCount > 0) {
-            val notificationTitle = getNotificationTitle(newEpisodesCount)
-            val notificationText = getNotificationText(notificationTextBuffer)
-            makeNotification(
-                notificationTitle,
-                notificationText
             )
         }
     }
@@ -93,18 +94,24 @@ class RefreshAnimeDataWork(
         return (remoteItem.episodesAired ?: 0) - (databaseItem.episodesAired ?: 0)
     }
 
-    private fun getNotificationTitle(newEpisodesCount: Int): String {
-        return resources.getString(R.string.work_manager_notification_title, newEpisodesCount)
+    private fun getNotificationTitle(remoteItem: Anime): String {
+        return remoteItem.name ?: resources.getString(R.string.unknown)
     }
 
-    private fun getNotificationText(notificationTextBuffer: StringBuffer): String {
-        return notificationTextBuffer.toString().trim(',', ' ')
+    private fun getNotificationText(remoteItem: Anime): String {
+        val newEpisodeNumber = remoteItem.episodesAired ?: 0
+        return resources.getString(R.string.work_manager_notification_title, newEpisodeNumber)
     }
 
-    private fun makeNotification(contentTitle: String, contentText: String) {
+    private fun makeNotification(
+        contentTitle: String,
+        contentText: String,
+        notificationImage: Bitmap
+    ) {
         workManagerNotification.makeNotification(
             contentTitle,
-            contentText
+            contentText,
+            notificationImage
         )
     }
 

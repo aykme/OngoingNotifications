@@ -72,7 +72,7 @@ class FavoritesViewModel(
     }
 
     fun bindImage(animeImage: ImageView, fullImageUrl: String) {
-        ImageDownloader.bindImage(animeImage, fullImageUrl)
+        ImageDownloader.bindImageView(animeImage, fullImageUrl)
     }
 
     fun bindNotificationFields(
