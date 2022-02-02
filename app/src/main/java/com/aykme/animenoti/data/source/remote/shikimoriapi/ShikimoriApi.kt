@@ -5,10 +5,11 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 const val BASE_URL = "https://shikimori.one"
-private const val ANIME_LIST_APPEND_URL = "api/animes"
+private const val ANIMES_APPEND_URL = "api/animes"
 
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
@@ -26,11 +27,14 @@ interface ShikimoriApi {
         }
     }
 
-    @GET(ANIME_LIST_APPEND_URL)
+    @GET(ANIMES_APPEND_URL)
     suspend fun getAnimeList(
         @Query("page") page: Int,
         @Query("limit") limit: Int,
         @Query("status") status: String? = null,
         @Query("order") order: String? = null
     ): List<AnimeResponse>
+
+    @GET("$ANIMES_APPEND_URL/{id}")
+    suspend fun getAnimeById(@Path("id") id: Int): AnimeDetailsResponse
 }

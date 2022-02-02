@@ -1,10 +1,16 @@
 package com.aykme.animenoti.ui.favorites
 
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.*
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.aykme.animenoti.AnimeNotiApplication
+import com.aykme.animenoti.background.workers.REFRESH_ANIME_DATA_WORK
+import com.aykme.animenoti.background.workers.RefreshAnimeDataWork
 import com.aykme.animenoti.data.source.remote.coil.ImageDownloader
 import com.aykme.animenoti.data.source.remote.shikimoriapi.BASE_URL
 import com.aykme.animenoti.domain.model.Anime
@@ -15,24 +21,36 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class FavoritesViewModel(
-    fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
+    private val application: AnimeNotiApplication,
+    private val fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
 ) : ViewModel() {
 
     private val _followedAnimeList: Flow<List<Anime>> by lazy {
-        fetchAllDatabaseItemsUseCase()
+        fetchAllDatabaseItemsAsFlowUseCase()
     }
     val followedAnimeList: LiveData<List<Anime>> by lazy {
         _followedAnimeList.asLiveData()
     }
 
     fun bindPlaceholder(placeholder: View, isActive: Boolean) {
-       if (isActive) {
-           placeholder.visibility = View.VISIBLE
-       } else {
-           placeholder.visibility = View.GONE
-       }
+        if (isActive) {
+            placeholder.visibility = View.VISIBLE
+        } else {
+            placeholder.visibility = View.GONE
+        }
+    }
+
+    fun refreshDatabaseItems() {
+        Log.d(REFRESH_ANIME_DATA_WORK, "viewModel refresh")
+        val workManager = WorkManager.getInstance(application)
+        val work = OneTimeWorkRequestBuilder<RefreshAnimeDataWork>().build()
+        workManager.enqueueUniqueWork(
+            RefreshAnimeDataWork::class.java.name,
+            ExistingWorkPolicy.REPLACE,
+            work
+        )
     }
 
     fun submitAnimeData(
@@ -45,11 +63,12 @@ class FavoritesViewModel(
     }
 
     fun getImageUrl(anime: Anime): String {
-        return BASE_URL + anime.imageUrl
+        val imageUrl = anime.imageUrl ?: ""
+        return BASE_URL + imageUrl
     }
 
-    fun getFormattedEpisodesField(anime: Anime): String {
-        return if (anime.episodesTotal < 1) "?" else anime.episodesTotal.toString()
+    fun getFormattedEpisodesField(episodesTotal: Int): String {
+        return if (episodesTotal < 1) "?" else episodesTotal.toString()
     }
 
     fun bindImage(animeImage: ImageView, fullImageUrl: String) {
@@ -61,12 +80,12 @@ class FavoritesViewModel(
         notificationOffFab: FloatingActionButton
     ) {
         viewModelScope.launch {
-                bindNotificationOnFields(notificationOnFab, notificationOffFab)
+            bindNotificationOnFields(notificationOnFab, notificationOffFab)
         }
     }
 
     fun bindAnimeStatus(
-        animeStatus: AnimeStatus,
+        animeStatus: AnimeStatus?,
         ongoingStatus: TextView,
         announcedStatus: TextView,
         releasedStatus: TextView,
@@ -84,6 +103,11 @@ class FavoritesViewModel(
             }
             AnimeStatus.RELEASED -> {
                 releasedStatus.visibility = View.VISIBLE
+                ongoingStatus.visibility = View.GONE
+                announcedStatus.visibility = View.GONE
+            }
+            else -> {
+                releasedStatus.visibility = View.GONE
                 ongoingStatus.visibility = View.GONE
                 announcedStatus.visibility = View.GONE
             }
@@ -138,7 +162,8 @@ class FavoritesViewModel(
 }
 
 class FavoritesViewModelFactory(
-    private val fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
+    private val application: AnimeNotiApplication,
+    private val fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
 ) :
@@ -147,7 +172,8 @@ class FavoritesViewModelFactory(
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(FavoritesViewModel::class.java)) {
             return FavoritesViewModel(
-                fetchAllDatabaseItemsUseCase,
+                application,
+                fetchAllDatabaseItemsAsFlowUseCase,
                 insertDatabaseItemUseCase,
                 deleteOneDatabaseItemUseCase
             ) as T
@@ -158,7 +184,8 @@ class FavoritesViewModelFactory(
     companion object {
         fun getInstance(application: AnimeNotiApplication): FavoritesViewModelFactory {
             return FavoritesViewModelFactory(
-                FetchAllDatabaseItemsUseCase(application.databaseRepository),
+                application,
+                FetchAllDatabaseItemsAsFlowUseCase(application.databaseRepository),
                 InsertDatabaseItemUseCase(application.databaseRepository),
                 DeleteOneDatabaseItemUseCase(application.databaseRepository)
             )

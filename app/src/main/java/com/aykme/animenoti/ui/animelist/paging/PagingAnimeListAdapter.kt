@@ -29,24 +29,26 @@ class PagingAnimeListAdapter(
             resources: Resources?,
             viewModel: AnimeListViewModel
         ) {
+            val episodesAired = anime.episodesAired?.toString() ?: "0"
+            val episodesTotal = anime.episodesTotal ?: 0
+            val formattedEpisodesTotal = viewModel.getFormattedEpisodesField(episodesTotal)
             val fullImageUrl = viewModel.getImageUrl(anime)
-            val episodesTotal = viewModel.getFormattedEpisodesField(anime)
             viewModel.bindImage(binding.animeImage, fullImageUrl)
 
             binding.apply {
-                animeName.text = anime.name
-                animeScore.text = anime.score.toString()
+                animeName.text = anime.name ?: resources?.getString(R.string.unknown)
+                animeScore.text = anime.score?.toString() ?: "0"
                 animeEpisodes.text = resources?.getString(
                     R.string.anime_episodes_aired,
-                    anime.episodesAired.toString(),
-                    episodesTotal
+                    episodesAired,
+                    formattedEpisodesTotal
                 )
                 val notificationText = animeNotificationText
                 val notificationOnFab = animeNotificationOnFab
                 val notificationOffFab = animeNotificationOffFab
                 notificationOnFab.setOnClickListener {
                     viewModel.onNotificationOnClicked(
-                        anime,
+                        anime.id,
                         notificationText,
                         notificationOnFab,
                         notificationOffFab
@@ -54,7 +56,7 @@ class PagingAnimeListAdapter(
                 }
                 notificationOffFab.setOnClickListener {
                     viewModel.onNotificationOffClicked(
-                        anime,
+                        anime.id,
                         notificationText,
                         notificationOnFab,
                         notificationOffFab

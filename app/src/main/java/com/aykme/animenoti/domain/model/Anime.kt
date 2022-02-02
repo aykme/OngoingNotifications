@@ -1,5 +1,6 @@
 package com.aykme.animenoti.domain.model
 
+import androidx.annotation.Nullable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -7,10 +8,14 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "anime_table")
 data class Anime(
     @PrimaryKey @ColumnInfo(name = "id") val id: Int,
-    @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "image_url") val imageUrl: String,
-    @ColumnInfo(name = "score") val score: Float,
-    @ColumnInfo(name = "episodes_aired") val episodesAired: Int,
-    @ColumnInfo(name = "episodes_total") val episodesTotal: Int,
-    @ColumnInfo(name = "status") val status: AnimeStatus
+    @Nullable @ColumnInfo(name = "name") val name: String?,
+    @Nullable @ColumnInfo(name = "image_url") val imageUrl: String?,
+    @Nullable @ColumnInfo(name = "score") val score: Float?,
+    @Nullable @ColumnInfo(name = "episodes_aired") val episodesAired: Int?,
+    @Nullable @ColumnInfo(name = "episodes_total") val episodesTotal: Int?,
+    @Nullable @ColumnInfo(name = "status") val status: AnimeStatus?,
+    @Nullable @ColumnInfo(name = "aired_on") val airedOn: String?,
+    @Nullable @ColumnInfo(name = "released_on") val releasedOn: String?,
+    @Nullable @ColumnInfo(name = "description") val description: String?,
+    @Nullable @ColumnInfo(name = "next_episode_at") val nextEpisodeAt: String?,
 )
