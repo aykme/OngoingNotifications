@@ -1,5 +1,6 @@
 package com.aykme.animenoti.background.notification
 
+import android.app.PendingIntent
 import android.graphics.Bitmap
 import androidx.core.app.NotificationCompat.*
 import androidx.core.app.NotificationManagerCompat
@@ -13,7 +14,12 @@ class WorkManagerNotification(private val application: AnimeNotiApplication) {
     private val notificationSummaryId = 0
     private val notificationGroupKey = "com.aykme.animenoti.background.notification"
 
-    fun makeNotification(contentTitle: String, contentText: String, notificationImage: Bitmap) {
+    fun makeNotification(
+        contentTitle: String,
+        contentText: String,
+        notificationImage: Bitmap,
+        pendingIntent: PendingIntent
+    ) {
 
         val builder = Builder(application, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_48)
@@ -24,9 +30,9 @@ class WorkManagerNotification(private val application: AnimeNotiApplication) {
             )
             .setLargeIcon(notificationImage)
             .setPriority(PRIORITY_HIGH)
-            .setVibrate(LongArray(1000))
             .setGroup(notificationGroupKey)
             .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
 
         val summaryBuilder = Builder(application, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_48)
@@ -41,10 +47,10 @@ class WorkManagerNotification(private val application: AnimeNotiApplication) {
                     )
             )
             .setPriority(PRIORITY_HIGH)
-            .setVibrate(LongArray(1000))
             .setGroup(notificationGroupKey)
             .setGroupSummary(true)
             .setGroupAlertBehavior(GROUP_ALERT_CHILDREN)
+            .setContentIntent(pendingIntent)
 
         NotificationManagerCompat.from(application).apply {
             notify(notificationId, builder.build())
