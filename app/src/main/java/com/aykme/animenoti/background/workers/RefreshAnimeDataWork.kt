@@ -3,10 +3,10 @@ package com.aykme.animenoti.background.workers
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.annotation.WorkerThread
+import androidx.navigation.NavDeepLinkBuilder
 import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
@@ -52,11 +52,11 @@ class RefreshAnimeDataWork(
 
     @SuppressLint("UnspecifiedImmutableFlag")
     private fun getPendingIntent(): PendingIntent {
-        val intent = Intent(applicationContext, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        return PendingIntent
-            .getActivity(applicationContext, 0, intent, 0)
+        return NavDeepLinkBuilder(applicationContext)
+            .setComponentName(MainActivity::class.java)
+            .setGraph(R.navigation.nav_graph)
+            .setDestination(R.id.favorites_anime)
+            .createPendingIntent()
     }
 
     private suspend fun refreshAnimeData(databaseItems: List<Anime>) {
