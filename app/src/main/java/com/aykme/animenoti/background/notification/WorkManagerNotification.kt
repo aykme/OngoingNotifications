@@ -1,8 +1,7 @@
 package com.aykme.animenoti.background.notification
 
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationCompat.GROUP_ALERT_ALL
-import androidx.core.app.NotificationCompat.GROUP_ALERT_CHILDREN
+import androidx.core.app.NotificationCompat.*
 import androidx.core.app.NotificationManagerCompat
 import com.aykme.animenoti.AnimeNotiApplication
 import com.aykme.animenoti.NOTIFICATION_CHANNEL_ID
