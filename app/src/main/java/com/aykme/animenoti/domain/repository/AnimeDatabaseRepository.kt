@@ -9,9 +9,11 @@ interface AnimeDatabaseRepository {
 
     suspend fun update(anime: Anime)
 
-    fun getItem(id: Int): Flow<Anime>
+    suspend fun getItem(id: Int): Anime
 
-    fun getItems(): Flow<List<Anime>>
+    fun getItemsAsFlow(): Flow<List<Anime>>
+
+    suspend fun getItems(): List<Anime>
 
     suspend fun delete(id: Int)
 

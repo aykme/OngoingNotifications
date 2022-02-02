@@ -15,11 +15,15 @@ class AnimeDatabaseRepositoryImpl(private val animeDao: AnimeDao) : AnimeDatabas
         animeDao.update(anime)
     }
 
-    override fun getItem(id: Int): Flow<Anime> {
+    override suspend fun getItem(id: Int): Anime {
         return animeDao.getItem(id)
     }
 
-    override fun getItems(): Flow<List<Anime>> {
+    override fun getItemsAsFlow(): Flow<List<Anime>> {
+        return animeDao.getItemsAsFlow()
+    }
+
+    override suspend fun getItems(): List<Anime> {
         return animeDao.getItems()
     }
 

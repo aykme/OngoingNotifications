@@ -35,6 +35,7 @@ class FavoritesFragment : Fragment() {
         val placeholder = binding.favoritesPlaceholder
 
         viewModel.apply {
+            refreshDatabaseItems()
             followedAnimeList.observe(viewLifecycleOwner) { followedAnimeList ->
                 bindPlaceholder(placeholder, followedAnimeList.isNullOrEmpty())
                 submitAnimeData(adapter, followedAnimeList)

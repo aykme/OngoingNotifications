@@ -1,8 +1,11 @@
 package com.aykme.animenoti
 
-import android.app.Application
+import android.app.*
+import android.content.Context
+import android.os.Build
 import android.util.Log
 import androidx.work.*
+import com.aykme.animenoti.background.notification.WorkManagerNotification
 import com.aykme.animenoti.background.workers.REFRESH_ANIME_DATA_WORK
 import com.aykme.animenoti.background.workers.RefreshAnimeDataWork
 import com.aykme.animenoti.data.repository.AnimeDatabaseRepositoryImpl
@@ -11,10 +14,12 @@ import com.aykme.animenoti.data.source.local.animedatabase.AnimeRoomDatabase
 import com.aykme.animenoti.data.source.remote.shikimoriapi.ShikimoriApi
 import com.aykme.animenoti.domain.repository.AnimeDatabaseRepository
 import com.aykme.animenoti.domain.repository.ApiRepository
-import com.aykme.animenoti.domain.usecase.FetchAllDatabaseItemsUseCase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
+import com.aykme.animenoti.domain.usecase.FetchAllDatabaseItems
+import com.aykme.animenoti.domain.usecase.FetchAnimeByIdUseCase
+import com.aykme.animenoti.domain.usecase.UpdateDatabaseItemUseCase
 import java.util.concurrent.TimeUnit
+
+const val NOTIFICATION_CHANNEL_ID = "Work Manager Notification Channel Id"
 
 class AnimeNotiApplication : Application() {
     val apiRepository: ApiRepository by lazy {
@@ -26,22 +31,27 @@ class AnimeNotiApplication : Application() {
     val databaseRepository: AnimeDatabaseRepository by lazy {
         AnimeDatabaseRepositoryImpl(database.animeDao())
     }
-    private val applicationScope = CoroutineScope(SupervisorJob())
 
     override fun onCreate() {
         super.onCreate()
         setupWorkManagerWork()
+        setupNotificationManager()
     }
 
     private fun setupWorkManagerWork() {
         Log.d(REFRESH_ANIME_DATA_WORK, "setupWorkManager() start")
         val workManagerConfiguration = Configuration.Builder()
             .setWorkerFactory(
-                RefreshAnimeDataWork.Factory(FetchAllDatabaseItemsUseCase(databaseRepository))
+                RefreshAnimeDataWork.Factory(
+                    FetchAllDatabaseItems(databaseRepository),
+                    FetchAnimeByIdUseCase(apiRepository),
+                    UpdateDatabaseItemUseCase(databaseRepository),
+                    WorkManagerNotification(this)
+                )
             )
             .build()
         WorkManager.initialize(this, workManagerConfiguration)
-        val work = PeriodicWorkRequestBuilder<RefreshAnimeDataWork>(10, TimeUnit.MINUTES)
+        val work = PeriodicWorkRequestBuilder<RefreshAnimeDataWork>(6, TimeUnit.HOURS)
             .build()
 
         WorkManager.getInstance(this)
@@ -51,5 +61,22 @@ class AnimeNotiApplication : Application() {
                 work
             )
         Log.d(REFRESH_ANIME_DATA_WORK, "setupWorkManager() end")
+    }
+
+    private fun setupNotificationManager() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannelName = getString(R.string.work_manager_notification_channel_name)
+            val description = getString(R.string.work_manager_notification_channel_description)
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                notificationChannelName,
+                importance
+            )
+            channel.description = description
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
     }
 }

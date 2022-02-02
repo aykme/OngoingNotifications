@@ -1,8 +1,10 @@
 package com.aykme.animenoti.ui.animelist
 
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.paging.*
 import com.aykme.animenoti.AnimeNotiApplication
@@ -20,21 +22,23 @@ import kotlinx.coroutines.launch
 import kotlin.IllegalArgumentException
 
 class AnimeListViewModel(
-    application: AnimeNotiApplication,
+    private val application: AnimeNotiApplication,
     private val fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase,
     private val fetchAnnouncedAnimeListUseCase: FetchAnnouncedAnimeListUseCase,
-    fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
+    fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
-    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
+    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
+    private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase
 ) :
     ViewModel() {
 
+    private val tag = "AnimeListViewModel"
     private val resources = application.applicationContext.resources
     private val _apiStatus = MutableLiveData(ApiStatus.LOADING)
     val apiStatus: LiveData<ApiStatus> = _apiStatus
     val animeDataType = MutableLiveData(AnimeDataType.ONGOING)
     val followedAnimeList: LiveData<List<Anime>> by lazy {
-        fetchAllDatabaseItemsUseCase().asLiveData()
+        fetchAllDatabaseItemsAsFlowUseCase().asLiveData()
     }
 
     fun bindApiStatus(status: ImageView) = when (apiStatus.value) {
@@ -84,11 +88,12 @@ class AnimeListViewModel(
     }
 
     fun getImageUrl(anime: Anime): String {
-        return BASE_URL + anime.imageUrl
+        val imageUrl = anime.imageUrl ?: ""
+        return BASE_URL + imageUrl
     }
 
-    fun getFormattedEpisodesField(anime: Anime): String {
-        return if (anime.episodesTotal < 1) "?" else anime.episodesTotal.toString()
+    fun getFormattedEpisodesField(episodesTotal: Int): String {
+        return if (episodesTotal < 1) "?" else episodesTotal.toString()
     }
 
     fun bindImage(animeImage: ImageView, fullImageUrl: String) {
@@ -118,17 +123,24 @@ class AnimeListViewModel(
     }
 
     fun onNotificationOnClicked(
-        anime: Anime,
+        animeId: Int,
         notificationText: TextView,
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
     ) {
-        insertIntoDatabaseAsync(anime)
-        bindNotificationOnFields(notificationText, notificationOnFab, notificationOffFab)
+        try {
+            insertIntoDatabaseAsync(animeId)
+            bindNotificationOnFields(notificationText, notificationOnFab, notificationOffFab)
+        } catch (e: Throwable) {
+            Log.d(tag, "onNotificationOnClicked() failure")
+            val toastText = resources.getString(R.string.notification_on_failure)
+            Toast.makeText(application, toastText, Toast.LENGTH_LONG).show()
+        }
     }
 
-    private fun insertIntoDatabaseAsync(anime: Anime) {
+    private fun insertIntoDatabaseAsync(animeId: Int) {
         viewModelScope.launch {
+            val anime = fetchAnimeByIdUseCase(animeId)
             insertDatabaseItemUseCase(anime)
         }
     }
@@ -144,12 +156,12 @@ class AnimeListViewModel(
     }
 
     fun onNotificationOffClicked(
-        anime: Anime,
+        animeId: Int,
         notificationText: TextView,
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
     ) {
-        deleteFromDatabaseAsync(anime.id)
+        deleteFromDatabaseAsync(animeId)
         bindNotificationOffFields(notificationText, notificationOnFab, notificationOffFab)
     }
 
@@ -174,9 +186,10 @@ class AnimeListViewModelFactory(
     private val application: AnimeNotiApplication,
     private val fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase,
     private val fetchAnnouncedAnimeListUseCase: FetchAnnouncedAnimeListUseCase,
-    private val fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
+    private val fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
-    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
+    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
+    private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase
 ) :
     ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
@@ -186,9 +199,10 @@ class AnimeListViewModelFactory(
                 application,
                 fetchOngoingAnimeListUseCase,
                 fetchAnnouncedAnimeListUseCase,
-                fetchAllDatabaseItemsUseCase,
+                fetchAllDatabaseItemsAsFlowUseCase,
                 insertDatabaseItemUseCase,
-                deleteOneDatabaseItemUseCase
+                deleteOneDatabaseItemUseCase,
+                fetchAnimeByIdUseCase
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
@@ -200,9 +214,10 @@ class AnimeListViewModelFactory(
                 application,
                 FetchOngoingAnimeListUseCase(application.apiRepository),
                 FetchAnnouncedAnimeListUseCase(application.apiRepository),
-                FetchAllDatabaseItemsUseCase(application.databaseRepository),
+                FetchAllDatabaseItemsAsFlowUseCase(application.databaseRepository),
                 InsertDatabaseItemUseCase(application.databaseRepository),
-                DeleteOneDatabaseItemUseCase(application.databaseRepository)
+                DeleteOneDatabaseItemUseCase(application.databaseRepository),
+                FetchAnimeByIdUseCase(application.apiRepository)
             )
         }
     }

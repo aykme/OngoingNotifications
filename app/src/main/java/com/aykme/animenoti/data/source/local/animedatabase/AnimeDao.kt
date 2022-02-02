@@ -14,10 +14,13 @@ interface AnimeDao {
     suspend fun update(anime: Anime)
 
     @Query("SELECT * FROM anime_table WHERE id = :id")
-    fun getItem(id: Int): Flow<Anime>
+    suspend fun getItem(id: Int): Anime
 
     @Query("SELECT * FROM anime_table ORDER BY name")
-    fun getItems(): Flow<List<Anime>>
+    fun getItemsAsFlow(): Flow<List<Anime>>
+
+    @Query("SELECT * FROM anime_table ORDER BY name")
+    suspend fun getItems(): List<Anime>
 
     @Query("DELETE FROM anime_table WHERE id =:id")
     suspend fun delete(id: Int)
