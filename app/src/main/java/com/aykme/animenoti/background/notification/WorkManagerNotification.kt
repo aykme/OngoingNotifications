@@ -9,8 +9,8 @@ import com.aykme.animenoti.R
 
 class WorkManagerNotification(private val application: AnimeNotiApplication) {
 
-    private var notificationId = 100
-    private var notificationSummaryId = 1000
+    private var notificationId = 1
+    private val notificationSummaryId = 0
     private val notificationGroupKey = "com.aykme.animenoti.background.notification"
 
     fun makeNotification(contentTitle: String, contentText: String, notificationImage: Bitmap) {
@@ -34,6 +34,11 @@ class WorkManagerNotification(private val application: AnimeNotiApplication) {
             .setStyle(
                 BigTextStyle()
                     .bigText(contentText)
+                    .setSummaryText(
+                        application.resources.getString(
+                            R.string.work_manager_notification_summary
+                        )
+                    )
             )
             .setPriority(PRIORITY_HIGH)
             .setVibrate(LongArray(1000))

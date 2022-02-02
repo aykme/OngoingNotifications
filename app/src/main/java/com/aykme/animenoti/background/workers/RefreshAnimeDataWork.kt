@@ -69,7 +69,11 @@ class RefreshAnimeDataWork(
                     applicationContext,
                     fullImageUrl
                 )
-                makeNotification(notificationTitle, notificationText, notificationImage)
+                makeNotification(
+                    notificationTitle,
+                    notificationText,
+                    notificationImage
+                )
             }
             if (databaseItem != remoteItem) {
                 updateDatabaseItemUseCase(remoteItem)
