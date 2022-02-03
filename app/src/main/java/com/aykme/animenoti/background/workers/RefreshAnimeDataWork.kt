@@ -11,13 +11,16 @@ import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
+import com.aykme.animenoti.MIN_PAGE
+import com.aykme.animenoti.PAGE_LIMIT
 import com.aykme.animenoti.R
 import com.aykme.animenoti.background.notification.WorkManagerNotification
 import com.aykme.animenoti.data.source.remote.coil.ImageDownloader
 import com.aykme.animenoti.data.source.remote.shikimoriapi.BASE_URL
 import com.aykme.animenoti.domain.model.Anime
-import com.aykme.animenoti.domain.usecase.FetchAllDatabaseItems
-import com.aykme.animenoti.domain.usecase.FetchAnimeByIdUseCase
+import com.aykme.animenoti.domain.usecase.FetchAllDatabaseItemsUseCase
+import com.aykme.animenoti.domain.usecase.FetchAnimeListByIdsUseCase
+import com.aykme.animenoti.domain.usecase.FetchDatabaseItemUseCase
 import com.aykme.animenoti.domain.usecase.UpdateDatabaseItemUseCase
 import com.aykme.animenoti.ui.base.MainActivity
 
@@ -27,27 +30,45 @@ const val REFRESH_ANIME_DATA_WORK = "RefreshAnimeDataWork"
 class RefreshAnimeDataWork(
     appContext: Context,
     params: WorkerParameters,
-    private val fetchAllDatabaseItems: FetchAllDatabaseItems,
-    private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase,
+    private val fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
+    private val fetchDatabaseItemUseCase: FetchDatabaseItemUseCase,
     private val updateDatabaseItemUseCase: UpdateDatabaseItemUseCase,
+    private val fetchAnimeListByIdsUseCase: FetchAnimeListByIdsUseCase,
     private val workManagerNotification: WorkManagerNotification
 ) :
     CoroutineWorker(appContext, params) {
 
     private val resources = applicationContext.resources
-    private lateinit var databaseItems: List<Anime>
-    private lateinit var pendingIntent: PendingIntent
 
     override suspend fun doWork(): Result {
-        Log.d(REFRESH_ANIME_DATA_WORK, "doWork() start")
         return try {
-            databaseItems = fetchAllDatabaseItems()
-            pendingIntent = getPendingIntent()
-            refreshAnimeData(databaseItems)
+            val databaseItems = fetchAllDatabaseItemsUseCase()
+            val remoteItems = fetchRemoteItems(databaseItems)
+            val pendingIntent = getPendingIntent()
+            refreshData(remoteItems, pendingIntent)
             Result.success()
         } catch (e: Throwable) {
             Result.failure()
         }
+    }
+
+    private suspend fun fetchRemoteItems(databaseItems: List<Anime>): List<Anime> {
+        val remoteItems = mutableListOf<Anime>()
+        var databaseIdsBuffer = StringBuffer()
+        var itemCount = 0
+        for ((index, databaseItem) in databaseItems.withIndex()) {
+            databaseIdsBuffer.append("${databaseItem.id},")
+            itemCount++
+            if (itemCount > (PAGE_LIMIT - 1) || index == databaseItems.size - 1) {
+                itemCount = 0
+                val databaseIds = databaseIdsBuffer.toString().trim(',')
+                databaseIdsBuffer = StringBuffer()
+                val tempRemoteItems =
+                    fetchAnimeListByIdsUseCase(MIN_PAGE, PAGE_LIMIT, databaseIds)
+                remoteItems.addAll(tempRemoteItems)
+            }
+        }
+        return remoteItems.toList()
     }
 
     @SuppressLint("UnspecifiedImmutableFlag")
@@ -59,17 +80,12 @@ class RefreshAnimeDataWork(
             .createPendingIntent()
     }
 
-    private suspend fun refreshAnimeData(databaseItems: List<Anime>) {
-        var itemNumber = 1
-        for (databaseItem in databaseItems) {
-            val remoteItem = try {
-                fetchAnimeByIdUseCase(databaseItem.id)
-            } catch (e: Throwable) {
-                Log.d(REFRESH_ANIME_DATA_WORK, "RemoteItem is Null")
-                null
-            } ?: continue
-            Log.d(REFRESH_ANIME_DATA_WORK, "remoteItem #$itemNumber: ${remoteItem.id}")
-            itemNumber++
+    private suspend fun refreshData(remoteItems: List<Anime>, pendingIntent: PendingIntent) {
+        var remoteItemNumber = 0
+        for (remoteItem in remoteItems) {
+            remoteItemNumber++
+            val id = remoteItem.id
+            val databaseItem = fetchDatabaseItemUseCase(id)
             val hasNewEpisode = isNewEpisode(databaseItem, remoteItem)
             if (hasNewEpisode) {
                 val notificationTitle = getNotificationTitle(remoteItem)
@@ -88,14 +104,10 @@ class RefreshAnimeDataWork(
             }
             if (databaseItem != remoteItem) {
                 updateDatabaseItemUseCase(remoteItem)
-                Log.d(REFRESH_ANIME_DATA_WORK, "Обновлен item: ${remoteItem.id}")
+                Log.d(REFRESH_ANIME_DATA_WORK, "item #$remoteItemNumber обновлен ${remoteItem.name}")
             } else {
-                Log.d(REFRESH_ANIME_DATA_WORK, "item не обновлен\n")
+                Log.d(REFRESH_ANIME_DATA_WORK, "item #$remoteItemNumber не обновлен${remoteItem.name}")
             }
-            Log.d(
-                REFRESH_ANIME_DATA_WORK, "\n" +
-                        "--------------------------------------------------\""
-            )
         }
     }
 
@@ -129,9 +141,10 @@ class RefreshAnimeDataWork(
     }
 
     class Factory(
-        private val fetchAllDatabaseItems: FetchAllDatabaseItems,
-        private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase,
+        private val fetchAllDatabaseItemsUseCase: FetchAllDatabaseItemsUseCase,
+        private val fetchDatabaseItemUseCase: FetchDatabaseItemUseCase,
         private val updateDatabaseItemUseCase: UpdateDatabaseItemUseCase,
+        private val fetchAnimeListByIdsUseCase: FetchAnimeListByIdsUseCase,
         private val workManagerNotification: WorkManagerNotification
     ) : WorkerFactory() {
         override fun createWorker(
@@ -142,9 +155,10 @@ class RefreshAnimeDataWork(
             return RefreshAnimeDataWork(
                 appContext,
                 workerParameters,
-                fetchAllDatabaseItems,
-                fetchAnimeByIdUseCase,
+                fetchAllDatabaseItemsUseCase,
+                fetchDatabaseItemUseCase,
                 updateDatabaseItemUseCase,
+                fetchAnimeListByIdsUseCase,
                 workManagerNotification
             )
         }

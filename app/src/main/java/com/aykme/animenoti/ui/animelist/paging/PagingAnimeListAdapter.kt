@@ -48,7 +48,7 @@ class PagingAnimeListAdapter(
                 val notificationOffFab = animeNotificationOffFab
                 notificationOnFab.setOnClickListener {
                     viewModel.onNotificationOnClicked(
-                        anime.id,
+                        anime,
                         notificationText,
                         notificationOnFab,
                         notificationOffFab
@@ -56,7 +56,7 @@ class PagingAnimeListAdapter(
                 }
                 notificationOffFab.setOnClickListener {
                     viewModel.onNotificationOffClicked(
-                        anime.id,
+                        anime,
                         notificationText,
                         notificationOnFab,
                         notificationOffFab
