@@ -13,4 +13,13 @@
     <color name="green">#81F343</color>
     <color name="black_transparent">#B5000000</color>
     <color name="white_transparent">#D5FFFFFF</color>
+    <color name="gold">#FFD700</color>
+    <color name="dark_khaki">#BDB76B</color>
+    <color name="golden_rod">#DAA520</color>
+    <color name="dark_golden_rod">#B8860B</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="medium_purple">#9370DB</color>
+    <color name="plum">#DDA0DD</color>
+    <color name="light_coral">#F08080</color>
+    <color name="salmon">#FA8072</color>
 </resources>
