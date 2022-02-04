@@ -57,28 +57,62 @@
                     android:id="@+id/favorites_score_ic"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_anime_score_24"
-                    app:layout_constraintBottom_toBottomOf="@id/favorites_image"
-                    app:layout_constraintStart_toStartOf="@id/favorites_image" />
+                    app:layout_constraintBottom_toBottomOf="@id/info_background"
+                    app:layout_constraintEnd_toStartOf="@id/favorites_score"
+                    app:layout_constraintStart_toStartOf="@id/info_background"
+                    app:layout_constraintTop_toTopOf="@id/info_background" />
 
                 <TextView
                     android:id="@+id/favorites_score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
                     android:maxLines="1"
-                    android:paddingEnd="8dp"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="@id/favorites_score_ic"
+                    app:layout_constraintEnd_toStartOf="@id/detail_button_container"
                     app:layout_constraintStart_toEndOf="@id/favorites_score_ic"
                     app:layout_constraintTop_toTopOf="@id/favorites_score_ic"
                     tools:ignore="RtlSymmetry"
                     tools:text="8.90" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/detail_button_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="@id/info_background"
+                    app:layout_constraintEnd_toEndOf="@id/info_background"
+                    app:layout_constraintStart_toEndOf="@id/favorites_score"
+                    app:layout_constraintTop_toTopOf="@id/info_background">
+
+                    <ImageButton
+                        android:id="@+id/detail_button_on"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/black"
+                        android:contentDescription="@string/favorites_detail_button_on"
+                        android:src="@drawable/ic_favorites_detail_on_24"
+                        android:visibility="visible"
+                        tools:ignore="TouchTargetSizeCheck">
+
+                    </ImageButton>
+
+                    <ImageButton
+                        android:id="@+id/detail_button_off"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/black"
+                        android:contentDescription="@string/favorites_detail_button_off"
+                        android:src="@drawable/ic_favorites_detail_off_24"
+                        android:visibility="gone"
+                        tools:ignore="TouchTargetSizeCheck">
+
+                    </ImageButton>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -96,8 +130,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/main_info_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/favorites_name"
@@ -125,10 +161,11 @@
                     android:textColor="@color/white"
                     app:layout_constraintStart_toStartOf="@id/favorites_name"
                     app:layout_constraintTop_toBottomOf="@id/favorites_name"
-                    tools:text="Эпизоды: 2 / ?"
-                    tools:ignore="RtlSymmetry" />
+                    tools:ignore="RtlSymmetry"
+                    tools:text="Эпизоды: 2 / ?" />
 
                 <LinearLayout
+                    android:id="@+id/status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingEnd="16dp"

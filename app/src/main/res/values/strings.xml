@@ -21,4 +21,8 @@
     <string name="work_manager_notification_title">Вышел эпизод %1$d</string>
     <string name="work_manager_notification_summary">Новые серии</string>
     <string name="notification_on_failure">Не удалось включить уведомление</string>
+    <string name="next_episode_at">Следующий эпизод: %1$s</string>
+    <string name="episodes_viewed">Просмотрено серий: </string>
+    <string name="favorites_detail_button_on">Включает альтернативное отображение информации в правой части</string>
+    <string name="favorites_detail_button_off">Выключает альтернативное отображение информации в правой части</string>
 </resources>

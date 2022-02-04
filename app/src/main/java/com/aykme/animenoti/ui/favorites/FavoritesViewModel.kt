@@ -2,8 +2,10 @@ package com.aykme.animenoti.ui.favorites
 
 import android.util.Log
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.*
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
@@ -27,6 +29,7 @@ class FavoritesViewModel(
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
 ) : ViewModel() {
 
+    private val resources = application.resources
     private val _followedAnimeList: Flow<List<Anime>> by lazy {
         fetchAllDatabaseItemsAsFlowUseCase()
     }
@@ -112,6 +115,26 @@ class FavoritesViewModel(
                 announcedStatus.visibility = View.GONE
             }
         }
+    }
+
+    fun onDetailButtonOnClicked(
+        detailButtonOn: ImageButton,
+        detailBuffonOff: ImageButton,
+        mainInfoContainer: ConstraintLayout
+    ) {
+        detailButtonOn.visibility = View.GONE
+        detailBuffonOff.visibility = View.VISIBLE
+        mainInfoContainer.visibility = View.GONE
+    }
+
+    fun onDetailButtonOffClicked(
+        detailButtonOn: ImageButton,
+        detailBuffonOff: ImageButton,
+        mainInfoContainer: ConstraintLayout
+    ) {
+        detailBuffonOff.visibility = View.GONE
+        detailButtonOn.visibility = View.VISIBLE
+        mainInfoContainer.visibility = View.VISIBLE
     }
 
     fun onNotificationOnClicked(

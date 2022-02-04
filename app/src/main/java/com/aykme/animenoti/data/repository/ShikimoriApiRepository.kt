@@ -17,13 +17,39 @@ class ShikimoriApiRepository(private val api: ShikimoriApi) : ApiRepository {
 
     override suspend fun getOngoings(page: Int, limit: Int): List<Anime> {
         val animeResponseList: List<AnimeResponse> =
-            safeApiCall { api.getAnimeList(page, limit, "ongoing", "ranked") }
+            safeApiCall {
+                api.getAnimeList(
+                    page = page,
+                    limit = limit,
+                    status = "ongoing",
+                    order = "ranked"
+                )
+            }
         return animeResponseList.toEntityList()
     }
 
     override suspend fun getAnnounced(page: Int, limit: Int): List<Anime> {
         val animeResponseList: List<AnimeResponse> =
-            safeApiCall { api.getAnimeList(page, limit, "anons", "popularity") }
+            safeApiCall {
+                api.getAnimeList(
+                    page = page,
+                    limit = limit,
+                    status = "anons",
+                    order = "popularity"
+                )
+            }
+        return animeResponseList.toEntityList()
+    }
+
+    override suspend fun getAnimeListByIds(page: Int, limit: Int, ids: String): List<Anime> {
+        val animeResponseList: List<AnimeResponse> =
+            safeApiCall {
+                api.getAnimeList(
+                    page = page,
+                    limit = limit,
+                    ids = ids
+                )
+            }
         return animeResponseList.toEntityList()
     }
 
@@ -36,12 +62,11 @@ class ShikimoriApiRepository(private val api: ShikimoriApi) : ApiRepository {
     private suspend fun <T> safeApiCall(apiCall: suspend () -> T): T {
         return withContext(Dispatchers.IO) {
             try {
-                Thread.sleep(200)
                 apiCall.invoke()
             } catch (e: Throwable) {
                 print(e.stackTrace)
                 Log.d(tag, "Api failure, trying again")
-                Thread.sleep(2000)
+                Thread.sleep(500)
                 try {
                     apiCall.invoke()
                 } catch (e: Throwable) {
