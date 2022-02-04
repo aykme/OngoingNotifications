@@ -129,14 +129,8 @@ class AnimeListViewModel(
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
     ) {
-        try {
-            insertIntoDatabaseAsync(anime)
-            bindNotificationOnFields(notificationText, notificationOnFab, notificationOffFab)
-        } catch (e: Throwable) {
-            Log.d(tag, "onNotificationOnClicked() failure")
-            val toastText = resources.getString(R.string.notification_on_failure)
-            Toast.makeText(application, toastText, Toast.LENGTH_LONG).show()
-        }
+        insertIntoDatabaseAsync(anime)
+        bindNotificationOnFields(notificationText, notificationOnFab, notificationOffFab)
     }
 
     private fun insertIntoDatabaseAsync(anime: Anime) {
