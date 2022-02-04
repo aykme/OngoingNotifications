@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.paging.*
 import com.aykme.animenoti.AnimeNotiApplication
+import com.aykme.animenoti.PAGE_LIMIT
 import com.aykme.animenoti.R
 import com.aykme.animenoti.data.source.remote.coil.ImageDownloader
 import com.aykme.animenoti.data.source.remote.shikimoriapi.BASE_URL
@@ -123,13 +124,13 @@ class AnimeListViewModel(
     }
 
     fun onNotificationOnClicked(
-        animeId: Int,
+        anime: Anime,
         notificationText: TextView,
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
     ) {
         try {
-            insertIntoDatabaseAsync(animeId)
+            insertIntoDatabaseAsync(anime)
             bindNotificationOnFields(notificationText, notificationOnFab, notificationOffFab)
         } catch (e: Throwable) {
             Log.d(tag, "onNotificationOnClicked() failure")
@@ -138,9 +139,8 @@ class AnimeListViewModel(
         }
     }
 
-    private fun insertIntoDatabaseAsync(animeId: Int) {
+    private fun insertIntoDatabaseAsync(anime: Anime) {
         viewModelScope.launch {
-            val anime = fetchAnimeByIdUseCase(animeId)
             insertDatabaseItemUseCase(anime)
         }
     }
@@ -156,18 +156,18 @@ class AnimeListViewModel(
     }
 
     fun onNotificationOffClicked(
-        animeId: Int,
+        anime: Anime,
         notificationText: TextView,
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
     ) {
-        deleteFromDatabaseAsync(animeId)
+        deleteFromDatabaseAsync(anime)
         bindNotificationOffFields(notificationText, notificationOnFab, notificationOffFab)
     }
 
-    private fun deleteFromDatabaseAsync(id: Int) {
+    private fun deleteFromDatabaseAsync(anime: Anime) {
         viewModelScope.launch {
-            deleteOneDatabaseItemUseCase(id)
+            deleteOneDatabaseItemUseCase(anime.id)
         }
     }
 
