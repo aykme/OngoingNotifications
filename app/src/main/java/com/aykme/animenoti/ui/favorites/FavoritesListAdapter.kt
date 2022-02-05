@@ -44,6 +44,7 @@ class FavoritesListAdapter(
                     releasedStatus
                 )
                 val mainInfoContainer = mainInfoContainer
+                val detailInfoContainer = detailInfoContainer
                 val detailButtonOn = detailButtonOn
                 val detailBuffonOff = detailButtonOff
                 val notificationOnFab = favoritesNotificationOnFab
@@ -52,15 +53,35 @@ class FavoritesListAdapter(
                     viewModel.onDetailButtonOnClicked(
                         detailButtonOn,
                         detailBuffonOff,
-                        mainInfoContainer
+                        mainInfoContainer,
+                        detailInfoContainer
                     )
                 }
                 detailBuffonOff.setOnClickListener {
                     viewModel.onDetailButtonOffClicked(
                         detailButtonOn,
                         detailBuffonOff,
-                        mainInfoContainer
+                        mainInfoContainer,
+                        detailInfoContainer
                     )
+                }
+                mainInfoContainer.setOnLongClickListener {
+                    viewModel.onDetailButtonOnClicked(
+                        detailButtonOn,
+                        detailBuffonOff,
+                        mainInfoContainer,
+                        detailInfoContainer
+                    )
+                    return@setOnLongClickListener true
+                }
+                detailInfoContainer.setOnLongClickListener {
+                    viewModel.onDetailButtonOffClicked(
+                        detailButtonOn,
+                        detailBuffonOff,
+                        mainInfoContainer,
+                        detailInfoContainer
+                    )
+                    return@setOnLongClickListener true
                 }
                 notificationOnFab.setOnClickListener {
                     viewModel.onNotificationOnClicked(

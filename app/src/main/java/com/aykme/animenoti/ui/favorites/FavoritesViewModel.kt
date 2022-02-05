@@ -120,20 +120,24 @@ class FavoritesViewModel(
     fun onDetailButtonOnClicked(
         detailButtonOn: ImageButton,
         detailBuffonOff: ImageButton,
-        mainInfoContainer: ConstraintLayout
+        mainInfoContainer: ConstraintLayout,
+        detailInfoContainer: ConstraintLayout
     ) {
         detailButtonOn.visibility = View.GONE
         detailBuffonOff.visibility = View.VISIBLE
         mainInfoContainer.visibility = View.GONE
+        detailInfoContainer.visibility = View.VISIBLE
     }
 
     fun onDetailButtonOffClicked(
         detailButtonOn: ImageButton,
         detailBuffonOff: ImageButton,
-        mainInfoContainer: ConstraintLayout
+        mainInfoContainer: ConstraintLayout,
+        detailInfoContainer: ConstraintLayout
     ) {
         detailBuffonOff.visibility = View.GONE
         detailButtonOn.visibility = View.VISIBLE
+        detailInfoContainer.visibility = View.GONE
         mainInfoContainer.visibility = View.VISIBLE
     }
 
