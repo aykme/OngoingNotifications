@@ -48,7 +48,7 @@ class FavoritesListAdapter(
                 val notificationOnFab = favoritesNotificationOnFab
                 val notificationOffFab = favoritesNotificationOffFab
                 detailButton.setOnClickListener {
-                    viewModel.onDetainButtonClicked(
+                    viewModel.onDetailButtonClicked(
                         isDetailInfoActive,
                         anime,
                         detailButton,
@@ -61,7 +61,7 @@ class FavoritesListAdapter(
                     isDetailInfoActive = !isDetailInfoActive
                 }
                 mainInfoContainer.setOnLongClickListener {
-                    viewModel.onDetainButtonClicked(
+                    viewModel.onDetailButtonClicked(
                         isDetailInfoActive,
                         anime,
                         detailButton,
@@ -87,8 +87,8 @@ class FavoritesListAdapter(
                         notificationOffFab
                     )
                 }
-                viewModel.bindNotificationFields(notificationOnFab, notificationOffFab)
-                viewModel.bindDetailButtonOff(
+                viewModel.bindDefaultStateNotificationFab(notificationOnFab, notificationOffFab)
+                viewModel.bindDefaultStateInfoFields(
                     detailButton,
                     favoritesName,
                     favoritesEpisodes,

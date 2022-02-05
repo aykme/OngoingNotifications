@@ -1,8 +1,10 @@
 package com.aykme.animenoti.ui.animelist
 
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.*
 import androidx.paging.*
 import com.aykme.animenoti.AnimeNotiApplication
@@ -127,8 +129,18 @@ class AnimeListViewModel(
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
     ) {
-        insertIntoDatabaseAsync(anime)
-        bindNotificationOnFields(notificationText, notificationOnFab, notificationOffFab)
+        try {
+            insertIntoDatabaseAsync(anime)
+            bindNotificationOnFields(notificationText, notificationOnFab, notificationOffFab)
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            Log.d(tag, resources.getString(R.string.database_access_error))
+            Toast.makeText(
+                application,
+                resources.getString(R.string.database_access_error),
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     private fun insertIntoDatabaseAsync(anime: Anime) {
@@ -153,8 +165,18 @@ class AnimeListViewModel(
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
     ) {
-        deleteFromDatabaseAsync(anime)
-        bindNotificationOffFields(notificationText, notificationOnFab, notificationOffFab)
+        try {
+            deleteFromDatabaseAsync(anime)
+            bindNotificationOffFields(notificationText, notificationOnFab, notificationOffFab)
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            Log.d(tag, resources.getString(R.string.database_access_error))
+            Toast.makeText(
+                application,
+                resources.getString(R.string.database_access_error),
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     private fun deleteFromDatabaseAsync(anime: Anime) {

@@ -33,6 +33,7 @@ class FavoritesFragment : Fragment() {
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
         val placeholder = binding.favoritesPlaceholder
+        placeholder.visibility = View.GONE
 
         viewModel.apply {
             refreshDatabaseItems()

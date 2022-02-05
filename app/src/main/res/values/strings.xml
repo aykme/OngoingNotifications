@@ -27,4 +27,6 @@
     <string name="getFormattedDateError">Не удалось получить дату</string>
     <string name="aired_on">Начало показа:\n%1$s (неточно)</string>
     <string name="released_on">Закончен:\n%1$s</string>
+    <string name="internet_connection_error">Ошибка интернет соединения</string>
+    <string name="database_access_error">Ошибка доступа к данным</string>
 </resources>

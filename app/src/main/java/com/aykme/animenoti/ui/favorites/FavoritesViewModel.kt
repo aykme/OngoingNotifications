@@ -41,7 +41,6 @@ class FavoritesViewModel(
     val followedAnimeList: LiveData<List<Anime>> by lazy {
         _followedAnimeList.asLiveData()
     }
-    //private var isDetailInfoVisible = false
 
     fun bindPlaceholder(placeholder: View, isActive: Boolean) {
         if (isActive) {
@@ -84,7 +83,26 @@ class FavoritesViewModel(
         ImageDownloader.bindImageView(animeImage, fullImageUrl)
     }
 
-    fun bindNotificationFields(
+    fun bindDefaultStateInfoFields(
+        detailButton: ImageButton,
+        favoritesName: TextView,
+        favoritesEpisodes: TextView,
+        status: LinearLayout,
+        favoritesNotificationFabLayout:
+        LinearLayout,
+        futureInfo: TextView
+    ) {
+        bindDetailButtonOff(
+            detailButton,
+            favoritesName,
+            favoritesEpisodes,
+            status,
+            favoritesNotificationFabLayout,
+            futureInfo
+        )
+    }
+
+    fun bindDefaultStateNotificationFab(
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
     ) {
@@ -128,8 +146,19 @@ class FavoritesViewModel(
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
     ) {
-        insertIntoDatabaseAsync(anime)
-        bindNotificationOnFields(notificationOnFab, notificationOffFab)
+        try {
+            insertIntoDatabaseAsync(anime)
+            bindNotificationOnFields(notificationOnFab, notificationOffFab)
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            Log.d(tag, resources.getString(R.string.database_access_error))
+            Toast.makeText(
+                application,
+                resources.getString(R.string.database_access_error),
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
     }
 
     private fun insertIntoDatabaseAsync(anime: Anime) {
@@ -151,8 +180,18 @@ class FavoritesViewModel(
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
     ) {
-        deleteFromDatabaseAsync(anime.id)
-        bindNotificationOffFields(notificationOnFab, notificationOffFab)
+        try {
+            deleteFromDatabaseAsync(anime.id)
+            bindNotificationOffFields(notificationOnFab, notificationOffFab)
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            Log.d(tag, resources.getString(R.string.database_access_error))
+            Toast.makeText(
+                application,
+                resources.getString(R.string.database_access_error),
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     private fun deleteFromDatabaseAsync(id: Int) {
@@ -169,7 +208,7 @@ class FavoritesViewModel(
         notificationOffFab.visibility = View.GONE
     }
 
-    fun onDetainButtonClicked(
+    fun onDetailButtonClicked(
         isDetailInfoActive: Boolean,
         anime: Anime,
         detailButton: ImageButton,
@@ -206,11 +245,22 @@ class FavoritesViewModel(
         when (anime.status) {
             AnimeStatus.ONGOING -> {
                 viewModelScope.launch {
-                    val nextEpisodeAt = fetchAnimeByIdUseCase(anime.id)
-                        .nextEpisodeAt
-                    val formattedDate = getFormattedDate(nextEpisodeAt)
-                    futureInfo.text =
-                        resources.getString(R.string.next_episode_at, formattedDate)
+                    try {
+                        val nextEpisodeAt = fetchAnimeByIdUseCase(anime.id)
+                            .nextEpisodeAt
+                        val formattedDate = getFormattedDate(nextEpisodeAt)
+                        futureInfo.text =
+                            resources.getString(R.string.next_episode_at, formattedDate)
+                    } catch (e: Throwable) {
+                        e.printStackTrace()
+                        futureInfo.text = resources.getString(R.string.unknown)
+                        Toast.makeText(
+                            application,
+                            resources.getString(R.string.internet_connection_error),
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
                 }
             }
             AnimeStatus.ANONS -> {
@@ -236,11 +286,6 @@ class FavoritesViewModel(
             dateToStringFormatter.format(unformattedDate!!)
         } catch (e: Throwable) {
             Log.d(tag, resources.getString(R.string.getFormattedDateError))
-            Toast.makeText(
-                application,
-                resources.getString(R.string.getFormattedDateError),
-                Toast.LENGTH_LONG
-            ).show()
             resources.getString(R.string.unknown)
         }
     }
@@ -266,7 +311,7 @@ class FavoritesViewModel(
         futureInfo.visibility = View.VISIBLE
     }
 
-    fun bindDetailButtonOff(
+    private fun bindDetailButtonOff(
         detailButton: ImageButton,
         favoritesName: TextView,
         favoritesEpisodes: TextView,

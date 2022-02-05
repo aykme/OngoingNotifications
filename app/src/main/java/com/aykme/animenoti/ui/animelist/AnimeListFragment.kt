@@ -41,6 +41,8 @@ class AnimeListFragment : Fragment() {
         val upperMenu: BottomNavigationView = binding.upperMenu
         val menuOngoingAnime = upperMenu.menu.findItem(R.id.ongoing_anime)
         val menuAnnouncedAnime = upperMenu.menu.findItem(R.id.announced_anime)
+        val status = binding.status
+        status.visibility = View.GONE
 
         menuOngoingAnime.setOnMenuItemClickListener {
             recyclerView.adapter = ongoingListAdapter
@@ -60,7 +62,7 @@ class AnimeListFragment : Fragment() {
                 submitAnimeData(currentAdapter, animeStatus)
             }
             apiStatus.observe(viewLifecycleOwner) {
-                bindApiStatus(binding.status)
+                bindApiStatus(status)
             }
             followedAnimeList.observe(viewLifecycleOwner) { followedAnimeList ->
                 ongoingListAdapter.submitFollowedAnimeList(followedAnimeList)
