@@ -1,16 +1,16 @@
 package com.aykme.animenoti.ui.favorites
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.View
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.aykme.animenoti.AnimeNotiApplication
+import com.aykme.animenoti.R
 import com.aykme.animenoti.background.workers.REFRESH_ANIME_DATA_WORK
 import com.aykme.animenoti.background.workers.RefreshAnimeDataWork
 import com.aykme.animenoti.data.source.remote.coil.ImageDownloader
@@ -21,14 +21,18 @@ import com.aykme.animenoti.domain.usecase.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class FavoritesViewModel(
     private val application: AnimeNotiApplication,
     private val fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
-    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
+    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
+    private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase
 ) : ViewModel() {
 
+    private val tag = "FavoritesViewModel"
     private val uniqueWorkName = "OneTimeRefreshAnimeDataWork"
     private val resources = application.resources
     private val _followedAnimeList: Flow<List<Anime>> by lazy {
@@ -37,7 +41,7 @@ class FavoritesViewModel(
     val followedAnimeList: LiveData<List<Anime>> by lazy {
         _followedAnimeList.asLiveData()
     }
-    private var isMainInfoVisible = true
+    //private var isDetailInfoVisible = false
 
     fun bindPlaceholder(placeholder: View, isActive: Boolean) {
         if (isActive) {
@@ -119,76 +123,6 @@ class FavoritesViewModel(
         }
     }
 
-    fun onDetainButtonClicked(
-        detailButtonOn: ImageButton,
-        detailButtonOff: ImageButton,
-        favoritesName: TextView,
-        favoritesEpisodes: TextView,
-        status: LinearLayout,
-        favoritesNotificationFabLayout: LinearLayout,
-        nextEpisodeAt: TextView
-    ) {
-        if (isMainInfoVisible) {
-            isMainInfoVisible = false
-            bindDetailButtonOn(
-                detailButtonOn,
-                detailButtonOff,
-                favoritesName,
-                favoritesEpisodes,
-                status,
-                favoritesNotificationFabLayout,
-                nextEpisodeAt
-            )
-        } else {
-            isMainInfoVisible = true
-            bindDetailButtonOff(
-                detailButtonOn,
-                detailButtonOff,
-                favoritesName,
-                favoritesEpisodes,
-                status,
-                favoritesNotificationFabLayout,
-                nextEpisodeAt
-            )
-        }
-    }
-
-    private fun bindDetailButtonOn(
-        detailButtonOn: ImageButton,
-        detailButtonOff: ImageButton,
-        favoritesName: TextView,
-        favoritesEpisodes: TextView,
-        status: LinearLayout,
-        favoritesNotificationFabLayout: LinearLayout,
-        nextEpisodeAt: TextView
-    ) {
-        detailButtonOn.visibility = View.GONE
-        detailButtonOff.visibility = View.VISIBLE
-        favoritesName.visibility = View.GONE
-        favoritesEpisodes.visibility = View.GONE
-        status.visibility = View.GONE
-        favoritesNotificationFabLayout.visibility = View.GONE
-        nextEpisodeAt.visibility = View.VISIBLE
-    }
-
-    private fun bindDetailButtonOff(
-        detailButtonOn: ImageButton,
-        detailButtonOff: ImageButton,
-        favoritesName: TextView,
-        favoritesEpisodes: TextView,
-        status: LinearLayout,
-        favoritesNotificationFabLayout: LinearLayout,
-        nextEpisodeAt: TextView
-    ) {
-        detailButtonOn.visibility = View.VISIBLE
-        detailButtonOff.visibility = View.GONE
-        favoritesName.visibility = View.VISIBLE
-        favoritesEpisodes.visibility = View.VISIBLE
-        status.visibility = View.VISIBLE
-        favoritesNotificationFabLayout.visibility = View.VISIBLE
-        nextEpisodeAt.visibility = View.GONE
-    }
-
     fun onNotificationOnClicked(
         anime: Anime,
         notificationOnFab: FloatingActionButton,
@@ -234,13 +168,132 @@ class FavoritesViewModel(
         notificationOnFab.visibility = View.VISIBLE
         notificationOffFab.visibility = View.GONE
     }
+
+    fun onDetainButtonClicked(
+        isDetailInfoActive: Boolean,
+        anime: Anime,
+        detailButton: ImageButton,
+        favoritesName: TextView,
+        favoritesEpisodes: TextView,
+        status: LinearLayout,
+        favoritesNotificationFabLayout: LinearLayout,
+        futureInfo: TextView
+    ) {
+        if (isDetailInfoActive) {
+            bindDetailButtonOff(
+                detailButton,
+                favoritesName,
+                favoritesEpisodes,
+                status,
+                favoritesNotificationFabLayout,
+                futureInfo
+            )
+
+        } else {
+            setDetailInfo(anime, futureInfo)
+            bindDetailButtonOn(
+                detailButton,
+                favoritesName,
+                favoritesEpisodes,
+                status,
+                favoritesNotificationFabLayout,
+                futureInfo
+            )
+        }
+    }
+
+    private fun setDetailInfo(anime: Anime, futureInfo: TextView) {
+        when (anime.status) {
+            AnimeStatus.ONGOING -> {
+                viewModelScope.launch {
+                    val nextEpisodeAt = fetchAnimeByIdUseCase(anime.id)
+                        .nextEpisodeAt
+                    val formattedDate = getFormattedDate(nextEpisodeAt)
+                    futureInfo.text =
+                        resources.getString(R.string.next_episode_at, formattedDate)
+                }
+            }
+            AnimeStatus.ANONS -> {
+                val formattedDate = getFormattedDate(anime.airedOn)
+                futureInfo.text = resources.getString(R.string.aired_on, formattedDate)
+            }
+            AnimeStatus.RELEASED -> {
+                val formattedDate = getFormattedDate(anime.releasedOn)
+                futureInfo.text = resources.getString(R.string.released_on, formattedDate)
+            }
+            else -> {
+                futureInfo.text = resources.getString(R.string.unknown)
+            }
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun getFormattedDate(date: String?): String {
+        return try {
+            val stringToDateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
+            val dateToStringFormatter = SimpleDateFormat("d MMM yyyy")
+            val unformattedDate = stringToDateFormatter.parse(date!!)
+            dateToStringFormatter.format(unformattedDate!!)
+        } catch (e: Throwable) {
+            Log.d(tag, resources.getString(R.string.getFormattedDateError))
+            Toast.makeText(
+                application,
+                resources.getString(R.string.getFormattedDateError),
+                Toast.LENGTH_LONG
+            ).show()
+            resources.getString(R.string.unknown)
+        }
+    }
+
+    private fun bindDetailButtonOn(
+        detailButton: ImageButton,
+        favoritesName: TextView,
+        favoritesEpisodes: TextView,
+        status: LinearLayout,
+        favoritesNotificationFabLayout: LinearLayout,
+        futureInfo: TextView
+    ) {
+        detailButton.setImageDrawable(
+            ContextCompat.getDrawable(
+                application,
+                R.drawable.ic_favorites_detail_off_24
+            )
+        )
+        favoritesName.visibility = View.GONE
+        favoritesEpisodes.visibility = View.GONE
+        status.visibility = View.GONE
+        favoritesNotificationFabLayout.visibility = View.GONE
+        futureInfo.visibility = View.VISIBLE
+    }
+
+    fun bindDetailButtonOff(
+        detailButton: ImageButton,
+        favoritesName: TextView,
+        favoritesEpisodes: TextView,
+        status: LinearLayout,
+        favoritesNotificationFabLayout: LinearLayout,
+        futureInfo: TextView
+    ) {
+        detailButton.setImageDrawable(
+            ContextCompat.getDrawable(
+                application,
+                R.drawable.ic_favorites_detail_on_24
+            )
+        )
+        favoritesName.visibility = View.VISIBLE
+        favoritesEpisodes.visibility = View.VISIBLE
+        status.visibility = View.VISIBLE
+        favoritesNotificationFabLayout.visibility = View.VISIBLE
+        futureInfo.visibility = View.GONE
+    }
 }
 
 class FavoritesViewModelFactory(
     private val application: AnimeNotiApplication,
     private val fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
-    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
+    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
+    private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase
 ) :
     ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
@@ -250,7 +303,8 @@ class FavoritesViewModelFactory(
                 application,
                 fetchAllDatabaseItemsAsFlowUseCase,
                 insertDatabaseItemUseCase,
-                deleteOneDatabaseItemUseCase
+                deleteOneDatabaseItemUseCase,
+                fetchAnimeByIdUseCase
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
@@ -262,7 +316,8 @@ class FavoritesViewModelFactory(
                 application,
                 FetchAllDatabaseItemsAsFlowUseCase(application.databaseRepository),
                 InsertDatabaseItemUseCase(application.databaseRepository),
-                DeleteOneDatabaseItemUseCase(application.databaseRepository)
+                DeleteOneDatabaseItemUseCase(application.databaseRepository),
+                FetchAnimeByIdUseCase(application.apiRepository)
             )
         }
     }

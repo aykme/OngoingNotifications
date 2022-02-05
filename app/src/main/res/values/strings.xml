@@ -12,7 +12,7 @@
     <string name="ongoing_anime_menu">Онгоинги</string>
     <string name="announced_anime_menu">Анонсы</string>
     <string name="ongoing_status">Онгоинг</string>
-    <string name="announced_status">Аннонс</string>
+    <string name="announced_status">Анонс</string>
     <string name="released_status">Закончен</string>
     <string name="favorites_placeholder">Ты пока не подписан на уведомления о новых сериях аниме. Нажми на меню [Аниме] и выбери что-нибудь (≧◡≦) ♡</string>
     <string name="unknown">Нет информации</string>
@@ -20,10 +20,11 @@
     <string name="work_manager_notification_channel_description">Показывает уведомления о выходе новых серий</string>
     <string name="work_manager_notification_title">Вышел эпизод %1$d</string>
     <string name="work_manager_notification_summary">Новые серии</string>
-    <string name="notification_on_failure">Не удалось включить уведомление</string>
-    <string name="next_episode_at_title">Следующий эпизод:</string>
-    <string name="next_episode_at_content">%1$s</string>
-    <string name="episodes_viewed">Просмотрено серий: </string>
+    <string name="next_episode_at">Следующий эпизод:\n%1$s</string>
+    <string name="episodes_viewed">Просмотрено: </string>
     <string name="favorites_detail_button_on">Включает альтернативное отображение информации в правой части</string>
     <string name="favorites_detail_button_off">Выключает альтернативное отображение информации в правой части</string>
+    <string name="getFormattedDateError">Не удалось получить дату</string>
+    <string name="aired_on">Начало показа:\n%1$s (неточно)</string>
+    <string name="released_on">Закончен:\n%1$s</string>
 </resources>

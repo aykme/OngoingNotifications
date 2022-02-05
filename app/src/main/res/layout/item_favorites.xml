@@ -72,45 +72,26 @@
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="@id/favorites_score_ic"
-                    app:layout_constraintEnd_toStartOf="@id/detail_button_container"
+                    app:layout_constraintEnd_toStartOf="@id/detail_button"
                     app:layout_constraintStart_toEndOf="@id/favorites_score_ic"
                     app:layout_constraintTop_toTopOf="@id/favorites_score_ic"
                     tools:ignore="RtlSymmetry"
                     tools:text="8.90" />
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/detail_button_container"
+                <ImageButton
+                    android:id="@+id/detail_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/black"
+                    android:contentDescription="@string/favorites_detail_button_on"
+                    android:src="@drawable/ic_favorites_detail_on_24"
                     app:layout_constraintBottom_toBottomOf="@id/info_background"
                     app:layout_constraintEnd_toEndOf="@id/info_background"
                     app:layout_constraintStart_toEndOf="@id/favorites_score"
-                    app:layout_constraintTop_toTopOf="@id/info_background">
+                    app:layout_constraintTop_toTopOf="@id/info_background"
+                    tools:ignore="TouchTargetSizeCheck">
 
-                    <ImageButton
-                        android:id="@+id/detail_button_on"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/black"
-                        android:contentDescription="@string/favorites_detail_button_on"
-                        android:src="@drawable/ic_favorites_detail_on_24"
-                        android:visibility="visible"
-                        tools:ignore="TouchTargetSizeCheck">
-
-                    </ImageButton>
-
-                    <ImageButton
-                        android:id="@+id/detail_button_off"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/black"
-                        android:contentDescription="@string/favorites_detail_button_off"
-                        android:src="@drawable/ic_favorites_detail_off_24"
-                        android:visibility="gone"
-                        tools:ignore="TouchTargetSizeCheck">
-
-                    </ImageButton>
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                </ImageButton>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -132,8 +113,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/main_info_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="visible">
+                android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/favorites_name"
@@ -145,7 +125,7 @@
                     android:paddingEnd="8dp"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:textColor="@color/white"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="RtlSymmetry"
@@ -160,7 +140,7 @@
                     android:paddingEnd="16dp"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:textColor="@color/white"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="@id/favorites_name"
                     app:layout_constraintTop_toBottomOf="@id/favorites_name"
                     tools:ignore="RtlSymmetry"
@@ -171,7 +151,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingEnd="16dp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/favorites_notification_fab_layout"
                     app:layout_constraintStart_toStartOf="@id/favorites_episodes"
                     app:layout_constraintTop_toTopOf="@id/favorites_notification_fab_layout"
@@ -220,7 +200,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent">
 
@@ -252,20 +232,20 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/next_episode_at"
+                    android:id="@+id/future_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:maxLines="2"
                     android:paddingEnd="8dp"
-                    android:text="@string/next_episode_at_title"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:textColor="@color/white"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="RtlSymmetry" />
+                    tools:ignore="RtlSymmetry"
+                    tools:text="Следующий эпизод:\n06.02.2022" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>

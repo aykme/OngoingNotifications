@@ -16,9 +16,11 @@ class FavoritesListAdapter(
     private val viewModel: FavoritesViewModel
 ) : ListAdapter<Anime, FavoritesListAdapter.AnimeViewHolder>(DiffCallback.instance) {
 
-    class AnimeViewHolder(private val binding: ItemFavoritesBinding) :
+    class AnimeViewHolder(
+        private val binding: ItemFavoritesBinding
+    ) :
         RecyclerView.ViewHolder(binding.root) {
-
+        private var isDetailInfoActive = false
         fun bind(
             anime: Anime,
             resources: Resources?,
@@ -45,37 +47,29 @@ class FavoritesListAdapter(
                 )
                 val notificationOnFab = favoritesNotificationOnFab
                 val notificationOffFab = favoritesNotificationOffFab
-                detailButtonOn.setOnClickListener {
+                detailButton.setOnClickListener {
                     viewModel.onDetainButtonClicked(
-                        detailButtonOn,
-                        detailButtonOff,
+                        isDetailInfoActive,
+                        anime,
+                        detailButton,
                         favoritesName,
                         favoritesEpisodes,
                         status,
                         favoritesNotificationFabLayout,
-                        nextEpisodeAt
+                        futureInfo
                     )
-                }
-                detailButtonOff.setOnClickListener {
-                    viewModel.onDetainButtonClicked(
-                        detailButtonOn,
-                        detailButtonOff,
-                        favoritesName,
-                        favoritesEpisodes,
-                        status,
-                        favoritesNotificationFabLayout,
-                        nextEpisodeAt
-                    )
+                    isDetailInfoActive = !isDetailInfoActive
                 }
                 mainInfoContainer.setOnLongClickListener {
                     viewModel.onDetainButtonClicked(
-                        detailButtonOn,
-                        detailButtonOff,
+                        isDetailInfoActive,
+                        anime,
+                        detailButton,
                         favoritesName,
                         favoritesEpisodes,
                         status,
                         favoritesNotificationFabLayout,
-                        nextEpisodeAt
+                        futureInfo
                     )
                     return@setOnLongClickListener true
                 }
@@ -94,6 +88,14 @@ class FavoritesListAdapter(
                     )
                 }
                 viewModel.bindNotificationFields(notificationOnFab, notificationOffFab)
+                viewModel.bindDetailButtonOff(
+                    detailButton,
+                    favoritesName,
+                    favoritesEpisodes,
+                    status,
+                    favoritesNotificationFabLayout,
+                    futureInfo
+                )
             }
         }
     }
