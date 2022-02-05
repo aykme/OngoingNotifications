@@ -4,8 +4,8 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.*
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
@@ -37,6 +37,7 @@ class FavoritesViewModel(
     val followedAnimeList: LiveData<List<Anime>> by lazy {
         _followedAnimeList.asLiveData()
     }
+    private var isMainInfoVisible = true
 
     fun bindPlaceholder(placeholder: View, isActive: Boolean) {
         if (isActive) {
@@ -118,28 +119,74 @@ class FavoritesViewModel(
         }
     }
 
-    fun onDetailButtonOnClicked(
+    fun onDetainButtonClicked(
         detailButtonOn: ImageButton,
-        detailBuffonOff: ImageButton,
-        mainInfoContainer: ConstraintLayout,
-        detailInfoContainer: ConstraintLayout
+        detailButtonOff: ImageButton,
+        favoritesName: TextView,
+        favoritesEpisodes: TextView,
+        status: LinearLayout,
+        favoritesNotificationFabLayout: LinearLayout,
+        nextEpisodeAt: TextView
     ) {
-        detailButtonOn.visibility = View.GONE
-        detailBuffonOff.visibility = View.VISIBLE
-        mainInfoContainer.visibility = View.GONE
-        detailInfoContainer.visibility = View.VISIBLE
+        if (isMainInfoVisible) {
+            isMainInfoVisible = false
+            bindDetailButtonOn(
+                detailButtonOn,
+                detailButtonOff,
+                favoritesName,
+                favoritesEpisodes,
+                status,
+                favoritesNotificationFabLayout,
+                nextEpisodeAt
+            )
+        } else {
+            isMainInfoVisible = true
+            bindDetailButtonOff(
+                detailButtonOn,
+                detailButtonOff,
+                favoritesName,
+                favoritesEpisodes,
+                status,
+                favoritesNotificationFabLayout,
+                nextEpisodeAt
+            )
+        }
     }
 
-    fun onDetailButtonOffClicked(
+    private fun bindDetailButtonOn(
         detailButtonOn: ImageButton,
-        detailBuffonOff: ImageButton,
-        mainInfoContainer: ConstraintLayout,
-        detailInfoContainer: ConstraintLayout
+        detailButtonOff: ImageButton,
+        favoritesName: TextView,
+        favoritesEpisodes: TextView,
+        status: LinearLayout,
+        favoritesNotificationFabLayout: LinearLayout,
+        nextEpisodeAt: TextView
     ) {
-        detailBuffonOff.visibility = View.GONE
+        detailButtonOn.visibility = View.GONE
+        detailButtonOff.visibility = View.VISIBLE
+        favoritesName.visibility = View.GONE
+        favoritesEpisodes.visibility = View.GONE
+        status.visibility = View.GONE
+        favoritesNotificationFabLayout.visibility = View.GONE
+        nextEpisodeAt.visibility = View.VISIBLE
+    }
+
+    private fun bindDetailButtonOff(
+        detailButtonOn: ImageButton,
+        detailButtonOff: ImageButton,
+        favoritesName: TextView,
+        favoritesEpisodes: TextView,
+        status: LinearLayout,
+        favoritesNotificationFabLayout: LinearLayout,
+        nextEpisodeAt: TextView
+    ) {
         detailButtonOn.visibility = View.VISIBLE
-        detailInfoContainer.visibility = View.GONE
-        mainInfoContainer.visibility = View.VISIBLE
+        detailButtonOff.visibility = View.GONE
+        favoritesName.visibility = View.VISIBLE
+        favoritesEpisodes.visibility = View.VISIBLE
+        status.visibility = View.VISIBLE
+        favoritesNotificationFabLayout.visibility = View.VISIBLE
+        nextEpisodeAt.visibility = View.GONE
     }
 
     fun onNotificationOnClicked(

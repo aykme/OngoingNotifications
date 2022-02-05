@@ -145,6 +145,7 @@
                     android:paddingEnd="8dp"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:textColor="@color/white"
+                    android:visibility="visible"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="RtlSymmetry"
@@ -159,6 +160,7 @@
                     android:paddingEnd="16dp"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:textColor="@color/white"
+                    android:visibility="visible"
                     app:layout_constraintStart_toStartOf="@id/favorites_name"
                     app:layout_constraintTop_toBottomOf="@id/favorites_name"
                     tools:ignore="RtlSymmetry"
@@ -169,6 +171,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingEnd="16dp"
+                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="@id/favorites_notification_fab_layout"
                     app:layout_constraintStart_toStartOf="@id/favorites_episodes"
                     app:layout_constraintTop_toTopOf="@id/favorites_notification_fab_layout"
@@ -217,6 +220,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
+                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent">
 
@@ -246,13 +250,6 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:maxImageSize="40dp" />
                 </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/detail_info_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/next_episode_at"
@@ -265,11 +262,11 @@
                     android:text="@string/next_episode_at_title"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:textColor="@color/white"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="RtlSymmetry" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         </com.google.android.material.card.MaterialCardView>
 

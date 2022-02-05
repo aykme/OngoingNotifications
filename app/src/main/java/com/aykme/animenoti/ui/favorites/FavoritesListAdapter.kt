@@ -43,43 +43,39 @@ class FavoritesListAdapter(
                     announcedStatus,
                     releasedStatus
                 )
-                val mainInfoContainer = mainInfoContainer
-                val detailInfoContainer = detailInfoContainer
-                val detailButtonOn = detailButtonOn
-                val detailBuffonOff = detailButtonOff
                 val notificationOnFab = favoritesNotificationOnFab
                 val notificationOffFab = favoritesNotificationOffFab
                 detailButtonOn.setOnClickListener {
-                    viewModel.onDetailButtonOnClicked(
+                    viewModel.onDetainButtonClicked(
                         detailButtonOn,
-                        detailBuffonOff,
-                        mainInfoContainer,
-                        detailInfoContainer
+                        detailButtonOff,
+                        favoritesName,
+                        favoritesEpisodes,
+                        status,
+                        favoritesNotificationFabLayout,
+                        nextEpisodeAt
                     )
                 }
-                detailBuffonOff.setOnClickListener {
-                    viewModel.onDetailButtonOffClicked(
+                detailButtonOff.setOnClickListener {
+                    viewModel.onDetainButtonClicked(
                         detailButtonOn,
-                        detailBuffonOff,
-                        mainInfoContainer,
-                        detailInfoContainer
+                        detailButtonOff,
+                        favoritesName,
+                        favoritesEpisodes,
+                        status,
+                        favoritesNotificationFabLayout,
+                        nextEpisodeAt
                     )
                 }
                 mainInfoContainer.setOnLongClickListener {
-                    viewModel.onDetailButtonOnClicked(
+                    viewModel.onDetainButtonClicked(
                         detailButtonOn,
-                        detailBuffonOff,
-                        mainInfoContainer,
-                        detailInfoContainer
-                    )
-                    return@setOnLongClickListener true
-                }
-                detailInfoContainer.setOnLongClickListener {
-                    viewModel.onDetailButtonOffClicked(
-                        detailButtonOn,
-                        detailBuffonOff,
-                        mainInfoContainer,
-                        detailInfoContainer
+                        detailButtonOff,
+                        favoritesName,
+                        favoritesEpisodes,
+                        status,
+                        favoritesNotificationFabLayout,
+                        nextEpisodeAt
                     )
                     return@setOnLongClickListener true
                 }
