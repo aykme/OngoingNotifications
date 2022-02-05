@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit
 const val NOTIFICATION_CHANNEL_ID = "Work Manager Notification Channel Id"
 
 class AnimeNotiApplication : Application() {
+    private val uniqueWorkName = "PeriodicRefreshAnimeDataWork"
     val apiRepository: ApiRepository by lazy {
         ShikimoriApiRepository(ShikimoriApi.instance)
     }
@@ -55,7 +56,7 @@ class AnimeNotiApplication : Application() {
 
         WorkManager.getInstance(this)
             .enqueueUniquePeriodicWork(
-                RefreshAnimeDataWork::class.java.name,
+                uniqueWorkName,
                 ExistingPeriodicWorkPolicy.KEEP,
                 work
             )

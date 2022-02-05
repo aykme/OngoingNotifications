@@ -29,6 +29,7 @@ class FavoritesViewModel(
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase
 ) : ViewModel() {
 
+    private val uniqueWorkName = "OneTimeRefreshAnimeDataWork"
     private val resources = application.resources
     private val _followedAnimeList: Flow<List<Anime>> by lazy {
         fetchAllDatabaseItemsAsFlowUseCase()
@@ -50,8 +51,8 @@ class FavoritesViewModel(
         val workManager = WorkManager.getInstance(application)
         val work = OneTimeWorkRequestBuilder<RefreshAnimeDataWork>().build()
         workManager.enqueueUniqueWork(
-            RefreshAnimeDataWork::class.java.name,
-            ExistingWorkPolicy.REPLACE,
+            uniqueWorkName,
+            ExistingWorkPolicy.KEEP,
             work
         )
     }
