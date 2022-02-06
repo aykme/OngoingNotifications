@@ -90,15 +90,23 @@ class FavoritesViewModel(
         favoritesEpisodes: TextView,
         status: LinearLayout,
         notificationFab: FloatingActionButton,
-        futureInfo: TextView
+        futureInfo: TextView,
+        episodesViewedTitle: TextView,
+        episodesViewedMinusButton: ImageButton,
+        episodesViewedNumber: TextView,
+        episodesViewedPlusButton: ImageButton
     ) {
-        bindDetailButtonOff(
+        setVisibilityDetailButtonOff(
             detailButton,
             favoritesName,
             favoritesEpisodes,
             status,
             notificationFab,
-            futureInfo
+            futureInfo,
+            episodesViewedTitle,
+            episodesViewedMinusButton,
+            episodesViewedNumber,
+            episodesViewedPlusButton
         )
     }
 
@@ -212,32 +220,45 @@ class FavoritesViewModel(
         favoritesEpisodes: TextView,
         status: LinearLayout,
         notificationFab: FloatingActionButton,
-        futureInfo: TextView
+        futureInfo: TextView,
+        episodesViewedTitle: TextView,
+        episodesViewedMinusButton: ImageButton,
+        episodesViewedNumber: TextView,
+        episodesViewedPlusButton: ImageButton
     ) {
         if (isDetailInfoActive) {
-            bindDetailButtonOff(
+            setVisibilityDetailButtonOff(
                 detailButton,
                 favoritesName,
                 favoritesEpisodes,
                 status,
                 notificationFab,
-                futureInfo
+                futureInfo,
+                episodesViewedTitle,
+                episodesViewedMinusButton,
+                episodesViewedNumber,
+                episodesViewedPlusButton
             )
 
         } else {
-            setDetailInfo(anime, futureInfo)
-            bindDetailButtonOn(
+            bindFutureInfoFields(anime, futureInfo)
+            bindEpisodesViewedFields(episodesViewedNumber)
+            setVisibilityDetailButtonOn(
                 detailButton,
                 favoritesName,
                 favoritesEpisodes,
                 status,
                 notificationFab,
-                futureInfo
+                futureInfo,
+                episodesViewedTitle,
+                episodesViewedMinusButton,
+                episodesViewedNumber,
+                episodesViewedPlusButton
             )
         }
     }
 
-    private fun setDetailInfo(anime: Anime, futureInfo: TextView) {
+    private fun bindFutureInfoFields(anime: Anime, futureInfo: TextView) {
         when (anime.status) {
             AnimeStatus.ONGOING -> {
                 viewModelScope.launch {
@@ -281,52 +302,72 @@ class FavoritesViewModel(
         }
     }
 
-    private fun bindDetailButtonOn(
+    private fun bindEpisodesViewedFields(episodesViewedNumber: TextView) {
+        episodesViewedNumber.text = "0"
+    }
+
+    private fun setVisibilityDetailButtonOn(
         detailButton: ImageButton,
         favoritesName: TextView,
         favoritesEpisodes: TextView,
         status: LinearLayout,
         notificationFab: FloatingActionButton,
-        futureInfo: TextView
+        futureInfo: TextView,
+        episodesViewedTitle: TextView,
+        episodesViewedMinusButton: ImageButton,
+        episodesViewedNumber: TextView,
+        episodesViewedPlusButton: ImageButton
     ) {
         detailButton.setImageDrawable(
             ContextCompat.getDrawable(
                 application,
-                R.drawable.ic_favorites_detail_off_24
+                R.drawable.ic_favorites_detail_off_button_24
             )
         )
         detailButton.contentDescription = resources.getString(
-            R.string.favorites_detail_button_off
+            R.string.favorites_detail_off_button
         )
         favoritesName.visibility = View.GONE
         favoritesEpisodes.visibility = View.GONE
         status.visibility = View.GONE
         notificationFab.visibility = View.GONE
         futureInfo.visibility = View.VISIBLE
+        episodesViewedTitle.visibility = View.VISIBLE
+        episodesViewedMinusButton.visibility = View.VISIBLE
+        episodesViewedNumber.visibility = View.VISIBLE
+        episodesViewedPlusButton.visibility = View.VISIBLE
     }
 
-    private fun bindDetailButtonOff(
+    private fun setVisibilityDetailButtonOff(
         detailButton: ImageButton,
         favoritesName: TextView,
         favoritesEpisodes: TextView,
         status: LinearLayout,
         notificationFab: FloatingActionButton,
-        futureInfo: TextView
+        futureInfo: TextView,
+        episodesViewedTitle: TextView,
+        episodesViewedMinusButton: ImageButton,
+        episodesViewedNumber: TextView,
+        episodesViewedPlusButton: ImageButton
     ) {
         detailButton.setImageDrawable(
             ContextCompat.getDrawable(
                 application,
-                R.drawable.ic_favorites_detail_on_24
+                R.drawable.ic_favorites_detail_on_button_24
             )
         )
         detailButton.contentDescription = resources.getString(
-            R.string.favorites_detail_button_on
+            R.string.favorites_detail_on_button
         )
         favoritesName.visibility = View.VISIBLE
         favoritesEpisodes.visibility = View.VISIBLE
         status.visibility = View.VISIBLE
         notificationFab.visibility = View.VISIBLE
         futureInfo.visibility = View.GONE
+        episodesViewedTitle.visibility = View.GONE
+        episodesViewedMinusButton.visibility = View.GONE
+        episodesViewedNumber.visibility = View.GONE
+        episodesViewedPlusButton.visibility = View.GONE
     }
 
     private fun makeDatabaseConnectionErrorMassage() {

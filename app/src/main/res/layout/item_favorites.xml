@@ -83,8 +83,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/black"
-                    android:contentDescription="@string/favorites_detail_button_on"
-                    android:src="@drawable/ic_favorites_detail_on_24"
+                    android:contentDescription="@string/favorites_detail_on_button"
+                    android:src="@drawable/ic_favorites_detail_on_button_24"
                     app:layout_constraintBottom_toBottomOf="@id/info_background"
                     app:layout_constraintEnd_toEndOf="@id/info_background"
                     app:layout_constraintStart_toEndOf="@id/favorites_score"
@@ -125,7 +125,7 @@
                     android:paddingEnd="8dp"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:textColor="@color/white"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="RtlSymmetry"
@@ -140,7 +140,7 @@
                     android:paddingEnd="16dp"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:textColor="@color/white"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="@id/favorites_name"
                     app:layout_constraintTop_toBottomOf="@id/favorites_name"
                     tools:ignore="RtlSymmetry"
@@ -151,7 +151,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingEnd="16dp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/favorites_notification_fab"
                     app:layout_constraintStart_toStartOf="@id/favorites_episodes"
                     app:layout_constraintTop_toTopOf="@id/favorites_notification_fab"
@@ -204,7 +204,7 @@
                     android:alpha="0.8"
                     android:contentDescription="@string/notification_off_ic"
                     android:src="@drawable/ic_notification_on_24"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:maxImageSize="40dp" />
@@ -220,11 +220,73 @@
                     android:paddingEnd="8dp"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                     android:textColor="@color/white"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="RtlSymmetry"
                     tools:text="Следующий эпизод:\n06.02.2022" />
+
+                <TextView
+                    android:id="@+id/episodes_viewed_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:maxLines="1"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="8dp"
+                    android:text="@string/episodes_viewed_title"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/white"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toTopOf="@id/episodes_viewed_minus_button"
+                    app:layout_constraintStart_toStartOf="@id/episodes_viewed_minus_button"
+                    tools:ignore="RtlSymmetry" />
+
+                <ImageButton
+                    android:id="@+id/episodes_viewed_minus_button"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:backgroundTint="@color/black"
+                    android:contentDescription="@string/episodes_viewed_minus_button"
+                    android:src="@drawable/ic_episodes_viewed_minus_button_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:ignore="TouchTargetSizeCheck">
+
+                </ImageButton>
+
+                <TextView
+                    android:id="@+id/episodes_viewed_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/white"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@id/episodes_viewed_minus_button"
+                    app:layout_constraintEnd_toStartOf="@id/episodes_viewed_plus_button"
+                    app:layout_constraintStart_toEndOf="@id/episodes_viewed_minus_button"
+                    app:layout_constraintTop_toTopOf="@id/episodes_viewed_minus_button"
+                    tools:text="0" />
+
+                <ImageButton
+                    android:id="@+id/episodes_viewed_plus_button"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="8dp"
+                    android:backgroundTint="@color/black"
+                    android:contentDescription="@string/episodes_viewed_plus_button"
+                    android:src="@drawable/ic_episodes_viewed_plus_button_24"
+                    app:layout_constraintBottom_toBottomOf="@id/episodes_viewed_minus_button"
+                    app:layout_constraintStart_toEndOf="@id/episodes_viewed_number"
+                    app:layout_constraintTop_toTopOf="@id/episodes_viewed_minus_button"
+                    tools:ignore="TouchTargetSizeCheck">
+
+                </ImageButton>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.card.MaterialCardView>

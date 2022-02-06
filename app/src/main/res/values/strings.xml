@@ -21,12 +21,14 @@
     <string name="work_manager_notification_title">Вышел эпизод %1$d</string>
     <string name="work_manager_notification_summary">Новые серии</string>
     <string name="next_episode_at">Следующий эпизод:\n%1$s</string>
-    <string name="episodes_viewed">Просмотрено: </string>
-    <string name="favorites_detail_button_on">Включает альтернативное отображение информации в правой части</string>
-    <string name="favorites_detail_button_off">Выключает альтернативное отображение информации в правой части</string>
+    <string name="episodes_viewed_title">Просмотрено: </string>
+    <string name="favorites_detail_on_button">Включает альтернативное отображение информации в правой части</string>
+    <string name="favorites_detail_off_button">Выключает альтернативное отображение информации в правой части</string>
     <string name="getFormattedDateError">Не удалось получить дату</string>
     <string name="aired_on">Начало показа:\n%1$s (неточно)</string>
     <string name="released_on">Закончен:\n%1$s</string>
     <string name="internet_connection_error">Ошибка интернет соединения</string>
     <string name="database_access_error">Ошибка доступа к данным</string>
+    <string name="episodes_viewed_minus_button">Отнять одну серию из количества просмотренных</string>
+    <string name="episodes_viewed_plus_button">Прибавить одну серию в количество просмотренных</string>
 </resources>

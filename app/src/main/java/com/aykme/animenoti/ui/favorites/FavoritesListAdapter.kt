@@ -56,7 +56,11 @@ class FavoritesListAdapter(
                         favoritesEpisodes,
                         status,
                         notificationFab,
-                        futureInfo
+                        futureInfo,
+                        episodesViewedTitle,
+                        episodesViewedMinusButton,
+                        episodesViewedNumber,
+                        episodesViewedPlusButton
                     )
                     isDetailInfoActive = !isDetailInfoActive
                 }
@@ -69,7 +73,11 @@ class FavoritesListAdapter(
                         favoritesEpisodes,
                         status,
                         notificationFab,
-                        futureInfo
+                        futureInfo,
+                        episodesViewedTitle,
+                        episodesViewedMinusButton,
+                        episodesViewedNumber,
+                        episodesViewedPlusButton
                     )
                     isDetailInfoActive = !isDetailInfoActive
                     return@setOnLongClickListener true
@@ -89,7 +97,11 @@ class FavoritesListAdapter(
                     favoritesEpisodes,
                     status,
                     notificationFab,
-                    futureInfo
+                    futureInfo,
+                    episodesViewedTitle,
+                    episodesViewedMinusButton,
+                    episodesViewedNumber,
+                    episodesViewedPlusButton
                 )
             }
         }
