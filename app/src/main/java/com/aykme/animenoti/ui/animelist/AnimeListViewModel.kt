@@ -1,10 +1,12 @@
 package com.aykme.animenoti.ui.animelist
 
+import android.content.res.ColorStateList
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import androidx.paging.*
 import com.aykme.animenoti.AnimeNotiApplication
@@ -105,14 +107,13 @@ class AnimeListViewModel(
         anime: Anime,
         followedAnimeList: List<Anime>,
         notificationText: TextView,
-        notificationOnFab: FloatingActionButton,
-        notificationOffFab: FloatingActionButton
+        notificationFab: FloatingActionButton
     ): Boolean {
         return if (isFollowedAnime(anime, followedAnimeList)) {
-            bindNotificationOnFields(notificationText, notificationOnFab, notificationOffFab)
+            bindNotificationOnFields(notificationText, notificationFab)
             true
         } else {
-            bindNotificationOffFields(notificationText, notificationOnFab, notificationOffFab)
+            bindNotificationOffFields(notificationText, notificationFab)
             false
         }
     }
@@ -133,16 +134,14 @@ class AnimeListViewModel(
         isNotificationActive: Boolean,
         anime: Anime,
         notificationText: TextView,
-        notificationOnFab: FloatingActionButton,
-        notificationOffFab: FloatingActionButton
+        notificationOnFab: FloatingActionButton
     ) {
         if (isNotificationActive) {
             try {
                 deleteFromDatabaseAsync(anime.id)
                 bindNotificationOffFields(
                     notificationText,
-                    notificationOnFab,
-                    notificationOffFab
+                    notificationOnFab
                 )
             } catch (e: Throwable) {
                 e.printStackTrace()
@@ -153,8 +152,7 @@ class AnimeListViewModel(
                 insertIntoDatabaseAsync(anime)
                 bindNotificationOnFields(
                     notificationText,
-                    notificationOnFab,
-                    notificationOffFab
+                    notificationOnFab
                 )
             } catch (e: Throwable) {
                 e.printStackTrace()
@@ -171,12 +169,18 @@ class AnimeListViewModel(
 
     private fun bindNotificationOnFields(
         notificationText: TextView,
-        notificationOnFab: FloatingActionButton,
-        notificationOffFab: FloatingActionButton
+        notificationFab: FloatingActionButton
     ) {
         notificationText.text = resources.getString(R.string.notification_on_text)
-        notificationOffFab.visibility = View.VISIBLE
-        notificationOnFab.visibility = View.GONE
+        notificationFab.setImageDrawable(
+            ContextCompat.getDrawable(application, R.drawable.ic_notification_on_24)
+        )
+        val greenColorId = ContextCompat.getColor(application, R.color.green)
+        notificationFab.backgroundTintList = ColorStateList.valueOf(greenColorId)
+        notificationFab.rippleColor = greenColorId
+        notificationFab.contentDescription = resources.getString(
+            R.string.notification_on_ic
+        )
     }
 
     private fun deleteFromDatabaseAsync(id: Int) {
@@ -187,12 +191,19 @@ class AnimeListViewModel(
 
     private fun bindNotificationOffFields(
         notificationText: TextView,
-        notificationOnFab: FloatingActionButton,
-        notificationOffFab: FloatingActionButton
+        notificationFab: FloatingActionButton
     ) {
         notificationText.text = resources.getString(R.string.notification_off_text)
-        notificationOnFab.visibility = View.VISIBLE
-        notificationOffFab.visibility = View.GONE
+        notificationFab.setImageDrawable(
+            ContextCompat.getDrawable(application, R.drawable.ic_notification_off_24)
+        )
+        val pinkColorId = ContextCompat.getColor(application, R.color.pink)
+        notificationFab.backgroundTintList = ColorStateList.valueOf(pinkColorId)
+        notificationFab.rippleColor = pinkColorId
+        notificationFab.contentDescription = resources.getString(
+            R.string.notification_off_ic
+        )
+
     }
 
     private fun makeDatabaseConnectionErrorMassage() {

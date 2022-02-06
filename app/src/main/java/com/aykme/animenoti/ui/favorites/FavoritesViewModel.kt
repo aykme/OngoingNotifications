@@ -285,6 +285,9 @@ class FavoritesViewModel(
                 R.drawable.ic_favorites_detail_off_24
             )
         )
+        detailButton.contentDescription = resources.getString(
+            R.string.favorites_detail_button_off
+        )
         favoritesName.visibility = View.GONE
         favoritesEpisodes.visibility = View.GONE
         status.visibility = View.GONE
@@ -305,6 +308,9 @@ class FavoritesViewModel(
                 application,
                 R.drawable.ic_favorites_detail_on_24
             )
+        )
+        detailButton.contentDescription = resources.getString(
+            R.string.favorites_detail_button_on
         )
         favoritesName.visibility = View.VISIBLE
         favoritesEpisodes.visibility = View.VISIBLE
