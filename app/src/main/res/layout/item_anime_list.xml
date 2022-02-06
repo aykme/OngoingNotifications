@@ -125,14 +125,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
                     android:maxLines="1"
-                    android:text="@string/notification_off_text"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/anime_notification_fab"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Off" />
+                    tools:text="On" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/anime_notification_fab"

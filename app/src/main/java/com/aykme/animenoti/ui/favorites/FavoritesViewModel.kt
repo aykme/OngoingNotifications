@@ -1,6 +1,7 @@
 package com.aykme.animenoti.ui.favorites
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -88,8 +89,7 @@ class FavoritesViewModel(
         favoritesName: TextView,
         favoritesEpisodes: TextView,
         status: LinearLayout,
-        favoritesNotificationFabLayout:
-        LinearLayout,
+        notificationFab: FloatingActionButton,
         futureInfo: TextView
     ) {
         bindDetailButtonOff(
@@ -97,17 +97,16 @@ class FavoritesViewModel(
             favoritesName,
             favoritesEpisodes,
             status,
-            favoritesNotificationFabLayout,
+            notificationFab,
             futureInfo
         )
     }
 
     fun bindDefaultStateNotificationFab(
-        notificationOnFab: FloatingActionButton,
-        notificationOffFab: FloatingActionButton
+        notificationFab: FloatingActionButton
     ) {
         viewModelScope.launch {
-            bindNotificationOnFields(notificationOnFab, notificationOffFab)
+            bindNotificationOnFields(notificationFab)
         }
     }
 
@@ -144,13 +143,12 @@ class FavoritesViewModel(
     fun onNotificationClicked(
         isNotificationActive: Boolean,
         anime: Anime,
-        notificationOnFab: FloatingActionButton,
-        notificationOffFab: FloatingActionButton
+        notificationFab: FloatingActionButton
     ) {
         if (isNotificationActive) {
             try {
                 deleteFromDatabaseAsync(anime.id)
-                bindNotificationOffFields(notificationOnFab, notificationOffFab)
+                bindNotificationOffFields(notificationFab)
             } catch (e: Throwable) {
                 e.printStackTrace()
                 makeDatabaseConnectionErrorMassage()
@@ -158,7 +156,7 @@ class FavoritesViewModel(
         } else {
             try {
                 insertIntoDatabaseAsync(anime)
-                bindNotificationOnFields(notificationOnFab, notificationOffFab)
+                bindNotificationOnFields(notificationFab)
             } catch (e: Throwable) {
                 e.printStackTrace()
                 makeDatabaseConnectionErrorMassage()
@@ -173,11 +171,17 @@ class FavoritesViewModel(
     }
 
     private fun bindNotificationOnFields(
-        notificationOnFab: FloatingActionButton,
-        notificationOffFab: FloatingActionButton
+        notificationFab: FloatingActionButton
     ) {
-        notificationOffFab.visibility = View.VISIBLE
-        notificationOnFab.visibility = View.GONE
+        notificationFab.setImageDrawable(
+            ContextCompat.getDrawable(application, R.drawable.ic_notification_on_24)
+        )
+        val greenColorId = ContextCompat.getColor(application, R.color.green)
+        notificationFab.backgroundTintList = ColorStateList.valueOf(greenColorId)
+        notificationFab.rippleColor = greenColorId
+        notificationFab.contentDescription = resources.getString(
+            R.string.notification_on_ic
+        )
     }
 
     private fun deleteFromDatabaseAsync(id: Int) {
@@ -187,11 +191,17 @@ class FavoritesViewModel(
     }
 
     private fun bindNotificationOffFields(
-        notificationOnFab: FloatingActionButton,
-        notificationOffFab: FloatingActionButton
+        notificationFab: FloatingActionButton
     ) {
-        notificationOnFab.visibility = View.VISIBLE
-        notificationOffFab.visibility = View.GONE
+        notificationFab.setImageDrawable(
+            ContextCompat.getDrawable(application, R.drawable.ic_notification_off_24)
+        )
+        val pinkColorId = ContextCompat.getColor(application, R.color.pink)
+        notificationFab.backgroundTintList = ColorStateList.valueOf(pinkColorId)
+        notificationFab.rippleColor = pinkColorId
+        notificationFab.contentDescription = resources.getString(
+            R.string.notification_off_ic
+        )
     }
 
     fun onDetailButtonClicked(
@@ -201,7 +211,7 @@ class FavoritesViewModel(
         favoritesName: TextView,
         favoritesEpisodes: TextView,
         status: LinearLayout,
-        favoritesNotificationFabLayout: LinearLayout,
+        notificationFab: FloatingActionButton,
         futureInfo: TextView
     ) {
         if (isDetailInfoActive) {
@@ -210,7 +220,7 @@ class FavoritesViewModel(
                 favoritesName,
                 favoritesEpisodes,
                 status,
-                favoritesNotificationFabLayout,
+                notificationFab,
                 futureInfo
             )
 
@@ -221,7 +231,7 @@ class FavoritesViewModel(
                 favoritesName,
                 favoritesEpisodes,
                 status,
-                favoritesNotificationFabLayout,
+                notificationFab,
                 futureInfo
             )
         }
@@ -276,7 +286,7 @@ class FavoritesViewModel(
         favoritesName: TextView,
         favoritesEpisodes: TextView,
         status: LinearLayout,
-        favoritesNotificationFabLayout: LinearLayout,
+        notificationFab: FloatingActionButton,
         futureInfo: TextView
     ) {
         detailButton.setImageDrawable(
@@ -291,7 +301,7 @@ class FavoritesViewModel(
         favoritesName.visibility = View.GONE
         favoritesEpisodes.visibility = View.GONE
         status.visibility = View.GONE
-        favoritesNotificationFabLayout.visibility = View.GONE
+        notificationFab.visibility = View.GONE
         futureInfo.visibility = View.VISIBLE
     }
 
@@ -300,7 +310,7 @@ class FavoritesViewModel(
         favoritesName: TextView,
         favoritesEpisodes: TextView,
         status: LinearLayout,
-        favoritesNotificationFabLayout: LinearLayout,
+        notificationFab: FloatingActionButton,
         futureInfo: TextView
     ) {
         detailButton.setImageDrawable(
@@ -315,7 +325,7 @@ class FavoritesViewModel(
         favoritesName.visibility = View.VISIBLE
         favoritesEpisodes.visibility = View.VISIBLE
         status.visibility = View.VISIBLE
-        favoritesNotificationFabLayout.visibility = View.VISIBLE
+        notificationFab.visibility = View.VISIBLE
         futureInfo.visibility = View.GONE
     }
 

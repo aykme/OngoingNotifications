@@ -46,8 +46,7 @@ class FavoritesListAdapter(
                     announcedStatus,
                     releasedStatus
                 )
-                val notificationOnFab = favoritesNotificationOnFab
-                val notificationOffFab = favoritesNotificationOffFab
+                val notificationFab = favoritesNotificationFab
                 detailButton.setOnClickListener {
                     viewModel.onDetailButtonClicked(
                         isDetailInfoActive,
@@ -56,7 +55,7 @@ class FavoritesListAdapter(
                         favoritesName,
                         favoritesEpisodes,
                         status,
-                        favoritesNotificationFabLayout,
+                        notificationFab,
                         futureInfo
                     )
                     isDetailInfoActive = !isDetailInfoActive
@@ -69,36 +68,27 @@ class FavoritesListAdapter(
                         favoritesName,
                         favoritesEpisodes,
                         status,
-                        favoritesNotificationFabLayout,
+                        notificationFab,
                         futureInfo
                     )
+                    isDetailInfoActive = !isDetailInfoActive
                     return@setOnLongClickListener true
                 }
-                notificationOnFab.setOnClickListener {
+                notificationFab.setOnClickListener {
                     viewModel.onNotificationClicked(
                         isNotificationActive,
                         anime,
-                        notificationOnFab,
-                        notificationOffFab
-                    )
-                    isDetailInfoActive = !isNotificationActive
-                }
-                notificationOffFab.setOnClickListener {
-                    viewModel.onNotificationClicked(
-                        isNotificationActive,
-                        anime,
-                        notificationOnFab,
-                        notificationOffFab
+                        notificationFab
                     )
                     isNotificationActive = !isNotificationActive
                 }
-                viewModel.bindDefaultStateNotificationFab(notificationOnFab, notificationOffFab)
+                viewModel.bindDefaultStateNotificationFab(notificationFab)
                 viewModel.bindDefaultStateInfoFields(
                     detailButton,
                     favoritesName,
                     favoritesEpisodes,
                     status,
-                    favoritesNotificationFabLayout,
+                    notificationFab,
                     futureInfo
                 )
             }

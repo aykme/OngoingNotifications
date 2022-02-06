@@ -203,7 +203,6 @@ class AnimeListViewModel(
         notificationFab.contentDescription = resources.getString(
             R.string.notification_off_ic
         )
-
     }
 
     private fun makeDatabaseConnectionErrorMassage() {
