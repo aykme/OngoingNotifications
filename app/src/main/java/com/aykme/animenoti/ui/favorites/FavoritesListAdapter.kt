@@ -21,6 +21,7 @@ class FavoritesListAdapter(
     ) :
         RecyclerView.ViewHolder(binding.root) {
         private var isDetailInfoActive = false
+        private var isNotificationActive = true
         fun bind(
             anime: Anime,
             resources: Resources?,
@@ -74,18 +75,22 @@ class FavoritesListAdapter(
                     return@setOnLongClickListener true
                 }
                 notificationOnFab.setOnClickListener {
-                    viewModel.onNotificationOnClicked(
+                    viewModel.onNotificationClicked(
+                        isNotificationActive,
                         anime,
                         notificationOnFab,
                         notificationOffFab
                     )
+                    isDetailInfoActive = !isNotificationActive
                 }
                 notificationOffFab.setOnClickListener {
-                    viewModel.onNotificationOffClicked(
+                    viewModel.onNotificationClicked(
+                        isNotificationActive,
                         anime,
                         notificationOnFab,
                         notificationOffFab
                     )
+                    isNotificationActive = !isNotificationActive
                 }
                 viewModel.bindDefaultStateNotificationFab(notificationOnFab, notificationOffFab)
                 viewModel.bindDefaultStateInfoFields(

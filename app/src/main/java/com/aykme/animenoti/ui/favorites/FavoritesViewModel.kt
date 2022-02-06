@@ -141,24 +141,29 @@ class FavoritesViewModel(
         }
     }
 
-    fun onNotificationOnClicked(
+    fun onNotificationClicked(
+        isNotificationActive: Boolean,
         anime: Anime,
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
     ) {
-        try {
-            insertIntoDatabaseAsync(anime)
-            bindNotificationOnFields(notificationOnFab, notificationOffFab)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.d(tag, resources.getString(R.string.database_access_error))
-            Toast.makeText(
-                application,
-                resources.getString(R.string.database_access_error),
-                Toast.LENGTH_LONG
-            ).show()
+        if (isNotificationActive) {
+            try {
+                deleteFromDatabaseAsync(anime.id)
+                bindNotificationOffFields(notificationOnFab, notificationOffFab)
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                makeDatabaseConnectionErrorMassage()
+            }
+        } else {
+            try {
+                insertIntoDatabaseAsync(anime)
+                bindNotificationOnFields(notificationOnFab, notificationOffFab)
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                makeDatabaseConnectionErrorMassage()
+            }
         }
-
     }
 
     private fun insertIntoDatabaseAsync(anime: Anime) {
@@ -173,25 +178,6 @@ class FavoritesViewModel(
     ) {
         notificationOffFab.visibility = View.VISIBLE
         notificationOnFab.visibility = View.GONE
-    }
-
-    fun onNotificationOffClicked(
-        anime: Anime,
-        notificationOnFab: FloatingActionButton,
-        notificationOffFab: FloatingActionButton
-    ) {
-        try {
-            deleteFromDatabaseAsync(anime.id)
-            bindNotificationOffFields(notificationOnFab, notificationOffFab)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.d(tag, resources.getString(R.string.database_access_error))
-            Toast.makeText(
-                application,
-                resources.getString(R.string.database_access_error),
-                Toast.LENGTH_LONG
-            ).show()
-        }
     }
 
     private fun deleteFromDatabaseAsync(id: Int) {
@@ -254,13 +240,8 @@ class FavoritesViewModel(
                     } catch (e: Throwable) {
                         e.printStackTrace()
                         futureInfo.text = resources.getString(R.string.unknown)
-                        Toast.makeText(
-                            application,
-                            resources.getString(R.string.internet_connection_error),
-                            Toast.LENGTH_LONG
-                        ).show()
+                        makeInternetConnectionErrorMassage()
                     }
-
                 }
             }
             AnimeStatus.ANONS -> {
@@ -330,6 +311,24 @@ class FavoritesViewModel(
         status.visibility = View.VISIBLE
         favoritesNotificationFabLayout.visibility = View.VISIBLE
         futureInfo.visibility = View.GONE
+    }
+
+    private fun makeDatabaseConnectionErrorMassage() {
+        Log.d(tag, resources.getString(R.string.database_access_error))
+        Toast.makeText(
+            application,
+            resources.getString(R.string.database_access_error),
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+    private fun makeInternetConnectionErrorMassage() {
+        Log.d(tag, resources.getString(R.string.internet_connection_error))
+        Toast.makeText(
+            application,
+            resources.getString(R.string.internet_connection_error),
+            Toast.LENGTH_LONG
+        ).show()
     }
 }
 

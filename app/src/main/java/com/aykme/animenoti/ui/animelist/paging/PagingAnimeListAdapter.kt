@@ -29,6 +29,7 @@ class PagingAnimeListAdapter(
             resources: Resources?,
             viewModel: AnimeListViewModel
         ) {
+            var isNotificationActive = false
             val episodesAired = anime.episodesAired?.toString() ?: "0"
             val episodesTotal = anime.episodesTotal ?: 0
             val formattedEpisodesTotal = viewModel.getFormattedEpisodesField(episodesTotal)
@@ -47,23 +48,27 @@ class PagingAnimeListAdapter(
                 val notificationOnFab = animeNotificationOnFab
                 val notificationOffFab = animeNotificationOffFab
                 notificationOnFab.setOnClickListener {
-                    viewModel.onNotificationOnClicked(
+                    viewModel.onNotificationClicked(
+                        isNotificationActive,
                         anime,
                         notificationText,
                         notificationOnFab,
                         notificationOffFab
                     )
+                    isNotificationActive = !isNotificationActive
                 }
                 notificationOffFab.setOnClickListener {
-                    viewModel.onNotificationOffClicked(
+                    viewModel.onNotificationClicked(
+                        isNotificationActive,
                         anime,
                         notificationText,
                         notificationOnFab,
                         notificationOffFab
                     )
+                    isNotificationActive = !isNotificationActive
                 }
                 followedAnimeList?.let {
-                    viewModel.bindNotificationFields(
+                    isNotificationActive = viewModel.bindDefaultStateNotificationFab(
                         anime,
                         followedAnimeList,
                         notificationText,

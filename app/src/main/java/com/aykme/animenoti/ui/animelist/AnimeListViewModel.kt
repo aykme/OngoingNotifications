@@ -101,45 +101,65 @@ class AnimeListViewModel(
         ImageDownloader.bindImageView(animeImage, fullImageUrl)
     }
 
-    fun bindNotificationFields(
+    fun bindDefaultStateNotificationFab(
         anime: Anime,
         followedAnimeList: List<Anime>,
         notificationText: TextView,
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
-    ) {
-        viewModelScope.launch {
-            if (isFollowedAnime(anime, followedAnimeList)) {
-                bindNotificationOnFields(notificationText, notificationOnFab, notificationOffFab)
-            } else
-                bindNotificationOffFields(notificationText, notificationOnFab, notificationOffFab)
+    ): Boolean {
+        return if (isFollowedAnime(anime, followedAnimeList)) {
+            bindNotificationOnFields(notificationText, notificationOnFab, notificationOffFab)
+            true
+        } else {
+            bindNotificationOffFields(notificationText, notificationOnFab, notificationOffFab)
+            false
         }
     }
 
     private fun isFollowedAnime(anime: Anime, followedAnimeList: List<Anime>): Boolean {
-        followedAnimeList.forEach {
-            if (it.id == anime.id) return true
+        var result = false
+        viewModelScope.launch {
+            followedAnimeList.forEach {
+                if (it.id == anime.id) {
+                    result = true
+                }
+            }
         }
-        return false
+        return result
     }
 
-    fun onNotificationOnClicked(
+    fun onNotificationClicked(
+        isNotificationActive: Boolean,
         anime: Anime,
         notificationText: TextView,
         notificationOnFab: FloatingActionButton,
         notificationOffFab: FloatingActionButton
     ) {
-        try {
-            insertIntoDatabaseAsync(anime)
-            bindNotificationOnFields(notificationText, notificationOnFab, notificationOffFab)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.d(tag, resources.getString(R.string.database_access_error))
-            Toast.makeText(
-                application,
-                resources.getString(R.string.database_access_error),
-                Toast.LENGTH_LONG
-            ).show()
+        if (isNotificationActive) {
+            try {
+                deleteFromDatabaseAsync(anime.id)
+                bindNotificationOffFields(
+                    notificationText,
+                    notificationOnFab,
+                    notificationOffFab
+                )
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                makeDatabaseConnectionErrorMassage()
+            }
+        } else {
+            try {
+                insertIntoDatabaseAsync(anime)
+                bindNotificationOnFields(
+                    notificationText,
+                    notificationOnFab,
+                    notificationOffFab
+                )
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                makeDatabaseConnectionErrorMassage()
+            }
         }
     }
 
@@ -159,29 +179,9 @@ class AnimeListViewModel(
         notificationOnFab.visibility = View.GONE
     }
 
-    fun onNotificationOffClicked(
-        anime: Anime,
-        notificationText: TextView,
-        notificationOnFab: FloatingActionButton,
-        notificationOffFab: FloatingActionButton
-    ) {
-        try {
-            deleteFromDatabaseAsync(anime)
-            bindNotificationOffFields(notificationText, notificationOnFab, notificationOffFab)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.d(tag, resources.getString(R.string.database_access_error))
-            Toast.makeText(
-                application,
-                resources.getString(R.string.database_access_error),
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
-
-    private fun deleteFromDatabaseAsync(anime: Anime) {
+    private fun deleteFromDatabaseAsync(id: Int) {
         viewModelScope.launch {
-            deleteOneDatabaseItemUseCase(anime.id)
+            deleteOneDatabaseItemUseCase(id)
         }
     }
 
@@ -193,6 +193,24 @@ class AnimeListViewModel(
         notificationText.text = resources.getString(R.string.notification_off_text)
         notificationOnFab.visibility = View.VISIBLE
         notificationOffFab.visibility = View.GONE
+    }
+
+    private fun makeDatabaseConnectionErrorMassage() {
+        Log.d(tag, resources.getString(R.string.database_access_error))
+        Toast.makeText(
+            application,
+            resources.getString(R.string.database_access_error),
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+    private fun makeInternetConnectionErrorMassage() {
+        Log.d(tag, resources.getString(R.string.internet_connection_error))
+        Toast.makeText(
+            application,
+            resources.getString(R.string.internet_connection_error),
+            Toast.LENGTH_LONG
+        ).show()
     }
 }
 
