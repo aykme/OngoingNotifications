@@ -18,4 +18,26 @@ data class Anime(
     @Nullable @ColumnInfo(name = "released_on") val releasedOn: String?,
     @Nullable @ColumnInfo(name = "description") val description: String?,
     @Nullable @ColumnInfo(name = "next_episode_at") val nextEpisodeAt: String?,
-)
+    @Nullable @ColumnInfo(name = "episodes_viewed") val episodesViewed: Int
+) {
+    override fun hashCode(): Int {
+        return id
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Anime) return false
+
+        if (id != other.id) return false
+        if (name != other.name) return false
+        if (imageUrl != other.imageUrl) return false
+        if (score != other.score) return false
+        if (episodesAired != other.episodesAired) return false
+        if (episodesTotal != other.episodesTotal) return false
+        if (status != other.status) return false
+        if (airedOn != other.airedOn) return false
+        if (releasedOn != other.releasedOn) return false
+
+        return true
+    }
+}

@@ -1,8 +1,11 @@
 package com.aykme.animenoti.ui.favorites
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
+import android.os.Handler
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +25,8 @@ class FavoritesListAdapter(
         RecyclerView.ViewHolder(binding.root) {
         private var isDetailInfoActive = false
         private var isNotificationActive = true
+
+        @SuppressLint("ClickableViewAccessibility")
         fun bind(
             anime: Anime,
             resources: Resources?,
@@ -81,6 +86,17 @@ class FavoritesListAdapter(
                     )
                     isDetailInfoActive = !isDetailInfoActive
                     return@setOnLongClickListener true
+                }
+                episodesViewedMinusButton.setOnClickListener {
+                    viewModel.onEpisodesViewedMinusButtonClicked(
+                        anime.id, episodesViewedNumber
+                    )
+                }
+
+                episodesViewedPlusButton.setOnClickListener {
+                    viewModel.onEpisodesViewedPlusButtonClicked(
+                        anime.id, episodesViewedNumber
+                    )
                 }
                 notificationFab.setOnClickListener {
                     viewModel.onNotificationClicked(

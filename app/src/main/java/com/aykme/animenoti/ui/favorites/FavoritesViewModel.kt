@@ -30,6 +30,8 @@ class FavoritesViewModel(
     private val fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
+    private val fetchDatabaseItemUseCase: FetchDatabaseItemUseCase,
+    private val updateDatabaseItemUseCase: UpdateDatabaseItemUseCase,
     private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase
 ) : ViewModel() {
 
@@ -242,7 +244,7 @@ class FavoritesViewModel(
 
         } else {
             bindFutureInfoFields(anime, futureInfo)
-            bindEpisodesViewedFields(episodesViewedNumber)
+            bindEpisodesViewedFields(anime.id, episodesViewedNumber)
             setVisibilityDetailButtonOn(
                 detailButton,
                 favoritesName,
@@ -302,8 +304,37 @@ class FavoritesViewModel(
         }
     }
 
-    private fun bindEpisodesViewedFields(episodesViewedNumber: TextView) {
-        episodesViewedNumber.text = "0"
+    private fun bindEpisodesViewedFields(animeId: Int, episodesViewedNumber: TextView) {
+        viewModelScope.launch {
+            val databaseItem = fetchDatabaseItemUseCase(animeId)
+            episodesViewedNumber.text = databaseItem.episodesViewed.toString()
+        }
+    }
+
+    fun onEpisodesViewedMinusButtonClicked(animeId: Int, episodesViewedNumber: TextView) {
+        viewModelScope.launch {
+            val databaseItem = fetchDatabaseItemUseCase(animeId)
+            val episodesViewed = databaseItem.episodesViewed
+            if (episodesViewed > 0) {
+                val updateItem = databaseItem.copy(
+                    episodesViewed = episodesViewed - 1
+                )
+                updateDatabaseItemUseCase(updateItem)
+                bindEpisodesViewedFields(animeId, episodesViewedNumber)
+            }
+        }
+    }
+
+    fun onEpisodesViewedPlusButtonClicked(animeId: Int, episodesViewedNumber: TextView) {
+        viewModelScope.launch {
+            val databaseItem = fetchDatabaseItemUseCase(animeId)
+            val episodesViewed = databaseItem.episodesViewed
+            val updateItem = databaseItem.copy(
+                episodesViewed = episodesViewed + 1
+            )
+            updateDatabaseItemUseCase(updateItem)
+            bindEpisodesViewedFields(animeId, episodesViewedNumber)
+        }
     }
 
     private fun setVisibilityDetailButtonOn(
@@ -394,6 +425,8 @@ class FavoritesViewModelFactory(
     private val fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
+    private val fetchDatabaseItemUseCase: FetchDatabaseItemUseCase,
+    private val updateDatabaseItemUseCase: UpdateDatabaseItemUseCase,
     private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase
 ) :
     ViewModelProvider.Factory {
@@ -405,6 +438,8 @@ class FavoritesViewModelFactory(
                 fetchAllDatabaseItemsAsFlowUseCase,
                 insertDatabaseItemUseCase,
                 deleteOneDatabaseItemUseCase,
+                fetchDatabaseItemUseCase,
+                updateDatabaseItemUseCase,
                 fetchAnimeByIdUseCase
             ) as T
         }
@@ -418,6 +453,8 @@ class FavoritesViewModelFactory(
                 FetchAllDatabaseItemsAsFlowUseCase(application.databaseRepository),
                 InsertDatabaseItemUseCase(application.databaseRepository),
                 DeleteOneDatabaseItemUseCase(application.databaseRepository),
+                FetchDatabaseItemUseCase(application.databaseRepository),
+                UpdateDatabaseItemUseCase(application.databaseRepository),
                 FetchAnimeByIdUseCase(application.apiRepository)
             )
         }

@@ -103,7 +103,8 @@ class RefreshAnimeDataWork(
                 )
             }
             if (databaseItem != remoteItem) {
-                updateDatabaseItemUseCase(remoteItem)
+                val updateItem = remoteItem.copy(episodesViewed = databaseItem.episodesViewed)
+                updateDatabaseItemUseCase(updateItem)
                 Log.d(REFRESH_ANIME_DATA_WORK, "item #$remoteItemNumber обновлен ${remoteItem.name}")
             } else {
                 Log.d(REFRESH_ANIME_DATA_WORK, "item #$remoteItemNumber не обновлен${remoteItem.name}")

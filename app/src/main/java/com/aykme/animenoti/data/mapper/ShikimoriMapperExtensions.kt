@@ -19,6 +19,7 @@ fun List<AnimeResponse>.toEntityList(): List<Anime> {
             releasedOn = animeResponse.releasedOn,
             description = null,
             nextEpisodeAt = null,
+            episodesViewed = 0,
             status = when (animeResponse.status) {
                 AnimeStatus.ONGOING.value -> AnimeStatus.ONGOING
                 AnimeStatus.ANONS.value -> AnimeStatus.ANONS
@@ -41,6 +42,7 @@ fun AnimeDetailsResponse.toEntity(): Anime {
         releasedOn = this.releasedOn,
         description = this.description,
         nextEpisodeAt = this.nextEpisodeAt,
+        episodesViewed = 0,
         status = when (this.status) {
             AnimeStatus.ONGOING.value -> AnimeStatus.ONGOING
             AnimeStatus.ANONS.value -> AnimeStatus.ANONS
