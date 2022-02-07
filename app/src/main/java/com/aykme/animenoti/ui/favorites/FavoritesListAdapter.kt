@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +15,7 @@ import com.aykme.animenoti.R
 import com.aykme.animenoti.databinding.ItemFavoritesBinding
 import com.aykme.animenoti.domain.model.Anime
 import com.aykme.animenoti.ui.diffcallback.DiffCallback
+import java.lang.IllegalArgumentException
 
 class FavoritesListAdapter(
     private val context: Context,
@@ -87,17 +90,20 @@ class FavoritesListAdapter(
                     isDetailInfoActive = !isDetailInfoActive
                     return@setOnLongClickListener true
                 }
-                episodesViewedMinusButton.setOnClickListener {
-                    viewModel.onEpisodesViewedMinusButtonClicked(
-                        anime.id, episodesViewedNumber
-                    )
-                }
-
-                episodesViewedPlusButton.setOnClickListener {
-                    viewModel.onEpisodesViewedPlusButtonClicked(
-                        anime.id, episodesViewedNumber
-                    )
-                }
+                episodesViewedMinusButton.setOnTouchListener(
+                    RepeatListener(500, 250) {
+                        viewModel.onEpisodesViewedMinusButtonClicked(
+                            anime.id, episodesViewedNumber
+                        )
+                    }
+                )
+                episodesViewedPlusButton.setOnTouchListener(
+                    RepeatListener(500, 250) {
+                        viewModel.onEpisodesViewedPlusButtonClicked(
+                            anime.id, episodesViewedNumber
+                        )
+                    }
+                )
                 notificationFab.setOnClickListener {
                     viewModel.onNotificationClicked(
                         isNotificationActive,
