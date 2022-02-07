@@ -18,7 +18,8 @@ data class Anime(
     @Nullable @ColumnInfo(name = "released_on") val releasedOn: String?,
     @Nullable @ColumnInfo(name = "description") val description: String?,
     @Nullable @ColumnInfo(name = "next_episode_at") val nextEpisodeAt: String?,
-    @Nullable @ColumnInfo(name = "episodes_viewed") val episodesViewed: Int
+    @ColumnInfo(name = "episodes_viewed") val episodesViewed: Int,
+    @ColumnInfo(name = "has_new_episode") val hasNewEpisode: Boolean
 ) {
     override fun hashCode(): Int {
         return id
