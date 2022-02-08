@@ -56,6 +56,10 @@ class FavoritesViewModel(
 
     fun refreshDatabaseItems() {
         viewModelScope.launch {
+            /*val anime1 = fetchAnimeByIdUseCase(40028)
+            val anime2 = fetchAnimeByIdUseCase(19)
+            insertDatabaseItemUseCase(anime1)
+            insertDatabaseItemUseCase(anime2)*/
             Log.d(REFRESH_ANIME_DATA_WORK, "viewModel refresh")
             val workManager = WorkManager.getInstance(application)
             val work = OneTimeWorkRequestBuilder<RefreshAnimeDataWork>().build()
@@ -457,17 +461,22 @@ class FavoritesViewModel(
                 mainInfoStroke.backgroundTintList = ColorStateList.valueOf(silverColor)
                 newEpisodeBackground.visibility = View.VISIBLE
                 newEpisode.visibility = View.VISIBLE
-                val updateItem = anime.copy(hasNewEpisode = false)
-                try {
-                    updateDatabaseItemUseCase(updateItem)
-                } catch (e: Throwable) {
-                    makeDatabaseConnectionErrorMassage()
-                }
             } else {
                 val greyColor = ContextCompat.getColor(application, R.color.grey)
                 mainInfoStroke.backgroundTintList = ColorStateList.valueOf(greyColor)
                 newEpisodeBackground.visibility = View.GONE
                 newEpisode.visibility = View.GONE
+            }
+        }
+    }
+
+    fun cancelNewEpisodeStatus(anime: Anime) {
+        viewModelScope.launch {
+            try {
+                val updateItem = anime.copy(hasNewEpisode = false)
+                updateDatabaseItemUseCase(updateItem)
+            } catch (e: Throwable) {
+                makeDatabaseConnectionErrorMassage()
             }
         }
     }

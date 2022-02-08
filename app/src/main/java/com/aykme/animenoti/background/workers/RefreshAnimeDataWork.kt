@@ -82,7 +82,7 @@ class RefreshAnimeDataWork(
 
     private suspend fun refreshData(remoteItems: List<Anime>, pendingIntent: PendingIntent) {
         var remoteItemNumber = 0
-        for (remoteItem in remoteItems) {
+        remoteItems.forEach { remoteItem ->
             remoteItemNumber++
             val id = remoteItem.id
             val databaseItem = fetchDatabaseItemUseCase(id)
@@ -115,7 +115,7 @@ class RefreshAnimeDataWork(
             } else {
                 Log.d(
                     REFRESH_ANIME_DATA_WORK,
-                    "item #$remoteItemNumber не обновлен${remoteItem.name}"
+                    "item #$remoteItemNumber не обновлен ${remoteItem.name}"
                 )
             }
         }
