@@ -100,7 +100,7 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/main_info_background"
+            android:id="@+id/main_info_stroke"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"

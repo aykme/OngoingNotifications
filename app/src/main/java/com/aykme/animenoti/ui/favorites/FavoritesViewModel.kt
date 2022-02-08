@@ -19,6 +19,7 @@ import com.aykme.animenoti.data.source.remote.shikimoriapi.BASE_URL
 import com.aykme.animenoti.domain.model.Anime
 import com.aykme.animenoti.domain.model.AnimeStatus
 import com.aykme.animenoti.domain.usecase.*
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -399,6 +400,20 @@ class FavoritesViewModel(
         episodesViewedMinusButton.visibility = View.GONE
         episodesViewedNumber.visibility = View.GONE
         episodesViewedPlusButton.visibility = View.GONE
+    }
+
+    fun bindNewEpisodeStatus(anime: Anime, mainInfoStroke: MaterialCardView) {
+        if (anime.hasNewEpisode) {
+            val silverColor = ContextCompat.getColor(application, R.color.silver)
+            mainInfoStroke.backgroundTintList = ColorStateList.valueOf(silverColor)
+            val updateItem = anime.copy(hasNewEpisode = false)
+            viewModelScope.launch {
+                updateDatabaseItemUseCase(updateItem)
+            }
+        } else {
+            val greyColor = ContextCompat.getColor(application, R.color.grey)
+            mainInfoStroke.backgroundTintList = ColorStateList.valueOf(greyColor)
+        }
     }
 
     private fun makeDatabaseConnectionErrorMassage() {
