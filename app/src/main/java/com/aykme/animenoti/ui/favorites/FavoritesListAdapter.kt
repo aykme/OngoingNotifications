@@ -3,6 +3,7 @@ package com.aykme.animenoti.ui.favorites
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -17,16 +18,20 @@ class FavoritesListAdapter(
     private val viewModel: FavoritesViewModel
 ) : ListAdapter<Anime, FavoritesListAdapter.AnimeViewHolder>(DiffCallback.instance) {
 
+    private var followedAnimeList: List<Anime>? = null
+
     class AnimeViewHolder(
         private val binding: ItemFavoritesBinding
     ) :
         RecyclerView.ViewHolder(binding.root) {
+        private val tag = "FavoritesListAdapter"
         private var isDetailInfoActive = false
         private var isNotificationActive = true
 
         @SuppressLint("ClickableViewAccessibility")
         fun bind(
             anime: Anime,
+            followedAnimeList: List<Anime>?,
             resources: Resources?,
             viewModel: FavoritesViewModel
         ) {
@@ -100,12 +105,14 @@ class FavoritesListAdapter(
                     }
                 )
                 notificationFab.setOnClickListener {
+                    Log.d(tag, "начало аниме ${anime.name} $isNotificationActive")
                     viewModel.onNotificationClicked(
                         isNotificationActive,
                         anime,
                         notificationFab
                     )
                     isNotificationActive = !isNotificationActive
+                    Log.d(tag, "конец аниме ${anime.name} $isNotificationActive")
                 }
                 viewModel.bindDefaultStateNotificationFab(notificationFab)
                 viewModel.bindDefaultStateInfoFields(
@@ -126,6 +133,13 @@ class FavoritesListAdapter(
                     newEpisodeBackground,
                     newEpisode
                 )
+                followedAnimeList?.let { followedAnimeList ->
+                    isNotificationActive = viewModel.bindDefaultStateNotificationFab(
+                        anime,
+                        followedAnimeList,
+                        notificationFab
+                    )
+                }
             }
         }
     }
@@ -138,7 +152,11 @@ class FavoritesListAdapter(
     override fun onBindViewHolder(holder: AnimeViewHolder, position: Int) {
         val anime = getItem(position)
         anime?.let {
-            holder.bind(anime, context.resources, viewModel)
+            holder.bind(anime, followedAnimeList, context.resources, viewModel)
         }
+    }
+
+    fun submitFollowedAnimeList(followedAnimeList: List<Anime>) {
+        this.followedAnimeList = followedAnimeList
     }
 }
