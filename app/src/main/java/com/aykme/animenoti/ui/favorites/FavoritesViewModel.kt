@@ -55,14 +55,16 @@ class FavoritesViewModel(
     }
 
     fun refreshDatabaseItems() {
-        Log.d(REFRESH_ANIME_DATA_WORK, "viewModel refresh")
-        val workManager = WorkManager.getInstance(application)
-        val work = OneTimeWorkRequestBuilder<RefreshAnimeDataWork>().build()
-        workManager.enqueueUniqueWork(
-            uniqueWorkName,
-            ExistingWorkPolicy.KEEP,
-            work
-        )
+        viewModelScope.launch {
+            Log.d(REFRESH_ANIME_DATA_WORK, "viewModel refresh")
+            val workManager = WorkManager.getInstance(application)
+            val work = OneTimeWorkRequestBuilder<RefreshAnimeDataWork>().build()
+            workManager.enqueueUniqueWork(
+                uniqueWorkName,
+                ExistingWorkPolicy.KEEP,
+                work
+            )
+        }
     }
 
     fun submitAnimeData(
@@ -71,7 +73,34 @@ class FavoritesViewModel(
     ) {
         viewModelScope.launch {
             adapter.submitList(followedAnimeList)
+            adapter.submitFollowedAnimeList(followedAnimeList)
         }
+    }
+
+    fun bindDefaultStateNotificationFab(
+        anime: Anime,
+        followedAnimeList: List<Anime>,
+        notificationFab: FloatingActionButton
+    ): Boolean {
+        return if (isFollowedAnime(anime, followedAnimeList)) {
+            bindNotificationOnFields(notificationFab)
+            true
+        } else {
+            bindNotificationOffFields(notificationFab)
+            false
+        }
+    }
+
+    private fun isFollowedAnime(anime: Anime, followedAnimeList: List<Anime>): Boolean {
+        var result = false
+        viewModelScope.launch {
+            followedAnimeList.forEach {
+                if (it.id == anime.id) {
+                    result = true
+                }
+            }
+        }
+        return result
     }
 
     fun getImageUrl(anime: Anime): String {
@@ -84,7 +113,9 @@ class FavoritesViewModel(
     }
 
     fun bindImage(animeImage: ImageView, fullImageUrl: String) {
-        ImageDownloader.bindImageView(animeImage, fullImageUrl)
+        viewModelScope.launch {
+            ImageDownloader.bindImageView(animeImage, fullImageUrl)
+        }
     }
 
     fun bindDefaultStateInfoFields(
@@ -307,34 +338,46 @@ class FavoritesViewModel(
 
     private fun bindEpisodesViewedFields(animeId: Int, episodesViewedNumber: TextView) {
         viewModelScope.launch {
-            val databaseItem = fetchDatabaseItemUseCase(animeId)
-            episodesViewedNumber.text = databaseItem.episodesViewed.toString()
+            try {
+                val databaseItem = fetchDatabaseItemUseCase(animeId)
+                episodesViewedNumber.text = databaseItem.episodesViewed.toString()
+            } catch (e: Throwable) {
+                makeDatabaseConnectionErrorMassage()
+            }
         }
     }
 
     fun onEpisodesViewedMinusButtonClicked(animeId: Int, episodesViewedNumber: TextView) {
         viewModelScope.launch {
-            val databaseItem = fetchDatabaseItemUseCase(animeId)
-            val episodesViewed = databaseItem.episodesViewed
-            if (episodesViewed > 0) {
-                val updateItem = databaseItem.copy(
-                    episodesViewed = episodesViewed - 1
-                )
-                updateDatabaseItemUseCase(updateItem)
-                bindEpisodesViewedFields(animeId, episodesViewedNumber)
+            try {
+                val databaseItem = fetchDatabaseItemUseCase(animeId)
+                val episodesViewed = databaseItem.episodesViewed
+                if (episodesViewed > 0) {
+                    val updateItem = databaseItem.copy(
+                        episodesViewed = episodesViewed - 1
+                    )
+                    updateDatabaseItemUseCase(updateItem)
+                    bindEpisodesViewedFields(animeId, episodesViewedNumber)
+                }
+            } catch (e: Throwable) {
+                makeDatabaseConnectionErrorMassage()
             }
         }
     }
 
     fun onEpisodesViewedPlusButtonClicked(animeId: Int, episodesViewedNumber: TextView) {
         viewModelScope.launch {
-            val databaseItem = fetchDatabaseItemUseCase(animeId)
-            val episodesViewed = databaseItem.episodesViewed
-            val updateItem = databaseItem.copy(
-                episodesViewed = episodesViewed + 1
-            )
-            updateDatabaseItemUseCase(updateItem)
-            bindEpisodesViewedFields(animeId, episodesViewedNumber)
+            try {
+                val databaseItem = fetchDatabaseItemUseCase(animeId)
+                val episodesViewed = databaseItem.episodesViewed
+                val updateItem = databaseItem.copy(
+                    episodesViewed = episodesViewed + 1
+                )
+                updateDatabaseItemUseCase(updateItem)
+                bindEpisodesViewedFields(animeId, episodesViewedNumber)
+            } catch (e: Throwable) {
+                makeDatabaseConnectionErrorMassage()
+            }
         }
     }
 
@@ -408,20 +451,24 @@ class FavoritesViewModel(
         newEpisodeBackground: RelativeLayout,
         newEpisode: TextView
     ) {
-        if (anime.hasNewEpisode) {
-            val silverColor = ContextCompat.getColor(application, R.color.silver)
-            mainInfoStroke.backgroundTintList = ColorStateList.valueOf(silverColor)
-            newEpisodeBackground.visibility = View.VISIBLE
-            newEpisode.visibility = View.VISIBLE
-            val updateItem = anime.copy(hasNewEpisode = false)
-            viewModelScope.launch {
-                updateDatabaseItemUseCase(updateItem)
+        viewModelScope.launch {
+            if (anime.hasNewEpisode) {
+                val silverColor = ContextCompat.getColor(application, R.color.silver)
+                mainInfoStroke.backgroundTintList = ColorStateList.valueOf(silverColor)
+                newEpisodeBackground.visibility = View.VISIBLE
+                newEpisode.visibility = View.VISIBLE
+                val updateItem = anime.copy(hasNewEpisode = false)
+                try {
+                    updateDatabaseItemUseCase(updateItem)
+                } catch (e: Throwable) {
+                    makeDatabaseConnectionErrorMassage()
+                }
+            } else {
+                val greyColor = ContextCompat.getColor(application, R.color.grey)
+                mainInfoStroke.backgroundTintList = ColorStateList.valueOf(greyColor)
+                newEpisodeBackground.visibility = View.GONE
+                newEpisode.visibility = View.GONE
             }
-        } else {
-            val greyColor = ContextCompat.getColor(application, R.color.grey)
-            mainInfoStroke.backgroundTintList = ColorStateList.valueOf(greyColor)
-            newEpisodeBackground.visibility = View.GONE
-            newEpisode.visibility = View.GONE
         }
     }
 

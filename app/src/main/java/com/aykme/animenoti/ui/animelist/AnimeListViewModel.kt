@@ -100,7 +100,9 @@ class AnimeListViewModel(
     }
 
     fun bindImage(animeImage: ImageView, fullImageUrl: String) {
-        ImageDownloader.bindImageView(animeImage, fullImageUrl)
+        viewModelScope.launch {
+            ImageDownloader.bindImageView(animeImage, fullImageUrl)
+        }
     }
 
     fun bindDefaultStateNotificationFab(
