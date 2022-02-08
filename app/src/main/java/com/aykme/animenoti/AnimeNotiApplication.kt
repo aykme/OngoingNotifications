@@ -51,7 +51,7 @@ class AnimeNotiApplication : Application() {
             )
             .build()
         WorkManager.initialize(this, workManagerConfiguration)
-        val work = PeriodicWorkRequestBuilder<RefreshAnimeDataWork>(12, TimeUnit.HOURS)
+        val work = PeriodicWorkRequestBuilder<RefreshAnimeDataWork>(15, TimeUnit.MINUTES)
             .build()
 
         WorkManager.getInstance(this)

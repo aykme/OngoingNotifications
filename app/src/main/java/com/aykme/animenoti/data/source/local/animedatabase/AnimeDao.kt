@@ -16,10 +16,10 @@ interface AnimeDao {
     @Query("SELECT * FROM anime_table WHERE id = :id")
     suspend fun getItem(id: Int): Anime
 
-    @Query("SELECT * FROM anime_table ORDER BY name")
+    @Query("SELECT * FROM anime_table ORDER BY status DESC, name ASC")
     fun getItemsAsFlow(): Flow<List<Anime>>
 
-    @Query("SELECT * FROM anime_table ORDER BY name")
+    @Query("SELECT * FROM anime_table")
     suspend fun getItems(): List<Anime>
 
     @Query("DELETE FROM anime_table WHERE id =:id")

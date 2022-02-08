@@ -72,7 +72,7 @@ class FavoritesListAdapter(
                     )
                     isDetailInfoActive = !isDetailInfoActive
                 }
-                mainInfoContainer.setOnLongClickListener {
+                itemView.setOnLongClickListener {
                     viewModel.onDetailButtonClicked(
                         isDetailInfoActive,
                         anime,
@@ -133,6 +133,14 @@ class FavoritesListAdapter(
                     newEpisodeBackground,
                     newEpisode
                 )
+                itemView.setOnClickListener {
+                    viewModel.cancelNewEpisodeStatus(
+                        anime,
+                        mainInfoStroke,
+                        newEpisodeBackground,
+                        newEpisode
+                    )
+                }
                 followedAnimeList?.let { followedAnimeList ->
                     isNotificationActive = viewModel.bindDefaultStateNotificationFab(
                         anime,

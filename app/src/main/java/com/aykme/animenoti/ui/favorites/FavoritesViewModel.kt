@@ -56,6 +56,10 @@ class FavoritesViewModel(
 
     fun refreshDatabaseItems() {
         viewModelScope.launch {
+            val anime1 = fetchAnimeByIdUseCase(40028)
+            val anime2 = fetchAnimeByIdUseCase(19)
+            insertDatabaseItemUseCase(anime1)
+            insertDatabaseItemUseCase(anime2)
             Log.d(REFRESH_ANIME_DATA_WORK, "viewModel refresh")
             val workManager = WorkManager.getInstance(application)
             val work = OneTimeWorkRequestBuilder<RefreshAnimeDataWork>().build()
@@ -453,23 +457,64 @@ class FavoritesViewModel(
     ) {
         viewModelScope.launch {
             if (anime.hasNewEpisode) {
-                val silverColor = ContextCompat.getColor(application, R.color.silver)
-                mainInfoStroke.backgroundTintList = ColorStateList.valueOf(silverColor)
-                newEpisodeBackground.visibility = View.VISIBLE
-                newEpisode.visibility = View.VISIBLE
-                val updateItem = anime.copy(hasNewEpisode = false)
+                setNewEpisodeStatusOn(
+                    mainInfoStroke,
+                    newEpisodeBackground,
+                    newEpisode
+                )
+            } else {
+                setNewEpisodeStatusOff(
+                    mainInfoStroke,
+                    newEpisodeBackground,
+                    newEpisode
+                )
+            }
+        }
+    }
+
+    fun cancelNewEpisodeStatus(
+        anime: Anime,
+        mainInfoStroke: MaterialCardView,
+        newEpisodeBackground: RelativeLayout,
+        newEpisode: TextView
+    ) {
+        if (anime.hasNewEpisode) {
+            viewModelScope.launch {
+                setNewEpisodeStatusOff(
+                    mainInfoStroke,
+                    newEpisodeBackground,
+                    newEpisode
+                )
                 try {
+                    val updateItem = anime.copy(hasNewEpisode = false)
                     updateDatabaseItemUseCase(updateItem)
                 } catch (e: Throwable) {
                     makeDatabaseConnectionErrorMassage()
                 }
-            } else {
-                val greyColor = ContextCompat.getColor(application, R.color.grey)
-                mainInfoStroke.backgroundTintList = ColorStateList.valueOf(greyColor)
-                newEpisodeBackground.visibility = View.GONE
-                newEpisode.visibility = View.GONE
             }
         }
+    }
+
+    private fun setNewEpisodeStatusOff(
+        mainInfoStroke: MaterialCardView,
+        newEpisodeBackground: RelativeLayout,
+        newEpisode: TextView
+    ) {
+        val greyColor = ContextCompat.getColor(application, R.color.grey)
+        mainInfoStroke.backgroundTintList = ColorStateList.valueOf(greyColor)
+        newEpisodeBackground.visibility = View.GONE
+        newEpisode.visibility = View.GONE
+    }
+
+    private fun setNewEpisodeStatusOn(
+        mainInfoStroke: MaterialCardView,
+        newEpisodeBackground: RelativeLayout,
+        newEpisode: TextView
+    ) {
+        val silverColor = ContextCompat.getColor(application, R.color.silver)
+        mainInfoStroke.backgroundTintList = ColorStateList.valueOf(silverColor)
+        newEpisodeBackground.visibility = View.VISIBLE
+        newEpisode.visibility = View.VISIBLE
     }
 
     private fun makeDatabaseConnectionErrorMassage() {
