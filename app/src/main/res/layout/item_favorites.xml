@@ -26,6 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+
                 <ImageView
                     android:id="@+id/favorites_image"
                     android:layout_width="match_parent"
@@ -33,6 +34,48 @@
                     android:importantForAccessibility="no"
                     android:scaleType="centerCrop"
                     tools:srcCompat="@drawable/anime_image_sample" />
+
+                <RelativeLayout
+                    android:id="@+id/new_episode_background"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="@id/new_episode"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/new_episode">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:alpha="0.5"
+                        app:cardBackgroundColor="@color/black"
+                        app:cardCornerRadius="0dp" />
+
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/new_episode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/amiko_bold"
+                    android:maxLines="1"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:shadowColor="@color/black"
+                    android:shadowDx="10"
+                    android:shadowDy="10"
+                    android:shadowRadius="10"
+                    android:text="@string/new_episode"
+                    android:textColor="@color/silver"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlSymmetry">
+
+                </TextView>
 
                 <RelativeLayout
                     android:id="@+id/info_background"
@@ -47,7 +90,7 @@
                         android:layout_height="50dp"
                         android:alpha="0.5"
                         app:cardBackgroundColor="@color/black"
-                        app:cardCornerRadius="8dp"
+                        app:cardCornerRadius="0dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -114,8 +157,8 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:cardBackgroundColor="@color/grey"
                 android:layout_margin="2dp"
+                app:cardBackgroundColor="@color/grey"
                 app:cardCornerRadius="9dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -261,7 +304,7 @@
                         android:src="@drawable/ic_episodes_viewed_minus_button_24"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        tools:ignore="TouchTargetSizeCheck">
+                        tools:ignore="TouchTargetSizeCheck,ImageContrastCheck">
 
                     </ImageButton>
 
@@ -291,7 +334,7 @@
                         app:layout_constraintBottom_toBottomOf="@id/episodes_viewed_minus_button"
                         app:layout_constraintStart_toEndOf="@id/episodes_viewed_number"
                         app:layout_constraintTop_toTopOf="@id/episodes_viewed_minus_button"
-                        tools:ignore="TouchTargetSizeCheck">
+                        tools:ignore="TouchTargetSizeCheck,ImageContrastCheck">
 
                     </ImageButton>
 

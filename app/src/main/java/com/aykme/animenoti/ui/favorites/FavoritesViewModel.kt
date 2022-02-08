@@ -402,10 +402,17 @@ class FavoritesViewModel(
         episodesViewedPlusButton.visibility = View.GONE
     }
 
-    fun bindNewEpisodeStatus(anime: Anime, mainInfoStroke: MaterialCardView) {
+    fun bindNewEpisodeStatus(
+        anime: Anime,
+        mainInfoStroke: MaterialCardView,
+        newEpisodeBackground: RelativeLayout,
+        newEpisode: TextView
+    ) {
         if (anime.hasNewEpisode) {
             val silverColor = ContextCompat.getColor(application, R.color.silver)
             mainInfoStroke.backgroundTintList = ColorStateList.valueOf(silverColor)
+            newEpisodeBackground.visibility = View.VISIBLE
+            newEpisode.visibility = View.VISIBLE
             val updateItem = anime.copy(hasNewEpisode = false)
             viewModelScope.launch {
                 updateDatabaseItemUseCase(updateItem)
@@ -413,6 +420,8 @@ class FavoritesViewModel(
         } else {
             val greyColor = ContextCompat.getColor(application, R.color.grey)
             mainInfoStroke.backgroundTintList = ColorStateList.valueOf(greyColor)
+            newEpisodeBackground.visibility = View.GONE
+            newEpisode.visibility = View.GONE
         }
     }
 

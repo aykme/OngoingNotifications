@@ -122,7 +122,9 @@ class FavoritesListAdapter(
                 )
                 viewModel.bindNewEpisodeStatus(
                     anime,
-                    mainInfoStroke
+                    mainInfoStroke,
+                    newEpisodeBackground,
+                    newEpisode
                 )
             }
         }
