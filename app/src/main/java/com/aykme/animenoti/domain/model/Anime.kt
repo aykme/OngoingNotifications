@@ -38,7 +38,6 @@ data class Anime(
         if (status != other.status) return false
         if (airedOn != other.airedOn) return false
         if (releasedOn != other.releasedOn) return false
-        if (hasNewEpisode != other.hasNewEpisode) return false
 
         return true
     }

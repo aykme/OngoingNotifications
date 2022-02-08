@@ -103,9 +103,10 @@ class RefreshAnimeDataWork(
                 )
             }
             if (databaseItem != remoteItem) {
+                val updateHasNewEpisode = hasNewEpisode || databaseItem.hasNewEpisode
                 val updateItem = remoteItem.copy(
                     episodesViewed = databaseItem.episodesViewed,
-                    hasNewEpisode = hasNewEpisode
+                    hasNewEpisode = updateHasNewEpisode
                 )
                 updateDatabaseItemUseCase(updateItem)
                 Log.d(
