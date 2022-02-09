@@ -1,6 +1,7 @@
 package com.aykme.animenoti.ui.favorites
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aykme.animenoti.AnimeNotiApplication
+import com.aykme.animenoti.R
 import com.aykme.animenoti.databinding.FragmentFavoritesBinding
 
 class FavoritesFragment : Fragment() {
@@ -34,13 +36,20 @@ class FavoritesFragment : Fragment() {
         recyclerView.adapter = adapter
         val placeholder = binding.favoritesPlaceholder
         placeholder.visibility = View.GONE
+        val swipeRefresh = binding.swipeRefresh
+        swipeRefresh.setProgressViewOffset(false, 50, 250)
+        swipeRefresh.setColorSchemeResources(R.color.pink)
 
         viewModel.apply {
-            refreshDatabaseItems()
             followedAnimeList.observe(viewLifecycleOwner) { followedAnimeList ->
                 bindPlaceholder(placeholder, followedAnimeList.isNullOrEmpty())
                 submitAnimeData(adapter, followedAnimeList)
             }
+            swipeRefresh.setOnRefreshListener {
+                refreshDatabaseItems()
+                swipeRefresh.isRefreshing = false
+            }
+
         }
     }
 
