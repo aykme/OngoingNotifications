@@ -34,4 +34,8 @@ class AnimeDatabaseRepositoryImpl(private val animeDao: AnimeDao) : AnimeDatabas
     override suspend fun deleteAll() {
         animeDao.deleteAll()
     }
+
+    override suspend fun updateItemsNewEpisodeStatus(hasNewEpisode: Boolean) {
+        animeDao.updateItemsNewEpisodeStatus(hasNewEpisode)
+    }
 }

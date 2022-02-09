@@ -29,5 +29,5 @@ interface AnimeDao {
     suspend fun deleteAll()
 
     @Query("UPDATE anime_table SET has_new_episode =:hasNewEpisode")
-    suspend fun updateItemsHasNewEpisodeStatus(hasNewEpisode: Boolean)
+    suspend fun updateItemsNewEpisodeStatus(hasNewEpisode: Boolean)
 }
