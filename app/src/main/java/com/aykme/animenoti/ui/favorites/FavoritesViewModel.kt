@@ -12,7 +12,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.aykme.animenoti.AnimeNotiApplication
 import com.aykme.animenoti.R
-import com.aykme.animenoti.background.workers.REFRESH_ANIME_DATA_WORK
 import com.aykme.animenoti.background.workers.RefreshAnimeDataWork
 import com.aykme.animenoti.data.source.remote.coil.ImageDownloader
 import com.aykme.animenoti.data.source.remote.shikimoriapi.BASE_URL
@@ -33,6 +32,7 @@ class FavoritesViewModel(
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
     private val fetchDatabaseItemUseCase: FetchDatabaseItemUseCase,
     private val updateDatabaseItemUseCase: UpdateDatabaseItemUseCase,
+    private val updateDatabaseItemsNewEpisodeStatus: UpdateDatabaseItemsNewEpisodeStatus,
     private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase
 ) : ViewModel() {
 
@@ -60,7 +60,7 @@ class FavoritesViewModel(
             val anime2 = fetchAnimeByIdUseCase(19)
             insertDatabaseItemUseCase(anime1)
             insertDatabaseItemUseCase(anime2)*/
-            Log.d(REFRESH_ANIME_DATA_WORK, "viewModel refresh")
+            updateDatabaseItemsNewEpisodeStatus(false)
             val workManager = WorkManager.getInstance(application)
             val work = OneTimeWorkRequestBuilder<RefreshAnimeDataWork>().build()
             workManager.enqueueUniqueWork(
@@ -75,10 +75,10 @@ class FavoritesViewModel(
         adapter: FavoritesListAdapter,
         followedAnimeList: List<Anime>
     ) {
-        viewModelScope.launch {
-            adapter.submitList(followedAnimeList)
-            adapter.submitFollowedAnimeList(followedAnimeList)
-        }
+            viewModelScope.launch {
+                adapter.submitList(followedAnimeList)
+                adapter.submitFollowedAnimeList(followedAnimeList)
+            }
     }
 
     fun bindDefaultStateNotificationFab(
@@ -146,14 +146,6 @@ class FavoritesViewModel(
             episodesViewedNumber,
             episodesViewedPlusButton
         )
-    }
-
-    fun bindDefaultStateNotificationFab(
-        notificationFab: FloatingActionButton
-    ) {
-        viewModelScope.launch {
-            bindNotificationOnFields(notificationFab)
-        }
     }
 
     fun bindAnimeStatus(
@@ -543,6 +535,7 @@ class FavoritesViewModelFactory(
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
     private val fetchDatabaseItemUseCase: FetchDatabaseItemUseCase,
     private val updateDatabaseItemUseCase: UpdateDatabaseItemUseCase,
+    private val updateDatabaseItemsNewEpisodeStatus: UpdateDatabaseItemsNewEpisodeStatus,
     private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase
 ) :
     ViewModelProvider.Factory {
@@ -556,6 +549,7 @@ class FavoritesViewModelFactory(
                 deleteOneDatabaseItemUseCase,
                 fetchDatabaseItemUseCase,
                 updateDatabaseItemUseCase,
+                updateDatabaseItemsNewEpisodeStatus,
                 fetchAnimeByIdUseCase
             ) as T
         }
@@ -571,6 +565,7 @@ class FavoritesViewModelFactory(
                 DeleteOneDatabaseItemUseCase(application.databaseRepository),
                 FetchDatabaseItemUseCase(application.databaseRepository),
                 UpdateDatabaseItemUseCase(application.databaseRepository),
+                UpdateDatabaseItemsNewEpisodeStatus(application.databaseRepository),
                 FetchAnimeByIdUseCase(application.apiRepository)
             )
         }

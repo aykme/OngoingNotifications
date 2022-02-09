@@ -10,7 +10,7 @@ object DiffCallback {
         }
 
         override fun areContentsTheSame(oldItem: Anime, newItem: Anime): Boolean {
-            return oldItem == newItem
+            return (oldItem == newItem) && (oldItem.hasNewEpisode == newItem.hasNewEpisode)
         }
     }
 }

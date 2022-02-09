@@ -3,7 +3,6 @@ package com.aykme.animenoti.ui.favorites
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -105,16 +104,13 @@ class FavoritesListAdapter(
                     }
                 )
                 notificationFab.setOnClickListener {
-                    Log.d(tag, "начало аниме ${anime.name} $isNotificationActive")
                     viewModel.onNotificationClicked(
                         isNotificationActive,
                         anime,
                         notificationFab
                     )
                     isNotificationActive = !isNotificationActive
-                    Log.d(tag, "конец аниме ${anime.name} $isNotificationActive")
                 }
-                viewModel.bindDefaultStateNotificationFab(notificationFab)
                 viewModel.bindDefaultStateInfoFields(
                     detailButton,
                     favoritesName,

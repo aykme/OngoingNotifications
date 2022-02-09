@@ -10,6 +10,7 @@ import com.aykme.animenoti.data.source.remote.shikimoriapi.ShikimoriApi
 import com.aykme.animenoti.domain.model.Anime
 import com.aykme.animenoti.domain.repository.ApiRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 class ShikimoriApiRepository(private val api: ShikimoriApi) : ApiRepository {
@@ -58,7 +59,6 @@ class ShikimoriApiRepository(private val api: ShikimoriApi) : ApiRepository {
         return anime.toEntity()
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun <T> safeApiCall(apiCall: suspend () -> T): T {
         return withContext(Dispatchers.IO) {
             try {
@@ -66,7 +66,7 @@ class ShikimoriApiRepository(private val api: ShikimoriApi) : ApiRepository {
             } catch (e: Throwable) {
                 print(e.stackTrace)
                 Log.d(tag, "Api failure, trying again")
-                Thread.sleep(500)
+                delay(500)
                 try {
                     apiCall.invoke()
                 } catch (e: Throwable) {
