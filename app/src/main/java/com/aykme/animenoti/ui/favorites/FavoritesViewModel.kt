@@ -39,11 +39,8 @@ class FavoritesViewModel(
     private val tag = "FavoritesViewModel"
     private val uniqueWorkName = "OneTimeRefreshAnimeDataWork"
     private val resources = application.resources
-    private val _followedAnimeList: Flow<List<Anime>> by lazy {
-        fetchAllDatabaseItemsAsFlowUseCase()
-    }
     val followedAnimeList: LiveData<List<Anime>> by lazy {
-        _followedAnimeList.asLiveData()
+        fetchAllDatabaseItemsAsFlowUseCase().asLiveData()
     }
 
     fun bindPlaceholder(placeholder: View, isActive: Boolean) {
@@ -75,10 +72,10 @@ class FavoritesViewModel(
         adapter: FavoritesListAdapter,
         followedAnimeList: List<Anime>
     ) {
-            viewModelScope.launch {
-                adapter.submitList(followedAnimeList)
-                adapter.submitFollowedAnimeList(followedAnimeList)
-            }
+        viewModelScope.launch {
+            adapter.submitList(followedAnimeList)
+            adapter.submitFollowedAnimeList(followedAnimeList)
+        }
     }
 
     fun bindDefaultStateNotificationFab(
@@ -112,8 +109,24 @@ class FavoritesViewModel(
         return BASE_URL + imageUrl
     }
 
-    fun getFormattedEpisodesField(episodesTotal: Int): String {
-        return if (episodesTotal < 1) "?" else episodesTotal.toString()
+    fun getFormattedEpisodesField(
+        episodesAired: Int,
+        episodesTotal: Int,
+        status: AnimeStatus?
+    ): String {
+        val formattedEpisodesTotal =
+            if (episodesTotal < 1) "?" else episodesTotal.toString()
+        val formattedEpisodesAired =
+            if (status != null && status == AnimeStatus.RELEASED) {
+                formattedEpisodesTotal
+            } else {
+                episodesAired.toString()
+            }
+        return resources.getString(
+            R.string.anime_episodes_aired,
+            formattedEpisodesAired,
+            formattedEpisodesTotal
+        )
     }
 
     fun bindImage(animeImage: ImageView, fullImageUrl: String) {

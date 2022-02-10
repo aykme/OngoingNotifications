@@ -15,6 +15,7 @@ import com.aykme.animenoti.R
 import com.aykme.animenoti.data.source.remote.coil.ImageDownloader
 import com.aykme.animenoti.data.source.remote.shikimoriapi.BASE_URL
 import com.aykme.animenoti.domain.model.Anime
+import com.aykme.animenoti.domain.model.AnimeStatus
 import com.aykme.animenoti.domain.repository.ApiStatus
 import com.aykme.animenoti.domain.usecase.*
 import com.aykme.animenoti.ui.animelist.paging.*
@@ -95,8 +96,24 @@ class AnimeListViewModel(
         return BASE_URL + imageUrl
     }
 
-    fun getFormattedEpisodesField(episodesTotal: Int): String {
-        return if (episodesTotal < 1) "?" else episodesTotal.toString()
+    fun getFormattedEpisodesField(
+        episodesAired: Int,
+        episodesTotal: Int,
+        status: AnimeStatus?
+    ): String {
+        val formattedEpisodesTotal =
+            if (episodesTotal < 1) "?" else episodesTotal.toString()
+        val formattedEpisodesAired =
+            if (status != null && status == AnimeStatus.RELEASED) {
+                formattedEpisodesTotal
+            } else {
+                episodesAired.toString()
+            }
+        return resources.getString(
+            R.string.anime_episodes_aired,
+            formattedEpisodesAired,
+            formattedEpisodesTotal
+        )
     }
 
     fun bindImage(animeImage: ImageView, fullImageUrl: String) {

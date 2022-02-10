@@ -34,19 +34,19 @@ class FavoritesListAdapter(
             resources: Resources?,
             viewModel: FavoritesViewModel
         ) {
-            val episodesAired = anime.episodesAired?.toString() ?: "0"
+            val episodesAired = anime.episodesAired ?: 0
             val episodesTotal = anime.episodesTotal ?: 0
-            val formattedEpisodesTotal = viewModel.getFormattedEpisodesField(episodesTotal)
+            val formattedEpisodes = viewModel.getFormattedEpisodesField(
+                episodesAired,
+                episodesTotal,
+                anime.status
+            )
             val fullImageUrl = viewModel.getImageUrl(anime)
             viewModel.bindImage(binding.favoritesImage, fullImageUrl)
             binding.apply {
                 favoritesName.text = anime.name ?: resources?.getString(R.string.unknown)
                 favoritesScore.text = anime.score?.toString() ?: "0"
-                favoritesEpisodes.text = resources?.getString(
-                    R.string.anime_episodes_aired,
-                    episodesAired,
-                    formattedEpisodesTotal
-                )
+                favoritesEpisodes.text = formattedEpisodes
                 viewModel.bindAnimeStatus(
                     anime.status,
                     ongoingStatus,
