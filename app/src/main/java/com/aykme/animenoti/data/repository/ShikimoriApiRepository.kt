@@ -48,7 +48,8 @@ class ShikimoriApiRepository(private val api: ShikimoriApi) : ApiRepository {
                 api.getAnimeList(
                     page = page,
                     limit = limit,
-                    ids = ids
+                    ids = ids,
+                    order = "popularity"
                 )
             }
         return animeResponseList.toEntityList()
@@ -57,6 +58,17 @@ class ShikimoriApiRepository(private val api: ShikimoriApi) : ApiRepository {
     override suspend fun getAnimeById(id: Int): Anime {
         val anime: AnimeDetailsResponse = safeApiCall { api.getAnimeById(id) }
         return anime.toEntity()
+    }
+
+    override suspend fun getAnimeListBySearch(page: Int, limit: Int, search: String): List<Anime> {
+        val animeResponseList = safeApiCall {
+            api.getAnimeList(
+                page = page,
+                limit = limit,
+                search = search
+            )
+        }
+        return animeResponseList.toEntityList()
     }
 
     private suspend fun <T> safeApiCall(apiCall: suspend () -> T): T {

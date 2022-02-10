@@ -7,4 +7,5 @@ interface ApiRepository {
     suspend fun getAnnounced(page: Int, limit: Int): List<Anime>
     suspend fun getAnimeListByIds(page: Int, limit: Int, ids: String): List<Anime>
     suspend fun getAnimeById(id: Int): Anime
+    suspend fun getAnimeListBySearch(page: Int, limit: Int, search: String): List<Anime>
 }

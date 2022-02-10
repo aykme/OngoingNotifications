@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import androidx.paging.*
 import com.aykme.animenoti.AnimeNotiApplication
+import com.aykme.animenoti.MIN_PAGE
 import com.aykme.animenoti.PAGE_LIMIT
 import com.aykme.animenoti.R
 import com.aykme.animenoti.data.source.remote.coil.ImageDownloader
@@ -32,7 +33,8 @@ class AnimeListViewModel(
     fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
-    private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase
+    private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase,
+    private val fetchAnimeListBySearchUseCase: FetchAnimeListBySearchUseCase
 ) :
     ViewModel() {
 
@@ -60,7 +62,8 @@ class AnimeListViewModel(
 
     fun submitAnimeData(
         adapter: PagingAnimeListAdapter,
-        animeDataType: AnimeDataType
+        animeDataType: AnimeDataType,
+        search: String? = null
     ) {
         viewModelScope.launch {
             when (animeDataType) {
@@ -70,7 +73,12 @@ class AnimeListViewModel(
                 AnimeDataType.ANONS -> getAnnouncedAnimeData().collectLatest {
                     adapter.submitData(it)
                 }
-                else -> throw IllegalArgumentException("Unknown AnimeDataType")
+                AnimeDataType.SEARCH -> {
+                    val currentSearch = search ?: ""
+                    getSearchedAnimeData(currentSearch).collectLatest {
+                        adapter.submitData(it)
+                    }
+                }
             }
         }
     }
@@ -88,6 +96,14 @@ class AnimeListViewModel(
             config = PagingConfig(pageSize = PAGE_LIMIT)
         ) {
             AnnouncedListDataSource(fetchAnnouncedAnimeListUseCase, _apiStatus)
+        }.flow.cachedIn(viewModelScope)
+    }
+
+    private fun getSearchedAnimeData(search: String): Flow<PagingData<Anime>> {
+        return Pager(
+            config = PagingConfig(pageSize = PAGE_LIMIT)
+        ) {
+            SearchedListDataSource(fetchAnimeListBySearchUseCase, search, _apiStatus)
         }.flow.cachedIn(viewModelScope)
     }
 
@@ -250,7 +266,8 @@ class AnimeListViewModelFactory(
     private val fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
     private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
     private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
-    private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase
+    private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase,
+    private val fetchAnimeListBySearchUseCase: FetchAnimeListBySearchUseCase
 ) :
     ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
@@ -263,7 +280,8 @@ class AnimeListViewModelFactory(
                 fetchAllDatabaseItemsAsFlowUseCase,
                 insertDatabaseItemUseCase,
                 deleteOneDatabaseItemUseCase,
-                fetchAnimeByIdUseCase
+                fetchAnimeByIdUseCase,
+                fetchAnimeListBySearchUseCase
             ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
@@ -278,7 +296,8 @@ class AnimeListViewModelFactory(
                 FetchAllDatabaseItemsAsFlowUseCase(application.databaseRepository),
                 InsertDatabaseItemUseCase(application.databaseRepository),
                 DeleteOneDatabaseItemUseCase(application.databaseRepository),
-                FetchAnimeByIdUseCase(application.apiRepository)
+                FetchAnimeByIdUseCase(application.apiRepository),
+                FetchAnimeListBySearchUseCase(application.apiRepository)
             )
         }
     }

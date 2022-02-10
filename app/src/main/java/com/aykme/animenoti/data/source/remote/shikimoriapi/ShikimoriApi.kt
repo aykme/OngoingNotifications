@@ -33,7 +33,8 @@ interface ShikimoriApi {
         @Query("limit") limit: Int,
         @Query("status") status: String? = null,
         @Query("order") order: String? = null,
-        @Query("ids") ids: String? = null
+        @Query("ids") ids: String? = null,
+        @Query("search") search: String? = null
     ): List<AnimeResponse>
 
     @GET("$ANIMES_APPEND_URL/{id}")
