@@ -7,23 +7,6 @@
     android:background="@color/black"
     tools:context=".ui.animelist.AnimeListFragment">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/upper_menu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:outlineAmbientShadowColor="@android:color/transparent"
-        android:outlineSpotShadowColor="@android:color/transparent"
-        app:backgroundTint="@android:color/transparent"
-        app:itemTextAppearanceActive="@style/AnimeNoti.UpperMenu"
-        app:itemTextAppearanceInactive="@style/AnimeNoti.UpperMenu"
-        app:itemTextColor="@drawable/upper_menu_color_selector"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/upper_menu"
-        tools:targetApi="p" />
-
     <ImageView
         android:id="@+id/status"
         android:layout_width="0dp"
@@ -45,6 +28,89 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/item_anime_list" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/upper_menu_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="38dp"
+        android:layout_marginEnd="38dp"
+        android:layout_marginBottom="22dp"
+        app:layout_constraintBottom_toBottomOf="@id/released_anime_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/released_anime_button">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/upper_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:outlineAmbientShadowColor="@android:color/transparent"
+            android:outlineSpotShadowColor="@android:color/transparent"
+            app:backgroundTint="@android:color/transparent"
+            app:itemTextAppearanceActive="@style/AnimeNoti.UpperMenu"
+            app:itemTextAppearanceInactive="@style/AnimeNoti.UpperMenu"
+            app:itemTextColor="@drawable/upper_menu_color_selector"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/upper_menu"
+            tools:targetApi="p" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageButton
+        android:id="@+id/released_anime_button_outline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@android:color/transparent"
+        android:contentDescription="@string/released_anime_description"
+        android:src="@drawable/ic_released_anime_outline_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry" />
+
+    <ImageButton
+        android:id="@+id/released_anime_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@android:color/transparent"
+        android:contentDescription="@string/released_anime_description"
+        android:paddingEnd="16dp"
+        android:src="@drawable/ic_released_anime_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry" />
+
+    <ImageButton
+        android:id="@+id/search_anime_button_outline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:backgroundTint="@android:color/transparent"
+        android:contentDescription="@string/released_anime_description"
+        android:src="@drawable/ic_anime_search_outline_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/search_anime_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:backgroundTint="@android:color/transparent"
+        android:contentDescription="@string/released_anime_description"
+        android:paddingStart="16dp"
+        android:src="@drawable/ic_anime_search_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

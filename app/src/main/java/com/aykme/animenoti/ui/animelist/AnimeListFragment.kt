@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -41,6 +42,7 @@ class AnimeListFragment : Fragment() {
         val upperMenu: BottomNavigationView = binding.upperMenu
         val menuOngoingAnime = upperMenu.menu.findItem(R.id.ongoing_anime)
         val menuAnnouncedAnime = upperMenu.menu.findItem(R.id.announced_anime)
+        val releasedAnimeButton = binding.releasedAnimeButton
         val status = binding.status
         status.visibility = View.GONE
 
