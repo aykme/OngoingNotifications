@@ -66,11 +66,10 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="@android:color/transparent"
-        android:contentDescription="@string/released_anime_description"
         android:src="@drawable/ic_released_anime_outline_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="RtlSymmetry" />
+        tools:ignore="ContentDescription,RtlSymmetry,SpeakableTextPresentCheck" />
 
     <ImageButton
         android:id="@+id/released_anime_button"
@@ -93,10 +92,10 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="4dp"
         android:backgroundTint="@android:color/transparent"
-        android:contentDescription="@string/released_anime_description"
         android:src="@drawable/ic_anime_search_outline_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 
     <ImageButton
         android:id="@+id/search_anime_button"
@@ -105,7 +104,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="4dp"
         android:backgroundTint="@android:color/transparent"
-        android:contentDescription="@string/released_anime_description"
+        android:contentDescription="@string/search_anime_description"
         android:paddingStart="16dp"
         android:src="@drawable/ic_anime_search_24"
         app:layout_constraintEnd_toEndOf="parent"

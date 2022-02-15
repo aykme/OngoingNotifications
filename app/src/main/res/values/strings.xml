@@ -33,4 +33,5 @@
     <string name="episodes_viewed_plus_button">Прибавить одну серию в количество просмотренных</string>
     <string name="new_episode">Новая серия</string>
     <string name="released_anime_description">Законченные</string>
+    <string name="search_anime_description">Поиск</string>
 </resources>
