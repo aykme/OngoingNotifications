@@ -1,16 +1,14 @@
 package com.aykme.animenoti.ui.animelist
 
 import android.content.res.ColorStateList
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import androidx.paging.*
 import com.aykme.animenoti.AnimeNotiApplication
-import com.aykme.animenoti.MIN_PAGE
 import com.aykme.animenoti.PAGE_LIMIT
 import com.aykme.animenoti.R
 import com.aykme.animenoti.data.source.remote.coil.ImageDownloader
@@ -20,6 +18,7 @@ import com.aykme.animenoti.domain.model.AnimeStatus
 import com.aykme.animenoti.domain.repository.ApiStatus
 import com.aykme.animenoti.domain.usecase.*
 import com.aykme.animenoti.ui.animelist.paging.*
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -42,10 +41,10 @@ class AnimeListViewModel(
     private val resources = application.applicationContext.resources
     private val _apiStatus = MutableLiveData(ApiStatus.LOADING)
     val apiStatus: LiveData<ApiStatus> = _apiStatus
-    val animeDataType = MutableLiveData(AnimeDataType.ONGOING)
     val followedAnimeList: LiveData<List<Anime>> by lazy {
         fetchAllDatabaseItemsAsFlowUseCase().asLiveData()
     }
+    var searchData = ""
 
     fun bindApiStatus(status: ImageView) = when (apiStatus.value) {
         ApiStatus.LOADING -> {
@@ -63,7 +62,6 @@ class AnimeListViewModel(
     fun submitAnimeData(
         adapter: PagingAnimeListAdapter,
         animeDataType: AnimeDataType,
-        search: String? = null
     ) {
         viewModelScope.launch {
             when (animeDataType) {
@@ -74,8 +72,7 @@ class AnimeListViewModel(
                     adapter.submitData(it)
                 }
                 AnimeDataType.SEARCH -> {
-                    val currentSearch = search ?: ""
-                    getSearchedAnimeData(currentSearch).collectLatest {
+                    getSearchedAnimeData(searchData).collectLatest {
                         adapter.submitData(it)
                     }
                 }
@@ -110,6 +107,112 @@ class AnimeListViewModel(
     fun getImageUrl(anime: Anime): String {
         val imageUrl = anime.imageUrl ?: ""
         return BASE_URL + imageUrl
+    }
+
+    fun bindDefaultUpperMenuState(
+        ongoingAnimeButton: MaterialButton,
+        announcedAnimeButton: MaterialButton,
+        searchAnimeButton: ImageButton,
+        searchInputTextButton: ImageButton,
+        verticalDivider: View,
+        searchInputTextLayout: RelativeLayout,
+        ongoingListAdapter: PagingAnimeListAdapter
+    ) {
+        onOngoingAnimeButtonClicked(
+            ongoingAnimeButton,
+            announcedAnimeButton,
+            searchAnimeButton,
+            searchInputTextButton,
+            verticalDivider,
+            searchInputTextLayout
+        )
+        submitAnimeData(ongoingListAdapter, AnimeDataType.ONGOING)
+    }
+
+    fun onOngoingAnimeButtonClicked(
+        ongoingAnimeButton: MaterialButton,
+        announcedAnimeButton: MaterialButton,
+        searchAnimeButton: ImageButton,
+        searchInputTextButton: ImageButton,
+        verticalDivider: View,
+        searchInputTextLayout: RelativeLayout
+    ) {
+        val pinkColorId = getPinkColorId()
+        val whiteTransparentColorId = getWhiteTransparentColorId()
+        val searchIconOff = getSearchIconOff()
+        ongoingAnimeButton.setTextColor(pinkColorId)
+        announcedAnimeButton.setTextColor(whiteTransparentColorId)
+        searchAnimeButton.setImageDrawable(searchIconOff)
+        ongoingAnimeButton.visibility = View.VISIBLE
+        announcedAnimeButton.visibility = View.VISIBLE
+        verticalDivider.visibility = View.VISIBLE
+        searchAnimeButton.visibility = View.VISIBLE
+        searchInputTextLayout.visibility = View.GONE
+        searchInputTextButton.visibility = View.GONE
+    }
+
+    fun onAnnouncedAnimeButtonClicked(
+        ongoingAnimeButton: MaterialButton,
+        announcedAnimeButton: MaterialButton,
+        searchAnimeButton: ImageButton,
+        searchInputTextButton: ImageButton,
+        verticalDivider: View,
+        searchInputTextLayout: RelativeLayout
+    ) {
+        val pinkColorId = getPinkColorId()
+        val whiteTransparentColorId = getWhiteTransparentColorId()
+        val searchIconOff = getSearchIconOff()
+        ongoingAnimeButton.setTextColor(whiteTransparentColorId)
+        announcedAnimeButton.setTextColor(pinkColorId)
+        searchAnimeButton.setImageDrawable(searchIconOff)
+        ongoingAnimeButton.visibility = View.VISIBLE
+        announcedAnimeButton.visibility = View.VISIBLE
+        verticalDivider.visibility = View.VISIBLE
+        searchAnimeButton.visibility = View.VISIBLE
+        searchInputTextLayout.visibility = View.GONE
+        searchInputTextButton.visibility = View.GONE
+    }
+
+    fun onSearchAnimeButtonClicked(
+        ongoingAnimeButton: MaterialButton,
+        announcedAnimeButton: MaterialButton,
+        searchAnimeButton: ImageButton,
+        searchInputTextButton: ImageButton,
+        verticalDivider: View,
+        searchInputTextLayout: RelativeLayout
+    ) {
+        val whiteTransparentColorId = getWhiteTransparentColorId()
+        val searchIconOn = getSearchIconOn()
+        ongoingAnimeButton.setTextColor(whiteTransparentColorId)
+        announcedAnimeButton.setTextColor(whiteTransparentColorId)
+        searchAnimeButton.setImageDrawable(searchIconOn)
+        ongoingAnimeButton.visibility = View.GONE
+        announcedAnimeButton.visibility = View.GONE
+        verticalDivider.visibility = View.GONE
+        searchAnimeButton.visibility = View.GONE
+        searchInputTextButton.visibility = View.VISIBLE
+        searchInputTextLayout.visibility = View.VISIBLE
+    }
+
+    fun onSearchInputTextButtonClicked(
+        ongoingAnimeButton: MaterialButton,
+        announcedAnimeButton: MaterialButton,
+        searchAnimeButton: ImageButton,
+        searchInputTextButton: ImageButton,
+        verticalDivider: View,
+        searchInputTextLayout: RelativeLayout
+    ) {
+        val whiteTransparentColorId = getWhiteTransparentColorId()
+        val searchIconOn = getSearchIconOn()
+        ongoingAnimeButton.setTextColor(whiteTransparentColorId)
+        announcedAnimeButton.setTextColor(whiteTransparentColorId)
+        searchAnimeButton.setImageDrawable(searchIconOn)
+        ongoingAnimeButton.visibility = View.VISIBLE
+        announcedAnimeButton.visibility = View.VISIBLE
+        verticalDivider.visibility = View.VISIBLE
+        searchAnimeButton.visibility = View.VISIBLE
+        searchInputTextLayout.visibility = View.GONE
+        searchInputTextButton.visibility = View.GONE
     }
 
     fun getFormattedEpisodesField(
@@ -210,7 +313,7 @@ class AnimeListViewModel(
         notificationFab.setImageDrawable(
             ContextCompat.getDrawable(application, R.drawable.ic_notification_on_24)
         )
-        val greenColorId = ContextCompat.getColor(application, R.color.green)
+        val greenColorId = getGreenColorId()
         notificationFab.backgroundTintList = ColorStateList.valueOf(greenColorId)
         notificationFab.rippleColor = greenColorId
         notificationFab.contentDescription = resources.getString(
@@ -232,12 +335,41 @@ class AnimeListViewModel(
         notificationFab.setImageDrawable(
             ContextCompat.getDrawable(application, R.drawable.ic_notification_off_24)
         )
-        val pinkColorId = ContextCompat.getColor(application, R.color.pink)
+        val pinkColorId = getPinkColorId()
         notificationFab.backgroundTintList = ColorStateList.valueOf(pinkColorId)
         notificationFab.rippleColor = pinkColorId
         notificationFab.contentDescription = resources.getString(
             R.string.notification_off_ic
         )
+    }
+
+    private fun getWhiteTransparentColorId(): Int {
+        return ContextCompat.getColor(
+            application,
+            R.color.white_transparent
+        )
+    }
+
+    private fun getPinkColorId(): Int {
+        return ContextCompat.getColor(application, R.color.pink)
+    }
+
+    private fun getGreenColorId(): Int {
+        return ContextCompat.getColor(application, R.color.green)
+    }
+
+    private fun getSearchIconOff(): Drawable {
+        return ContextCompat.getDrawable(
+            application,
+            R.drawable.ic_anime_search_off_32
+        )!!
+    }
+
+    private fun getSearchIconOn(): Drawable {
+        return ContextCompat.getDrawable(
+            application,
+            R.drawable.ic_anime_search_on_32
+        )!!
     }
 
     private fun makeDatabaseConnectionErrorMassage() {

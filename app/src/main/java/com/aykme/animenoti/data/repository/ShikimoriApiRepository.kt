@@ -48,8 +48,7 @@ class ShikimoriApiRepository(private val api: ShikimoriApi) : ApiRepository {
                 api.getAnimeList(
                     page = page,
                     limit = limit,
-                    ids = ids,
-                    order = "popularity"
+                    ids = ids
                 )
             }
         return animeResponseList.toEntityList()
@@ -65,7 +64,8 @@ class ShikimoriApiRepository(private val api: ShikimoriApi) : ApiRepository {
             api.getAnimeList(
                 page = page,
                 limit = limit,
-                search = search
+                search = search,
+                order = "ranked"
             )
         }
         return animeResponseList.toEntityList()

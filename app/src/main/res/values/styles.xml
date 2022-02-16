@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Divider style -->
-    <style name="Widget.AnimeNoti.Divider" parent="">
+    <style name="Widget.AnimeNoti.DividerHorizontal" parent="">
         <item name="android:background">?attr/dividerHorizontal</item>
+    </style>
+    <style name="Widget.AnimeNoti.DividerVertical" parent="">
+        <item name="android:background">?attr/dividerVertical</item>
     </style>
     <!-- Theme style -->
     <style name="Theme.AnimeNoti" parent="Theme.MaterialComponents">

@@ -20,7 +20,6 @@ import com.aykme.animenoti.domain.model.AnimeStatus
 import com.aykme.animenoti.domain.usecase.*
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -227,7 +226,7 @@ class FavoritesViewModel(
         notificationFab.setImageDrawable(
             ContextCompat.getDrawable(application, R.drawable.ic_notification_on_24)
         )
-        val greenColorId = ContextCompat.getColor(application, R.color.green)
+        val greenColorId = getGreenColorId()
         notificationFab.backgroundTintList = ColorStateList.valueOf(greenColorId)
         notificationFab.rippleColor = greenColorId
         notificationFab.contentDescription = resources.getString(
@@ -247,7 +246,7 @@ class FavoritesViewModel(
         notificationFab.setImageDrawable(
             ContextCompat.getDrawable(application, R.drawable.ic_notification_off_24)
         )
-        val pinkColorId = ContextCompat.getColor(application, R.color.pink)
+        val pinkColorId = getPinkColorId()
         notificationFab.backgroundTintList = ColorStateList.valueOf(pinkColorId)
         notificationFab.rippleColor = pinkColorId
         notificationFab.contentDescription = resources.getString(
@@ -505,7 +504,7 @@ class FavoritesViewModel(
         newEpisodeBackground: RelativeLayout,
         newEpisode: TextView
     ) {
-        val greyColor = ContextCompat.getColor(application, R.color.grey)
+        val greyColor = getGreyColorId()
         mainInfoStroke.backgroundTintList = ColorStateList.valueOf(greyColor)
         newEpisodeBackground.visibility = View.GONE
         newEpisode.visibility = View.GONE
@@ -516,10 +515,26 @@ class FavoritesViewModel(
         newEpisodeBackground: RelativeLayout,
         newEpisode: TextView
     ) {
-        val silverColor = ContextCompat.getColor(application, R.color.silver)
+        val silverColor = getSilverColorId()
         mainInfoStroke.backgroundTintList = ColorStateList.valueOf(silverColor)
         newEpisodeBackground.visibility = View.VISIBLE
         newEpisode.visibility = View.VISIBLE
+    }
+
+    private fun getPinkColorId(): Int {
+        return ContextCompat.getColor(application, R.color.pink)
+    }
+
+    private fun getGreenColorId(): Int {
+        return ContextCompat.getColor(application, R.color.green)
+    }
+
+    private fun getGreyColorId(): Int {
+        return ContextCompat.getColor(application, R.color.grey)
+    }
+
+    private fun getSilverColorId(): Int {
+        return ContextCompat.getColor(application, R.color.silver)
     }
 
     private fun makeDatabaseConnectionErrorMassage() {

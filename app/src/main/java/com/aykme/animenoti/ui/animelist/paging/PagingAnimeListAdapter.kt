@@ -55,7 +55,6 @@ class PagingAnimeListAdapter(
                     )
                     isNotificationActive = !isNotificationActive
                 }
-
                 followedAnimeList?.let {
                     isNotificationActive = viewModel.bindDefaultStateNotificationFab(
                         anime,

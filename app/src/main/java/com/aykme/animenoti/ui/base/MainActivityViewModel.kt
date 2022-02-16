@@ -30,7 +30,7 @@ class MainActivityViewModel(
 
     }
 
-    private suspend fun calculateNewEpisodeStatusNumber(
+    private fun calculateNewEpisodeStatusNumber(
         followedAnimeList: List<Anime>
     ): Int {
         var statusCount = 0
@@ -43,7 +43,6 @@ class MainActivityViewModel(
 
 @Suppress("UNCHECKED_CAST")
 class MainViewModelFactory(
-    private val application: AnimeNotiApplication,
     private val fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -58,7 +57,6 @@ class MainViewModelFactory(
     companion object {
         fun getInstance(application: AnimeNotiApplication): MainViewModelFactory {
             return MainViewModelFactory(
-                application,
                 FetchAllDatabaseItemsAsFlowUseCase(application.databaseRepository)
             )
         }
