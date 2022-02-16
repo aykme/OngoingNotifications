@@ -43,6 +43,7 @@ class AnimeListFragment : Fragment() {
         val menuOngoingAnime = upperMenu.menu.findItem(R.id.ongoing_anime)
         val menuAnnouncedAnime = upperMenu.menu.findItem(R.id.announced_anime)
         val releasedAnimeButton = binding.releasedAnimeButton
+        val searchAnimeButton = binding.searchAnimeButton
         val status = binding.status
         status.visibility = View.GONE
 
