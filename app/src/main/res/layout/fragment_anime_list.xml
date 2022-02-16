@@ -42,6 +42,7 @@
         app:layout_constraintTop_toTopOf="@id/released_anime_button">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:visibility="visible"
             android:id="@+id/upper_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -69,7 +70,7 @@
         android:src="@drawable/ic_released_anime_outline_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription,RtlSymmetry,SpeakableTextPresentCheck" />
+        tools:ignore="ContentDescription" />
 
     <ImageButton
         android:id="@+id/released_anime_button"
@@ -95,7 +96,7 @@
         android:src="@drawable/ic_anime_search_outline_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+        tools:ignore="ContentDescription" />
 
     <ImageButton
         android:id="@+id/search_anime_button"
