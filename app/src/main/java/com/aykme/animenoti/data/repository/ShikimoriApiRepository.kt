@@ -74,11 +74,12 @@ class ShikimoriApiRepository(private val api: ShikimoriApi) : ApiRepository {
     private suspend fun <T> safeApiCall(apiCall: suspend () -> T): T {
         return withContext(Dispatchers.IO) {
             try {
+                delay(75)
                 apiCall.invoke()
             } catch (e: Throwable) {
                 print(e.stackTrace)
                 Log.d(tag, "Api failure, trying again")
-                delay(500)
+                delay(1500)
                 try {
                     apiCall.invoke()
                 } catch (e: Throwable) {

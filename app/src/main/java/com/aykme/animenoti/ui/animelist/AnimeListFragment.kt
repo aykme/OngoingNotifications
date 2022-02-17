@@ -2,6 +2,7 @@ package com.aykme.animenoti.ui.animelist
 
 import android.os.Bundle
 import android.text.SpannableStringBuilder
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aykme.animenoti.AnimeNotiApplication
+import com.aykme.animenoti.R
 import com.aykme.animenoti.databinding.FragmentAnimeListBinding
 import com.aykme.animenoti.ui.animelist.paging.PagingAnimeListAdapter
 
@@ -16,7 +18,7 @@ class AnimeListFragment : Fragment() {
     private var _binding: FragmentAnimeListBinding? = null
     private val binding get() = _binding!!
     private val viewModel: AnimeListViewModel by viewModels {
-        AnimeListViewModelFactory.getInstance(activity?.application as AnimeNotiApplication)
+        AnimeListViewModel.AnimeListViewModelFactory.getInstance(activity?.application as AnimeNotiApplication)
     }
 
     override fun onCreateView(
@@ -40,17 +42,20 @@ class AnimeListFragment : Fragment() {
         val ongoingAnimeButton = binding.ongoingAnimeButton
         val announcedAnimeButton = binding.announcedAnimeButton
         val searchAnimeButton = binding.searchAnimeButton
-        val searchInputTextButton = binding.searchInputTextButton
         val verticalDivider = binding.verticalDivider
         val searchInputTextLayout = binding.searchInputTextLayout
         val searchTextInputEditText = binding.searchTextInputEditText
+        val searchCancelButton = binding.searchCancelButton
+        val swipeRefresh = binding.swipeRefresh
+        swipeRefresh.setProgressViewOffset(false, 50, 250)
+        swipeRefresh.setColorSchemeResources(R.color.pink)
         val status = binding.status
         status.visibility = View.GONE
         viewModel.bindDefaultUpperMenuState(
             ongoingAnimeButton,
             announcedAnimeButton,
             searchAnimeButton,
-            searchInputTextButton,
+            searchCancelButton,
             verticalDivider,
             searchInputTextLayout,
             ongoingListAdapter
@@ -58,11 +63,12 @@ class AnimeListFragment : Fragment() {
         ongoingAnimeButton.setOnClickListener {
             recyclerView.adapter = ongoingListAdapter
             viewModel.submitAnimeData(ongoingListAdapter, AnimeDataType.ONGOING)
+            viewModel.dataType = AnimeDataType.ONGOING
             viewModel.onOngoingAnimeButtonClicked(
                 ongoingAnimeButton,
                 announcedAnimeButton,
                 searchAnimeButton,
-                searchInputTextButton,
+                searchCancelButton,
                 verticalDivider,
                 searchInputTextLayout
             )
@@ -70,38 +76,64 @@ class AnimeListFragment : Fragment() {
         announcedAnimeButton.setOnClickListener {
             recyclerView.adapter = announcedListAdapter
             viewModel.submitAnimeData(announcedListAdapter, AnimeDataType.ANONS)
+            viewModel.dataType = AnimeDataType.ANONS
             viewModel.onAnnouncedAnimeButtonClicked(
                 ongoingAnimeButton,
                 announcedAnimeButton,
                 searchAnimeButton,
-                searchInputTextButton,
+                searchCancelButton,
                 verticalDivider,
                 searchInputTextLayout
             )
         }
         searchAnimeButton.setOnClickListener {
-            viewModel.submitAnimeData(searchListAdapter, AnimeDataType.SEARCH)
             recyclerView.adapter = searchListAdapter
+            viewModel.submitAnimeData(searchListAdapter, AnimeDataType.SEARCH)
+            viewModel.dataType = AnimeDataType.SEARCH
             viewModel.onSearchAnimeButtonClicked(
                 ongoingAnimeButton,
                 announcedAnimeButton,
                 searchAnimeButton,
-                searchInputTextButton,
+                searchCancelButton,
                 verticalDivider,
                 searchInputTextLayout
             )
         }
-        searchInputTextButton.setOnClickListener {
-            viewModel.searchData = searchTextInputEditText.text.toString()
-            viewModel.submitAnimeData(searchListAdapter, AnimeDataType.SEARCH)
-            recyclerView.adapter = searchListAdapter
-            viewModel.onSearchInputTextButtonClicked(
+        searchTextInputEditText.setOnKeyListener(fun(
+            view: View,
+            keyCode: Int,
+            keyEvent: KeyEvent
+        ): Boolean {
+            val result = viewModel.onEnterKeyClicked(
+                requireContext(),
+                view,
+                keyCode,
+                keyEvent,
                 ongoingAnimeButton,
                 announcedAnimeButton,
                 searchAnimeButton,
-                searchInputTextButton,
+                searchCancelButton,
                 verticalDivider,
                 searchInputTextLayout
+            )
+            return if (result) {
+                viewModel.searchData = searchTextInputEditText.text.toString()
+                viewModel.submitAnimeData(searchListAdapter, AnimeDataType.SEARCH)
+                recyclerView.adapter = searchListAdapter
+                searchTextInputEditText.text = SpannableStringBuilder("")
+                true
+            } else false
+        })
+        searchCancelButton.setOnClickListener {
+            viewModel.cancelSearch(
+                ongoingAnimeButton,
+                announcedAnimeButton,
+                searchAnimeButton,
+                searchCancelButton,
+                verticalDivider,
+                searchInputTextLayout,
+                requireContext(),
+                view
             )
             searchTextInputEditText.text = SpannableStringBuilder("")
         }
@@ -113,6 +145,14 @@ class AnimeListFragment : Fragment() {
                 ongoingListAdapter.submitFollowedAnimeList(followedAnimeList)
                 announcedListAdapter.submitFollowedAnimeList(followedAnimeList)
                 searchListAdapter.submitFollowedAnimeList(followedAnimeList)
+            }
+            swipeRefresh.setOnRefreshListener {
+                viewModel.refreshRecyclerView(
+                    ongoingListAdapter,
+                    announcedListAdapter,
+                    searchListAdapter
+                )
+                swipeRefresh.isRefreshing = false
             }
         }
     }

@@ -35,5 +35,7 @@
     <string name="released_anime_description">Законченные</string>
     <string name="search_anime_description">Поиск</string>
     <string name="ongoings">Онгоинги</string>
-    <string name="Announced">Анонсы</string>
+    <string name="announced">Анонсы</string>
+    <string name="search_cancel">Убрать полоску поиска</string>
+    <string name="search_input_text_description">Поиск</string>
 </resources>

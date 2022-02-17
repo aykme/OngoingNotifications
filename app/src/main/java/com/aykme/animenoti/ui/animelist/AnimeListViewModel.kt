@@ -1,9 +1,12 @@
 package com.aykme.animenoti.ui.animelist
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
@@ -44,6 +47,7 @@ class AnimeListViewModel(
     val followedAnimeList: LiveData<List<Anime>> by lazy {
         fetchAllDatabaseItemsAsFlowUseCase().asLiveData()
     }
+    var dataType = AnimeDataType.ONGOING
     var searchData = ""
 
     fun bindApiStatus(status: ImageView) = when (apiStatus.value) {
@@ -80,6 +84,18 @@ class AnimeListViewModel(
         }
     }
 
+    fun refreshRecyclerView(
+        ongoingListAdapter: PagingAnimeListAdapter,
+        announcedListAdapter: PagingAnimeListAdapter,
+        searchListAdapter: PagingAnimeListAdapter
+    ) {
+        when (dataType) {
+            AnimeDataType.ONGOING -> submitAnimeData(ongoingListAdapter, AnimeDataType.ONGOING)
+            AnimeDataType.ANONS -> submitAnimeData(announcedListAdapter, AnimeDataType.ANONS)
+            AnimeDataType.SEARCH -> submitAnimeData(searchListAdapter, AnimeDataType.SEARCH)
+        }
+    }
+
     private fun getOngoingAnimeData(): Flow<PagingData<Anime>> {
         return Pager(
             config = PagingConfig(pageSize = PAGE_LIMIT)
@@ -113,7 +129,7 @@ class AnimeListViewModel(
         ongoingAnimeButton: MaterialButton,
         announcedAnimeButton: MaterialButton,
         searchAnimeButton: ImageButton,
-        searchInputTextButton: ImageButton,
+        searchCancelButton: ImageButton,
         verticalDivider: View,
         searchInputTextLayout: RelativeLayout,
         ongoingListAdapter: PagingAnimeListAdapter
@@ -122,7 +138,7 @@ class AnimeListViewModel(
             ongoingAnimeButton,
             announcedAnimeButton,
             searchAnimeButton,
-            searchInputTextButton,
+            searchCancelButton,
             verticalDivider,
             searchInputTextLayout
         )
@@ -133,7 +149,7 @@ class AnimeListViewModel(
         ongoingAnimeButton: MaterialButton,
         announcedAnimeButton: MaterialButton,
         searchAnimeButton: ImageButton,
-        searchInputTextButton: ImageButton,
+        searchCancelButton: ImageButton,
         verticalDivider: View,
         searchInputTextLayout: RelativeLayout
     ) {
@@ -148,14 +164,14 @@ class AnimeListViewModel(
         verticalDivider.visibility = View.VISIBLE
         searchAnimeButton.visibility = View.VISIBLE
         searchInputTextLayout.visibility = View.GONE
-        searchInputTextButton.visibility = View.GONE
+        searchCancelButton.visibility = View.GONE
     }
 
     fun onAnnouncedAnimeButtonClicked(
         ongoingAnimeButton: MaterialButton,
         announcedAnimeButton: MaterialButton,
         searchAnimeButton: ImageButton,
-        searchInputTextButton: ImageButton,
+        searchCancelButton: ImageButton,
         verticalDivider: View,
         searchInputTextLayout: RelativeLayout
     ) {
@@ -170,14 +186,14 @@ class AnimeListViewModel(
         verticalDivider.visibility = View.VISIBLE
         searchAnimeButton.visibility = View.VISIBLE
         searchInputTextLayout.visibility = View.GONE
-        searchInputTextButton.visibility = View.GONE
+        searchCancelButton.visibility = View.GONE
     }
 
     fun onSearchAnimeButtonClicked(
         ongoingAnimeButton: MaterialButton,
         announcedAnimeButton: MaterialButton,
         searchAnimeButton: ImageButton,
-        searchInputTextButton: ImageButton,
+        searchCancelButton: ImageButton,
         verticalDivider: View,
         searchInputTextLayout: RelativeLayout
     ) {
@@ -190,18 +206,21 @@ class AnimeListViewModel(
         announcedAnimeButton.visibility = View.GONE
         verticalDivider.visibility = View.GONE
         searchAnimeButton.visibility = View.GONE
-        searchInputTextButton.visibility = View.VISIBLE
+        searchCancelButton.visibility = View.VISIBLE
         searchInputTextLayout.visibility = View.VISIBLE
     }
 
-    fun onSearchInputTextButtonClicked(
+    fun cancelSearch(
         ongoingAnimeButton: MaterialButton,
         announcedAnimeButton: MaterialButton,
         searchAnimeButton: ImageButton,
-        searchInputTextButton: ImageButton,
+        searchCancelButton: ImageButton,
         verticalDivider: View,
-        searchInputTextLayout: RelativeLayout
+        searchInputTextLayout: RelativeLayout,
+        context: Context,
+        view: View
     ) {
+        hideKeyboard(context, view)
         val whiteTransparentColorId = getWhiteTransparentColorId()
         val searchIconOn = getSearchIconOn()
         ongoingAnimeButton.setTextColor(whiteTransparentColorId)
@@ -212,7 +231,43 @@ class AnimeListViewModel(
         verticalDivider.visibility = View.VISIBLE
         searchAnimeButton.visibility = View.VISIBLE
         searchInputTextLayout.visibility = View.GONE
-        searchInputTextButton.visibility = View.GONE
+        searchCancelButton.visibility = View.GONE
+    }
+
+    fun onEnterKeyClicked(
+        context: Context,
+        view: View,
+        keyCode: Int,
+        keyEvent: KeyEvent,
+        ongoingAnimeButton: MaterialButton,
+        announcedAnimeButton: MaterialButton,
+        searchAnimeButton: ImageButton,
+        searchCancelButton: ImageButton,
+        verticalDivider: View,
+        searchInputTextLayout: RelativeLayout
+    ): Boolean {
+        if ((keyEvent.action == KeyEvent.ACTION_DOWN)
+            && (keyCode == KeyEvent.KEYCODE_ENTER)
+        ) {
+            cancelSearch(
+                ongoingAnimeButton,
+                announcedAnimeButton,
+                searchAnimeButton,
+                searchCancelButton,
+                verticalDivider,
+                searchInputTextLayout,
+                context,
+                view
+            )
+            return true
+        }
+        return false
+    }
+
+    private fun hideKeyboard(context: Context, view: View) {
+        val inputMethodManager =
+            context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     fun getFormattedEpisodesField(
@@ -389,48 +444,48 @@ class AnimeListViewModel(
             Toast.LENGTH_LONG
         ).show()
     }
-}
 
-class AnimeListViewModelFactory(
-    private val application: AnimeNotiApplication,
-    private val fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase,
-    private val fetchAnnouncedAnimeListUseCase: FetchAnnouncedAnimeListUseCase,
-    private val fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
-    private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
-    private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
-    private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase,
-    private val fetchAnimeListBySearchUseCase: FetchAnimeListBySearchUseCase
-) :
-    ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AnimeListViewModel::class.java)) {
-            return AnimeListViewModel(
-                application,
-                fetchOngoingAnimeListUseCase,
-                fetchAnnouncedAnimeListUseCase,
-                fetchAllDatabaseItemsAsFlowUseCase,
-                insertDatabaseItemUseCase,
-                deleteOneDatabaseItemUseCase,
-                fetchAnimeByIdUseCase,
-                fetchAnimeListBySearchUseCase
-            ) as T
+    class AnimeListViewModelFactory(
+        private val application: AnimeNotiApplication,
+        private val fetchOngoingAnimeListUseCase: FetchOngoingAnimeListUseCase,
+        private val fetchAnnouncedAnimeListUseCase: FetchAnnouncedAnimeListUseCase,
+        private val fetchAllDatabaseItemsAsFlowUseCase: FetchAllDatabaseItemsAsFlowUseCase,
+        private val insertDatabaseItemUseCase: InsertDatabaseItemUseCase,
+        private val deleteOneDatabaseItemUseCase: DeleteOneDatabaseItemUseCase,
+        private val fetchAnimeByIdUseCase: FetchAnimeByIdUseCase,
+        private val fetchAnimeListBySearchUseCase: FetchAnimeListBySearchUseCase
+    ) :
+        ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(AnimeListViewModel::class.java)) {
+                return AnimeListViewModel(
+                    application,
+                    fetchOngoingAnimeListUseCase,
+                    fetchAnnouncedAnimeListUseCase,
+                    fetchAllDatabaseItemsAsFlowUseCase,
+                    insertDatabaseItemUseCase,
+                    deleteOneDatabaseItemUseCase,
+                    fetchAnimeByIdUseCase,
+                    fetchAnimeListBySearchUseCase
+                ) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
 
-    companion object {
-        fun getInstance(application: AnimeNotiApplication): AnimeListViewModelFactory {
-            return AnimeListViewModelFactory(
-                application,
-                FetchOngoingAnimeListUseCase(application.apiRepository),
-                FetchAnnouncedAnimeListUseCase(application.apiRepository),
-                FetchAllDatabaseItemsAsFlowUseCase(application.databaseRepository),
-                InsertDatabaseItemUseCase(application.databaseRepository),
-                DeleteOneDatabaseItemUseCase(application.databaseRepository),
-                FetchAnimeByIdUseCase(application.apiRepository),
-                FetchAnimeListBySearchUseCase(application.apiRepository)
-            )
+        companion object {
+            fun getInstance(application: AnimeNotiApplication): AnimeListViewModelFactory {
+                return AnimeListViewModelFactory(
+                    application,
+                    FetchOngoingAnimeListUseCase(application.apiRepository),
+                    FetchAnnouncedAnimeListUseCase(application.apiRepository),
+                    FetchAllDatabaseItemsAsFlowUseCase(application.databaseRepository),
+                    InsertDatabaseItemUseCase(application.databaseRepository),
+                    DeleteOneDatabaseItemUseCase(application.databaseRepository),
+                    FetchAnimeByIdUseCase(application.apiRepository),
+                    FetchAnimeListBySearchUseCase(application.apiRepository)
+                )
+            }
         }
     }
 }

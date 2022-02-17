@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/anime_list_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
@@ -19,15 +20,22 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/anime_list_recycler_view"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/item_anime_list" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/anime_list_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_anime_list" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/ongoing_anime_button"
@@ -63,7 +71,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:paddingStart="28dp"
-        android:text="@string/Announced"
+        android:text="@string/announced"
         android:textAppearance="@style/AnimeNoti.UpperMenu"
         android:textColor="@color/white_transparent"
         android:visibility="gone"
@@ -78,33 +86,31 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@id/search_input_text_button"
-        app:layout_constraintEnd_toEndOf="@id/search_input_text_button"
+        app:layout_constraintBottom_toBottomOf="@id/search_cancel_button"
+        app:layout_constraintEnd_toEndOf="@id/search_cancel_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/search_input_text_button">
+        app:layout_constraintTop_toTopOf="@id/search_cancel_button">
 
-        <com.google.android.material.card.MaterialCardView
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:backgroundTint="@android:color/transparent">
 
-            <com.google.android.material.textfield.TextInputLayout
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/search_text_input_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@android:color/transparent">
+                android:backgroundTint="@color/black_transparent"
+                android:hint="@string/search_input_text_description"
+                android:inputType="text"
+                android:maxLength="30"
+                android:maxLines="1"
+                android:textColorHint="@color/pink"
+                tools:ignore="DuplicateSpeakableTextCheck">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/search_text_input_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/black_transparent"
-                    android:maxLength="30"
-                    android:maxLines="1">
-
-                </com.google.android.material.textfield.TextInputEditText>
-            </com.google.android.material.textfield.TextInputLayout>
-        </com.google.android.material.card.MaterialCardView>
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
 
     </RelativeLayout>
 
@@ -133,21 +139,23 @@
         android:src="@drawable/ic_anime_search_off_32"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="DuplicateClickableBoundsCheck" />
 
     <ImageButton
-        android:id="@+id/search_input_text_button"
+        android:id="@+id/search_cancel_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:backgroundTint="@android:color/transparent"
-        android:clickable="false"
+        android:backgroundTint="@color/black_transparent"
         android:contentDescription="@string/search_anime_description"
-        android:src="@drawable/ic_anime_search_on_32"
-        android:visibility="visible"
+        android:src="@drawable/ic_cancel_search_32"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TouchTargetSizeCheck">
+
+    </ImageButton>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
