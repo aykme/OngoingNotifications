@@ -16,7 +16,7 @@ class SearchedListDataSource(
     private val apiStatus: MutableLiveData<ApiStatus>
 ) : PagingSource<Int, Anime>() {
 
-    override suspend fun load(params: LoadParams<Int>): PagingSource.LoadResult<Int, Anime> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Anime> {
         val pageNumber = params.key ?: MIN_PAGE
         val prevKey = if (pageNumber <= MIN_PAGE) null else (pageNumber - 1)
         val nextKey = if (pageNumber <= MAX_PAGE) (pageNumber + 1) else null
