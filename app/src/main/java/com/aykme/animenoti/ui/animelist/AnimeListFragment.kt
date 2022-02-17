@@ -35,7 +35,7 @@ class AnimeListFragment : Fragment() {
         val recyclerView = binding.animeListRecyclerView
         val ongoingListAdapter = PagingAnimeListAdapter(requireContext(), viewModel)
         val announcedListAdapter = PagingAnimeListAdapter(requireContext(), viewModel)
-        val searchListAdapter = PagingAnimeListAdapter(requireContext(), viewModel)
+        var searchListAdapter = PagingAnimeListAdapter(requireContext(), viewModel)
         val layoutManager = GridLayoutManager(requireContext(), 1)
         recyclerView.adapter = ongoingListAdapter
         recyclerView.layoutManager = layoutManager
@@ -117,9 +117,10 @@ class AnimeListFragment : Fragment() {
                 searchInputTextLayout
             )
             return if (result) {
+                searchListAdapter = PagingAnimeListAdapter(requireContext(), viewModel)
+                recyclerView.adapter = searchListAdapter
                 viewModel.searchData = searchTextInputEditText.text.toString()
                 viewModel.submitAnimeData(searchListAdapter, AnimeDataType.SEARCH)
-                recyclerView.adapter = searchListAdapter
                 searchTextInputEditText.text = SpannableStringBuilder("")
                 true
             } else false
@@ -135,7 +136,6 @@ class AnimeListFragment : Fragment() {
                 requireContext(),
                 view
             )
-            searchTextInputEditText.text = SpannableStringBuilder("")
         }
         viewModel.apply {
             apiStatus.observe(viewLifecycleOwner) {

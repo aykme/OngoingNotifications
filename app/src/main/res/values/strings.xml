@@ -37,5 +37,5 @@
     <string name="ongoings">Онгоинги</string>
     <string name="announced">Анонсы</string>
     <string name="search_cancel">Убрать полоску поиска</string>
-    <string name="search_input_text_description">Поиск</string>
+    <string name="search_input_text_description">Введите текст и нажмите Enter</string>
 </resources>
