@@ -107,7 +107,7 @@
                 android:maxLength="30"
                 android:maxLines="1"
                 android:textColorHint="@color/pink"
-                tools:ignore="DuplicateSpeakableTextCheck">
+                tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck">
 
             </com.google.android.material.textfield.TextInputEditText>
         </com.google.android.material.textfield.TextInputLayout>
