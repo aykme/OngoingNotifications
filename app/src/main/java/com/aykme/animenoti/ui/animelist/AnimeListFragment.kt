@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.aykme.animenoti.AnimeNotiApplication
 import com.aykme.animenoti.R
 import com.aykme.animenoti.databinding.FragmentAnimeListBinding
+import com.aykme.animenoti.domain.model.Anime
 import com.aykme.animenoti.ui.animelist.paging.PagingAnimeListAdapter
 
 class AnimeListFragment : Fragment() {
@@ -20,6 +21,7 @@ class AnimeListFragment : Fragment() {
     private val viewModel: AnimeListViewModel by viewModels {
         AnimeListViewModel.AnimeListViewModelFactory.getInstance(activity?.application as AnimeNotiApplication)
     }
+    private var lastFollowedAnimeList: List<Anime>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -121,6 +123,9 @@ class AnimeListFragment : Fragment() {
                 recyclerView.adapter = searchListAdapter
                 viewModel.searchData = searchTextInputEditText.text.toString()
                 viewModel.submitAnimeData(searchListAdapter, AnimeDataType.SEARCH)
+                lastFollowedAnimeList?.let {
+                    searchListAdapter.submitFollowedAnimeList(it)
+                }
                 searchTextInputEditText.text = SpannableStringBuilder("")
                 true
             } else false
@@ -142,6 +147,7 @@ class AnimeListFragment : Fragment() {
                 bindApiStatus(status)
             }
             followedAnimeList.observe(viewLifecycleOwner) { followedAnimeList ->
+                lastFollowedAnimeList = followedAnimeList
                 ongoingListAdapter.submitFollowedAnimeList(followedAnimeList)
                 announcedListAdapter.submitFollowedAnimeList(followedAnimeList)
                 searchListAdapter.submitFollowedAnimeList(followedAnimeList)
