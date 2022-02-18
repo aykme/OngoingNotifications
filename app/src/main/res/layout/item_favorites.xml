@@ -216,9 +216,7 @@
                             android:text="@string/ongoing_status"
                             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                             android:textColor="@color/green"
-                            android:visibility="visible"
-                            app:layout_constraintStart_toStartOf="@id/favorites_episodes"
-                            app:layout_constraintTop_toBottomOf="@id/favorites_episodes" />
+                            android:visibility="visible" />
 
                         <TextView
                             android:id="@+id/announced_status"
@@ -228,9 +226,7 @@
                             android:text="@string/announced_status"
                             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                             android:textColor="@color/purple_200"
-                            android:visibility="gone"
-                            app:layout_constraintStart_toStartOf="@id/favorites_episodes"
-                            app:layout_constraintTop_toBottomOf="@id/favorites_episodes" />
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/released_status"
@@ -240,9 +236,7 @@
                             android:text="@string/released_status"
                             android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                             android:textColor="@color/pink"
-                            android:visibility="gone"
-                            app:layout_constraintStart_toStartOf="@id/favorites_episodes"
-                            app:layout_constraintTop_toBottomOf="@id/favorites_episodes" />
+                            android:visibility="gone" />
                     </LinearLayout>
 
 
@@ -252,9 +246,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="6dp"
                         android:layout_marginBottom="6dp"
-                        android:focusable="true"
                         android:alpha="0.8"
                         android:contentDescription="@string/notification_off_ic"
+                        android:focusable="true"
                         android:src="@drawable/ic_notification_on_24"
                         android:visibility="visible"
                         app:layout_constraintBottom_toBottomOf="parent"

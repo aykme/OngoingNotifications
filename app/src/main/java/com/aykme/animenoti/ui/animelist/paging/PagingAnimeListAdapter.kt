@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.aykme.animenoti.R
@@ -44,13 +45,17 @@ class PagingAnimeListAdapter(
                 animeName.text = anime.name ?: resources?.getString(R.string.unknown)
                 animeScore.text = anime.score?.toString() ?: "0"
                 animeEpisodes.text = formattedEpisodes
-                val notificationText = animeNotificationText
+                viewModel.bindAnimeStatus(
+                    anime.status,
+                    ongoingStatus,
+                    announcedStatus,
+                    releasedStatus
+                )
                 val notificationFab = animeNotificationFab
                 notificationFab.setOnClickListener {
                     viewModel.onNotificationClicked(
                         isNotificationActive,
                         anime,
-                        notificationText,
                         notificationFab,
                     )
                     isNotificationActive = !isNotificationActive
@@ -59,7 +64,6 @@ class PagingAnimeListAdapter(
                     isNotificationActive = viewModel.bindDefaultStateNotificationFab(
                         anime,
                         followedAnimeList,
-                        notificationText,
                         notificationFab,
                     )
                 }

@@ -299,15 +299,44 @@ class AnimeListViewModel(
     fun bindDefaultStateNotificationFab(
         anime: Anime,
         followedAnimeList: List<Anime>,
-        notificationText: TextView,
         notificationFab: FloatingActionButton
     ): Boolean {
         return if (isFollowedAnime(anime, followedAnimeList)) {
-            bindNotificationOnFields(notificationText, notificationFab)
+            bindNotificationOnFields(notificationFab)
             true
         } else {
-            bindNotificationOffFields(notificationText, notificationFab)
+            bindNotificationOffFields(notificationFab)
             false
+        }
+    }
+
+    fun bindAnimeStatus(
+        animeStatus: AnimeStatus?,
+        ongoingStatus: TextView,
+        announcedStatus: TextView,
+        releasedStatus: TextView,
+    ) {
+        when (animeStatus) {
+            AnimeStatus.ONGOING -> {
+                ongoingStatus.visibility = View.VISIBLE
+                announcedStatus.visibility = View.GONE
+                releasedStatus.visibility = View.GONE
+            }
+            AnimeStatus.ANONS -> {
+                announcedStatus.visibility = View.VISIBLE
+                ongoingStatus.visibility = View.GONE
+                releasedStatus.visibility = View.GONE
+            }
+            AnimeStatus.RELEASED -> {
+                releasedStatus.visibility = View.VISIBLE
+                ongoingStatus.visibility = View.GONE
+                announcedStatus.visibility = View.GONE
+            }
+            else -> {
+                releasedStatus.visibility = View.GONE
+                ongoingStatus.visibility = View.GONE
+                announcedStatus.visibility = View.GONE
+            }
         }
     }
 
@@ -326,14 +355,12 @@ class AnimeListViewModel(
     fun onNotificationClicked(
         isNotificationActive: Boolean,
         anime: Anime,
-        notificationText: TextView,
         notificationOnFab: FloatingActionButton
     ) {
         if (isNotificationActive) {
             try {
                 deleteFromDatabaseAsync(anime.id)
                 bindNotificationOffFields(
-                    notificationText,
                     notificationOnFab
                 )
             } catch (e: Throwable) {
@@ -344,7 +371,6 @@ class AnimeListViewModel(
             try {
                 insertIntoDatabaseAsync(anime)
                 bindNotificationOnFields(
-                    notificationText,
                     notificationOnFab
                 )
             } catch (e: Throwable) {
@@ -361,10 +387,8 @@ class AnimeListViewModel(
     }
 
     private fun bindNotificationOnFields(
-        notificationText: TextView,
         notificationFab: FloatingActionButton
     ) {
-        notificationText.text = resources.getString(R.string.notification_on_text)
         notificationFab.setImageDrawable(
             ContextCompat.getDrawable(application, R.drawable.ic_notification_on_24)
         )
@@ -383,10 +407,8 @@ class AnimeListViewModel(
     }
 
     private fun bindNotificationOffFields(
-        notificationText: TextView,
         notificationFab: FloatingActionButton
     ) {
-        notificationText.text = resources.getString(R.string.notification_off_text)
         notificationFab.setImageDrawable(
             ContextCompat.getDrawable(application, R.drawable.ic_notification_off_24)
         )
