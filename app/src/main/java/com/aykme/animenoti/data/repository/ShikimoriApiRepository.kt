@@ -79,7 +79,7 @@ class ShikimoriApiRepository(private val api: ShikimoriApi) : ApiRepository {
             } catch (e: Throwable) {
                 print(e.stackTrace)
                 Log.d(tag, "Api failure, trying again")
-                delay(1500)
+                delay(2500)
                 try {
                     apiCall.invoke()
                 } catch (e: Throwable) {
