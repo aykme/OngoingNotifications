@@ -3,8 +3,8 @@
     <string name="anime_episodes_aired">Эпизоды: %1$s / %2$s</string>
     <string name="notification_off_ic">Включить уведомления</string>
     <string name="notification_on_ic">Выключить уведомления</string>
-    <string name="anime_menu">Меню Аниме</string>
-    <string name="favorites_menu">Меню Слежу</string>
+    <string name="anime_menu">Аниме</string>
+    <string name="favorites_menu">Слежу</string>
     <string name="anime_ongoings_title">Аниме онгоинги</string>
     <string name="favorites_title">Мои подписки</string>
     <string name="ongoing_anime_menu">Онгоинги</string>
