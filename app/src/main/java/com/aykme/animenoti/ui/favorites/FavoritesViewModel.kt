@@ -52,10 +52,6 @@ class FavoritesViewModel(
 
     fun refreshDatabaseItems() {
         viewModelScope.launch {
-            /*val anime1 = fetchAnimeByIdUseCase(40028)
-            val anime2 = fetchAnimeByIdUseCase(19)
-            insertDatabaseItemUseCase(anime1)
-            insertDatabaseItemUseCase(anime2)*/
             updateDatabaseItemsNewEpisodeStatus(false)
             val workManager = WorkManager.getInstance(application)
             val work = OneTimeWorkRequestBuilder<RefreshAnimeDataWork>().build()
@@ -304,6 +300,11 @@ class FavoritesViewModel(
         when (anime.status) {
             AnimeStatus.ONGOING -> {
                 viewModelScope.launch {
+                    futureInfo.text =
+                        resources.getString(
+                            R.string.next_episode_at,
+                            resources.getString(R.string.unknown)
+                        )
                     try {
                         val nextEpisodeAt = fetchAnimeByIdUseCase(anime.id)
                             .nextEpisodeAt
@@ -312,14 +313,19 @@ class FavoritesViewModel(
                             resources.getString(R.string.next_episode_at, formattedDate)
                     } catch (e: Throwable) {
                         e.printStackTrace()
-                        futureInfo.text = resources.getString(R.string.unknown)
                         makeInternetConnectionErrorMassage()
                     }
                 }
             }
             AnimeStatus.ANONS -> {
                 val formattedDate = getFormattedDate(anime.airedOn)
-                futureInfo.text = resources.getString(R.string.aired_on, formattedDate)
+                val unknown = resources.getString(R.string.unknown)
+                if (formattedDate == unknown) {
+                    futureInfo.text = resources.getString(R.string.aired_on, formattedDate)
+                } else {
+                    futureInfo.text =
+                        resources.getString(R.string.aired_on_not_exactly, formattedDate)
+                }
             }
             AnimeStatus.RELEASED -> {
                 val formattedDate = getFormattedDate(anime.releasedOn)

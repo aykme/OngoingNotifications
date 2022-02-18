@@ -78,6 +78,7 @@
                 android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 android:textColor="@color/white"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/anime_name"
                 app:layout_constraintTop_toBottomOf="@id/anime_name"
                 tools:text="Эпизоды: 2 / ?" />
@@ -88,8 +89,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
                 android:backgroundTint="@color/black_transparent"
-                android:contentDescription=""
+                android:contentDescription="@string/future_info_fab"
                 android:src="@drawable/ic_future_info_32"
+                android:visibility="gone"
                 app:borderWidth="0dp"
                 app:fabCustomSize="35dp"
                 app:fabSize="mini"
@@ -97,6 +99,37 @@
                 app:layout_constraintStart_toEndOf="@id/anime_episodes"
                 app:layout_constraintTop_toBottomOf="@id/anime_name"
                 app:layout_constraintTop_toTopOf="@id/anime_episodes"
+                app:rippleColor="@color/pink"
+                app:tint="@color/pink" />
+
+            <TextView
+                android:id="@+id/future_info_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:maxLines="2"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="@id/anime_name"
+                app:layout_constraintTop_toBottomOf="@id/anime_name"
+                tools:text="Следующий эпизод:\n 20 февр. 2022" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/current_info_fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:backgroundTint="@color/black_transparent"
+                android:contentDescription="@string/current_info_fab"
+                android:src="@drawable/ic_current_info_32"
+                android:visibility="visible"
+                app:borderWidth="0dp"
+                app:fabCustomSize="35dp"
+                app:fabSize="mini"
+                app:layout_constraintBottom_toBottomOf="@id/future_info_text"
+                app:layout_constraintStart_toEndOf="@id/future_info_text"
+                app:layout_constraintTop_toBottomOf="@id/future_info_text"
+                app:layout_constraintTop_toTopOf="@id/future_info_text"
                 app:rippleColor="@color/pink"
                 app:tint="@color/pink" />
 

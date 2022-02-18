@@ -23,17 +23,19 @@
     <string name="favorites_detail_on_button">Включает альтернативное отображение информации в правой части</string>
     <string name="favorites_detail_off_button">Выключает альтернативное отображение информации в правой части</string>
     <string name="getFormattedDateError">Не удалось получить дату</string>
-    <string name="aired_on">Начало показа:\n%1$s (неточно)</string>
-    <string name="released_on">Закончен:\n%1$s</string>
+    <string name="aired_on_not_exactly">Начало показа:\n%1$s (неточно)</string>
+    <string name="aired_on">Начало показа:\n%1$s</string>
+    <string name="released_on">Показ завершен:\n%1$s</string>
     <string name="internet_connection_error">Ошибка интернет соединения</string>
     <string name="database_access_error">Ошибка доступа к данным</string>
     <string name="episodes_viewed_minus_button">Отнять одну серию из количества просмотренных</string>
     <string name="episodes_viewed_plus_button">Прибавить одну серию в количество просмотренных</string>
     <string name="new_episode">Новая серия</string>
-    <string name="released_anime_description">Законченные</string>
     <string name="search_anime_description">Поиск</string>
     <string name="ongoings">Онгоинги</string>
     <string name="announced">Анонсы</string>
     <string name="search_cancel">Убрать полоску поиска</string>
     <string name="search_input_text_description">Введите текст и нажмите Enter</string>
+    <string name="future_info_fab">Отобразить информацию о выходе новых эпизодов</string>
+    <string name="current_info_fab">Отобразить информацию о вышедших эпизодах</string>
 </resources>

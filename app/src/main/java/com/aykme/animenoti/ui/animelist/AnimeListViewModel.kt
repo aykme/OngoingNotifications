@@ -1,5 +1,6 @@
 package com.aykme.animenoti.ui.animelist
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
@@ -26,6 +27,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.IllegalArgumentException
 
 class AnimeListViewModel(
@@ -465,6 +468,98 @@ class AnimeListViewModel(
             resources.getString(R.string.internet_connection_error),
             Toast.LENGTH_LONG
         ).show()
+    }
+
+    fun onFutureInfoFabClicked(
+        anime: Anime,
+        futureInfoFab: FloatingActionButton,
+        currentInfoFab: FloatingActionButton,
+        animeEpisodes: TextView,
+        futureInfoText: TextView
+    ) {
+        futureInfoFab.visibility = View.GONE
+        bindFutureInfoFields(anime, futureInfoText)
+        animeEpisodes.visibility = View.GONE
+        futureInfoText.visibility = View.VISIBLE
+        currentInfoFab.visibility = View.VISIBLE
+    }
+
+    private fun bindFutureInfoFields(anime: Anime, futureInfo: TextView) {
+        when (anime.status) {
+            AnimeStatus.ONGOING -> {
+                viewModelScope.launch {
+                    futureInfo.text =
+                        resources.getString(
+                            R.string.next_episode_at,
+                            resources.getString(R.string.unknown)
+                        )
+                    try {
+                        val nextEpisodeAt = fetchAnimeByIdUseCase(anime.id)
+                            .nextEpisodeAt
+                        val formattedDate = getFormattedDate(nextEpisodeAt)
+                        futureInfo.text =
+                            resources.getString(R.string.next_episode_at, formattedDate)
+                    } catch (e: Throwable) {
+                        e.printStackTrace()
+                        makeInternetConnectionErrorMassage()
+                    }
+                }
+            }
+            AnimeStatus.ANONS -> {
+                val formattedDate = getFormattedDate(anime.airedOn)
+                val unknown = resources.getString(R.string.unknown)
+                if (formattedDate == unknown) {
+                    futureInfo.text = resources.getString(R.string.aired_on, formattedDate)
+                } else {
+                    futureInfo.text =
+                        resources.getString(R.string.aired_on_not_exactly, formattedDate)
+                }
+            }
+            AnimeStatus.RELEASED -> {
+                val formattedDate = getFormattedDate(anime.releasedOn)
+                futureInfo.text = resources.getString(R.string.released_on, formattedDate)
+            }
+            else -> {
+                futureInfo.text = resources.getString(R.string.unknown)
+            }
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun getFormattedDate(date: String?): String {
+        return try {
+            val stringToDateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale("ru"))
+            val dateToStringFormatter = SimpleDateFormat("d MMM yyyy")
+            val unformattedDate = stringToDateFormatter.parse(date!!)
+            dateToStringFormatter.format(unformattedDate!!)
+        } catch (e: Throwable) {
+            Log.d(tag, resources.getString(R.string.getFormattedDateError))
+            resources.getString(R.string.unknown)
+        }
+    }
+
+    fun bindDefaultFieldsState(
+        animeEpisodes: TextView,
+        futureInfoText: TextView,
+        futureInfoFab: FloatingActionButton,
+        currentInfoFab: FloatingActionButton
+    ) {
+        futureInfoText.visibility = View.GONE
+        currentInfoFab.visibility = View.GONE
+        animeEpisodes.visibility = View.VISIBLE
+        futureInfoFab.visibility = View.VISIBLE
+    }
+
+    fun onCurrentInfoFabClicked(
+        futureInfoFab: FloatingActionButton,
+        currentInfoFab: FloatingActionButton,
+        animeEpisodes: TextView,
+        futureInfoText: TextView
+    ) {
+        futureInfoText.visibility = View.GONE
+        currentInfoFab.visibility = View.GONE
+        animeEpisodes.visibility = View.VISIBLE
+        futureInfoFab.visibility = View.VISIBLE
     }
 
     class AnimeListViewModelFactory(
