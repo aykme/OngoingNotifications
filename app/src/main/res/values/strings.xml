@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AnimeNoti</string>
+    <string name="app_name">Anoti</string>
     <string name="anime_episodes_aired">Эпизоды: %1$s / %2$s</string>
     <string name="notification_off_ic">Включить уведомления</string>
     <string name="notification_on_ic">Выключить уведомления</string>
