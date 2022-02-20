@@ -38,7 +38,7 @@ object ImageDownloader {
         } catch (e: Throwable) {
             BitmapFactory.decodeResource(
                 context.applicationContext.resources,
-                R.drawable.ic_notification_48
+                R.drawable.ic_notification_96
             )
         }
     }

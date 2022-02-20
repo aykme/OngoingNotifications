@@ -22,7 +22,7 @@ class WorkManagerNotification(private val application: AnimeNotiApplication) {
     ) {
 
         val builder = Builder(application, NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification_48)
+            .setSmallIcon(R.drawable.ic_notification_96)
             .setContentTitle(contentTitle)
             .setStyle(
                 BigTextStyle()
@@ -35,7 +35,7 @@ class WorkManagerNotification(private val application: AnimeNotiApplication) {
             .setContentIntent(pendingIntent)
 
         val summaryBuilder = Builder(application, NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification_48)
+            .setSmallIcon(R.drawable.ic_notification_96)
             .setContentTitle(contentTitle)
             .setStyle(
                 BigTextStyle()
