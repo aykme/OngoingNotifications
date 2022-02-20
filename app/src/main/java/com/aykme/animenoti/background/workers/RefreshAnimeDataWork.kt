@@ -76,7 +76,7 @@ class RefreshAnimeDataWork(
         return NavDeepLinkBuilder(applicationContext)
             .setComponentName(MainActivity::class.java)
             .setGraph(R.navigation.nav_graph)
-            .setDestination(R.id.favorites_anime)
+            .setDestination(R.id.anime_list)
             .createPendingIntent()
     }
 
