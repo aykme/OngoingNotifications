@@ -50,6 +50,7 @@ class WorkManagerNotification(private val application: AnimeNotiApplication) {
             .setGroup(notificationGroupKey)
             .setGroupSummary(true)
             .setGroupAlertBehavior(GROUP_ALERT_CHILDREN)
+            .setAutoCancel(true)
             .setContentIntent(pendingIntent)
 
         NotificationManagerCompat.from(application).apply {
