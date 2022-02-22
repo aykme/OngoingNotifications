@@ -90,14 +90,14 @@ class FavoritesListAdapter(
                     return@setOnLongClickListener true
                 }
                 episodesViewedMinusButton.setOnTouchListener(
-                    RepeatListener(500, 250) {
+                    RepeatListener(500, 200) {
                         viewModel.onEpisodesViewedMinusButtonClicked(
                             anime.id, episodesViewedNumber
                         )
                     }
                 )
                 episodesViewedPlusButton.setOnTouchListener(
-                    RepeatListener(500, 250) {
+                    RepeatListener(500, 200) {
                         viewModel.onEpisodesViewedPlusButtonClicked(
                             anime.id, episodesViewedNumber
                         )
