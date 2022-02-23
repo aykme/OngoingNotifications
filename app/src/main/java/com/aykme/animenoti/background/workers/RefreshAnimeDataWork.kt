@@ -15,7 +15,7 @@ import com.aykme.animenoti.MIN_PAGE
 import com.aykme.animenoti.PAGE_LIMIT
 import com.aykme.animenoti.R
 import com.aykme.animenoti.background.notification.WorkManagerNotification
-import com.aykme.animenoti.data.source.remote.coil.ImageDownloader
+import com.aykme.animenoti.util.Image
 import com.aykme.animenoti.data.source.remote.shikimoriapi.BASE_URL
 import com.aykme.animenoti.domain.model.Anime
 import com.aykme.animenoti.domain.usecase.FetchAllDatabaseItemsUseCase
@@ -54,7 +54,7 @@ class RefreshAnimeDataWork(
 
     private suspend fun fetchRemoteItems(databaseItems: List<Anime>): List<Anime> {
         val remoteItems = mutableListOf<Anime>()
-        var databaseIdsBuffer = StringBuffer()
+        var databaseIdsBuffer = StringBuilder()
         var itemCount = 0
         for ((index, databaseItem) in databaseItems.withIndex()) {
             databaseIdsBuffer.append("${databaseItem.id},")
@@ -62,7 +62,7 @@ class RefreshAnimeDataWork(
             if (itemCount > (PAGE_LIMIT - 1) || index == databaseItems.size - 1) {
                 itemCount = 0
                 val databaseIds = databaseIdsBuffer.toString().trim(',')
-                databaseIdsBuffer = StringBuffer()
+                databaseIdsBuffer = StringBuilder()
                 val tempRemoteItems =
                     fetchAnimeListByIdsUseCase(MIN_PAGE, PAGE_LIMIT, databaseIds)
                 remoteItems.addAll(tempRemoteItems)
@@ -91,7 +91,7 @@ class RefreshAnimeDataWork(
                 val notificationTitle = getNotificationTitle(remoteItem)
                 val notificationText = getNotificationText(remoteItem)
                 val fullImageUrl = BASE_URL + remoteItem.imageUrl
-                val notificationImage = ImageDownloader.fetchBitmap(
+                val notificationImage = Image.fetchBitmap(
                     applicationContext,
                     fullImageUrl
                 )

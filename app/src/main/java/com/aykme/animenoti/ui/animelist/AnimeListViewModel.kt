@@ -15,7 +15,7 @@ import androidx.paging.*
 import com.aykme.animenoti.AnimeNotiApplication
 import com.aykme.animenoti.PAGE_LIMIT
 import com.aykme.animenoti.R
-import com.aykme.animenoti.data.source.remote.coil.ImageDownloader
+import com.aykme.animenoti.util.Image
 import com.aykme.animenoti.data.source.remote.shikimoriapi.BASE_URL
 import com.aykme.animenoti.domain.model.Anime
 import com.aykme.animenoti.domain.model.AnimeStatus
@@ -295,7 +295,7 @@ class AnimeListViewModel(
 
     fun bindImage(animeImage: ImageView, fullImageUrl: String) {
         viewModelScope.launch {
-            ImageDownloader.bindImageView(animeImage, fullImageUrl)
+            Image.bindImageView(animeImage, fullImageUrl)
         }
     }
 

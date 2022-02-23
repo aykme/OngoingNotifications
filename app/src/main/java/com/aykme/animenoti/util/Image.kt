@@ -1,4 +1,4 @@
-package com.aykme.animenoti.data.source.remote.coil
+package com.aykme.animenoti.util
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -12,7 +12,7 @@ import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.aykme.animenoti.R
 
-object ImageDownloader {
+object Image {
     fun bindImageView(imgView: ImageView, imgUrl: String?) {
         imgUrl?.let {
             val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()

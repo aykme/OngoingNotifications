@@ -12,8 +12,7 @@ import com.aykme.animenoti.R
 import com.aykme.animenoti.databinding.FragmentFavoritesBinding
 
 class FavoritesFragment : Fragment() {
-    private var _binding: FragmentFavoritesBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentFavoritesBinding
     private val viewModel: FavoritesViewModel by viewModels {
         FavoritesViewModelFactory.getInstance(activity?.application as AnimeNotiApplication)
     }
@@ -22,7 +21,7 @@ class FavoritesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentFavoritesBinding.inflate(layoutInflater, container, false)
+        binding = FragmentFavoritesBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -50,10 +49,5 @@ class FavoritesFragment : Fragment() {
             }
 
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

@@ -16,8 +16,7 @@ import com.aykme.animenoti.domain.model.Anime
 import com.aykme.animenoti.ui.animelist.paging.PagingAnimeListAdapter
 
 class AnimeListFragment : Fragment() {
-    private var _binding: FragmentAnimeListBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentAnimeListBinding
     private val viewModel: AnimeListViewModel by viewModels {
         AnimeListViewModel.AnimeListViewModelFactory.getInstance(activity?.application as AnimeNotiApplication)
     }
@@ -28,7 +27,7 @@ class AnimeListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAnimeListBinding.inflate(inflater, container, false)
+        binding = FragmentAnimeListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -161,10 +160,5 @@ class AnimeListFragment : Fragment() {
                 swipeRefresh.isRefreshing = false
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
