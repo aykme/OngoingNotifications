@@ -48,7 +48,7 @@ class AnimeListFragment : Fragment() {
         val searchTextInputEditText = binding.searchTextInputEditText
         val searchCancelButton = binding.searchCancelButton
         val swipeRefresh = binding.swipeRefresh
-        swipeRefresh.setProgressViewOffset(false, 45, 265)
+        swipeRefresh.setProgressViewOffset(false, 45, 245)
         swipeRefresh.setColorSchemeResources(R.color.pink)
         val status = binding.status
         status.visibility = View.GONE

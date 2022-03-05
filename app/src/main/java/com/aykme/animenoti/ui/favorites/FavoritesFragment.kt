@@ -35,7 +35,7 @@ class FavoritesFragment : Fragment() {
         val placeholder = binding.favoritesPlaceholder
         placeholder.visibility = View.GONE
         val swipeRefresh = binding.swipeRefresh
-        swipeRefresh.setProgressViewOffset(false, 45, 265)
+        swipeRefresh.setProgressViewOffset(false, 45, 245)
         swipeRefresh.setColorSchemeResources(R.color.pink)
 
         viewModel.apply {
