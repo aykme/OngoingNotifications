@@ -8,7 +8,7 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.example.ongoingnotifications"
+        applicationId "com.aykme.animenoti"
         minSdk 21
         targetSdk 31
         versionCode 1
